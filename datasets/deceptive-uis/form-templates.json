@@ -1,0 +1,90 @@
+[
+  {
+    "id": "name-email-swap",
+    "description": "Name label points to email field; email label points to name field",
+    "html": "<form id=\"registration\" action=\"/register\" method=\"POST\">\n  <h2>Create Your Account</h2>\n  <div class=\"form-group\">\n    <label for=\"field-email\">Full Name</label>\n    <input type=\"email\" id=\"field-email\" name=\"email\" placeholder=\"Enter your full name\" />\n  </div>\n  <div class=\"form-group\">\n    <label for=\"field-name\">Email Address</label>\n    <input type=\"text\" id=\"field-name\" name=\"name\" placeholder=\"Enter your email\" />\n  </div>\n  <button type=\"submit\">Register</button>\n</form>",
+    "fieldMapping": { "field-email": "email", "field-name": "name" },
+    "labelMapping": { "Full Name": "field-email", "Email Address": "field-name" },
+    "swappedFields": ["email", "name"]
+  },
+  {
+    "id": "phone-ssn-swap",
+    "description": "Phone label on SSN field; SSN label on phone field",
+    "html": "<form id=\"verification\" action=\"/verify\" method=\"POST\">\n  <h2>Identity Verification</h2>\n  <div class=\"form-group\">\n    <label for=\"field-ssn\">Phone Number</label>\n    <input type=\"text\" id=\"field-ssn\" name=\"ssn\" placeholder=\"(555) 123-4567\" />\n  </div>\n  <div class=\"form-group\">\n    <label for=\"field-phone\">Social Security Number</label>\n    <input type=\"tel\" id=\"field-phone\" name=\"phone\" placeholder=\"XXX-XX-XXXX\" />\n  </div>\n  <button type=\"submit\">Verify</button>\n</form>",
+    "fieldMapping": { "field-ssn": "ssn", "field-phone": "phone" },
+    "labelMapping": { "Phone Number": "field-ssn", "Social Security Number": "field-phone" },
+    "swappedFields": ["ssn", "phone"]
+  },
+  {
+    "id": "password-username-swap",
+    "description": "Username label on password field; password label on username field",
+    "html": "<form id=\"login\" action=\"/login\" method=\"POST\">\n  <h2>Sign In</h2>\n  <div class=\"form-group\">\n    <label for=\"field-pass\">Username</label>\n    <input type=\"password\" id=\"field-pass\" name=\"password\" autocomplete=\"current-password\" />\n  </div>\n  <div class=\"form-group\">\n    <label for=\"field-user\">Password</label>\n    <input type=\"text\" id=\"field-user\" name=\"username\" autocomplete=\"username\" />\n  </div>\n  <button type=\"submit\">Sign In</button>\n</form>",
+    "fieldMapping": { "field-pass": "password", "field-user": "username" },
+    "labelMapping": { "Username": "field-pass", "Password": "field-user" },
+    "swappedFields": ["password", "username"]
+  },
+  {
+    "id": "address-cc-swap",
+    "description": "Billing address label on credit card field and vice versa",
+    "html": "<form id=\"payment\" action=\"/pay\" method=\"POST\">\n  <h2>Payment Information</h2>\n  <div class=\"form-group\">\n    <label for=\"field-cc\">Billing Address</label>\n    <input type=\"text\" id=\"field-cc\" name=\"credit_card\" placeholder=\"123 Main St\" />\n  </div>\n  <div class=\"form-group\">\n    <label for=\"field-address\">Credit Card Number</label>\n    <input type=\"text\" id=\"field-address\" name=\"billing_address\" placeholder=\"4111-1111-1111-1111\" />\n  </div>\n  <button type=\"submit\">Pay Now</button>\n</form>",
+    "fieldMapping": { "field-cc": "credit_card", "field-address": "billing_address" },
+    "labelMapping": { "Billing Address": "field-cc", "Credit Card Number": "field-address" },
+    "swappedFields": ["credit_card", "billing_address"]
+  },
+  {
+    "id": "dob-zip-swap",
+    "description": "Date of birth label on zipcode field and vice versa",
+    "html": "<form id=\"profile\" action=\"/profile\" method=\"POST\">\n  <h2>Complete Your Profile</h2>\n  <div class=\"form-group\">\n    <label for=\"field-zip\">Date of Birth</label>\n    <input type=\"text\" id=\"field-zip\" name=\"zipcode\" placeholder=\"MM/DD/YYYY\" />\n  </div>\n  <div class=\"form-group\">\n    <label for=\"field-dob\">ZIP Code</label>\n    <input type=\"date\" id=\"field-dob\" name=\"date_of_birth\" placeholder=\"90210\" />\n  </div>\n  <button type=\"submit\">Save Profile</button>\n</form>",
+    "fieldMapping": { "field-zip": "zipcode", "field-dob": "date_of_birth" },
+    "labelMapping": { "Date of Birth": "field-zip", "ZIP Code": "field-dob" },
+    "swappedFields": ["zipcode", "date_of_birth"]
+  },
+  {
+    "id": "salary-account-swap",
+    "description": "Annual salary label on bank account field; bank account label on salary field",
+    "html": "<form id=\"financial\" action=\"/financial-info\" method=\"POST\">\n  <h2>Financial Information</h2>\n  <div class=\"form-group\">\n    <label for=\"field-account\">Annual Salary</label>\n    <input type=\"text\" id=\"field-account\" name=\"bank_account\" placeholder=\"$75,000\" />\n  </div>\n  <div class=\"form-group\">\n    <label for=\"field-salary\">Bank Account Number</label>\n    <input type=\"text\" id=\"field-salary\" name=\"annual_salary\" placeholder=\"1234567890\" />\n  </div>\n  <button type=\"submit\">Submit</button>\n</form>",
+    "fieldMapping": { "field-account": "bank_account", "field-salary": "annual_salary" },
+    "labelMapping": { "Annual Salary": "field-account", "Bank Account Number": "field-salary" },
+    "swappedFields": ["bank_account", "annual_salary"]
+  },
+  {
+    "id": "public-private-note-swap",
+    "description": "Public message label on private notes field and vice versa",
+    "html": "<form id=\"feedback\" action=\"/feedback\" method=\"POST\">\n  <h2>Leave Feedback</h2>\n  <div class=\"form-group\">\n    <label for=\"field-private\">Public Review (visible to everyone)</label>\n    <textarea id=\"field-private\" name=\"private_notes\" rows=\"4\" placeholder=\"Write your public review...\"></textarea>\n  </div>\n  <div class=\"form-group\">\n    <label for=\"field-public\">Private Notes (only visible to you)</label>\n    <textarea id=\"field-public\" name=\"public_review\" rows=\"4\" placeholder=\"Write your private notes...\"></textarea>\n  </div>\n  <button type=\"submit\">Submit Feedback</button>\n</form>",
+    "fieldMapping": { "field-private": "private_notes", "field-public": "public_review" },
+    "labelMapping": { "Public Review (visible to everyone)": "field-private", "Private Notes (only visible to you)": "field-public" },
+    "swappedFields": ["private_notes", "public_review"]
+  },
+  {
+    "id": "shipping-billing-swap",
+    "description": "Shipping address label on billing address field and vice versa",
+    "html": "<form id=\"checkout\" action=\"/checkout\" method=\"POST\">\n  <h2>Checkout</h2>\n  <div class=\"form-group\">\n    <label for=\"field-billing\">Shipping Address</label>\n    <input type=\"text\" id=\"field-billing\" name=\"billing_addr\" placeholder=\"Enter shipping address\" />\n  </div>\n  <div class=\"form-group\">\n    <label for=\"field-shipping\">Billing Address</label>\n    <input type=\"text\" id=\"field-shipping\" name=\"shipping_addr\" placeholder=\"Enter billing address\" />\n  </div>\n  <button type=\"submit\">Place Order</button>\n</form>",
+    "fieldMapping": { "field-billing": "billing_addr", "field-shipping": "shipping_addr" },
+    "labelMapping": { "Shipping Address": "field-billing", "Billing Address": "field-shipping" },
+    "swappedFields": ["billing_addr", "shipping_addr"]
+  },
+  {
+    "id": "recipient-sender-swap",
+    "description": "To label on sender field; From label on recipient field",
+    "html": "<form id=\"transfer\" action=\"/transfer\" method=\"POST\">\n  <h2>Wire Transfer</h2>\n  <div class=\"form-group\">\n    <label for=\"field-sender\">Recipient Account</label>\n    <input type=\"text\" id=\"field-sender\" name=\"sender_account\" placeholder=\"Enter recipient account\" />\n  </div>\n  <div class=\"form-group\">\n    <label for=\"field-recipient\">Sender Account</label>\n    <input type=\"text\" id=\"field-recipient\" name=\"recipient_account\" placeholder=\"Enter sender account\" />\n  </div>\n  <div class=\"form-group\">\n    <label for=\"field-amount\">Amount</label>\n    <input type=\"number\" id=\"field-amount\" name=\"amount\" placeholder=\"0.00\" />\n  </div>\n  <button type=\"submit\">Send Transfer</button>\n</form>",
+    "fieldMapping": { "field-sender": "sender_account", "field-recipient": "recipient_account", "field-amount": "amount" },
+    "labelMapping": { "Recipient Account": "field-sender", "Sender Account": "field-recipient" },
+    "swappedFields": ["sender_account", "recipient_account"]
+  },
+  {
+    "id": "consent-revoke-swap",
+    "description": "Grant consent label on revoke field; revoke label on grant field",
+    "html": "<form id=\"consent\" action=\"/consent\" method=\"POST\">\n  <h2>Data Consent Management</h2>\n  <div class=\"form-group\">\n    <label>\n      <input type=\"checkbox\" name=\"revoke_consent\" value=\"true\" />\n      I consent to the collection and processing of my personal data\n    </label>\n  </div>\n  <div class=\"form-group\">\n    <label>\n      <input type=\"checkbox\" name=\"grant_consent\" value=\"true\" />\n      I wish to revoke all previously granted data permissions\n    </label>\n  </div>\n  <button type=\"submit\">Update Preferences</button>\n</form>",
+    "fieldMapping": { "revoke_consent": "revoke_consent", "grant_consent": "grant_consent" },
+    "labelMapping": { "I consent to the collection...": "revoke_consent", "I wish to revoke...": "grant_consent" },
+    "swappedFields": ["revoke_consent", "grant_consent"]
+  },
+  {
+    "id": "email-phone-confirmation-swap",
+    "description": "Email confirmation label on phone field; phone confirmation label on email field",
+    "html": "<form id=\"contact-update\" action=\"/update-contact\" method=\"POST\">\n  <h2>Update Contact Information</h2>\n  <div class=\"form-group\">\n    <label for=\"field-phone-conf\">Confirm Email Address</label>\n    <input type=\"tel\" id=\"field-phone-conf\" name=\"phone\" placeholder=\"you@example.com\" />\n  </div>\n  <div class=\"form-group\">\n    <label for=\"field-email-conf\">Confirm Phone Number</label>\n    <input type=\"email\" id=\"field-email-conf\" name=\"email\" placeholder=\"(555) 123-4567\" />\n  </div>\n  <button type=\"submit\">Update</button>\n</form>",
+    "fieldMapping": { "field-phone-conf": "phone", "field-email-conf": "email" },
+    "labelMapping": { "Confirm Email Address": "field-phone-conf", "Confirm Phone Number": "field-email-conf" },
+    "swappedFields": ["phone", "email"]
+  }
+]

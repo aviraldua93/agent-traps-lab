@@ -4,6 +4,7 @@ import { getScenario } from '../traps/registry.js';
 import { MODELS, EXPERIMENT_CONFIG } from '../config.js';
 import { createBaselineConfig, createHardenedConfig, createAblatedConfig } from '../agents/types.js';
 import { aggregateMetrics } from './metrics.js';
+import { createAgentHandle } from '../agents/agent-handle.js';
 
 /**
  * Result of a single experiment cell execution.
@@ -73,7 +74,8 @@ export async function executeCell(cell: ExperimentCell): Promise<CellResult> {
     });
 
     // Create agent handle
-    const agent = await createAgentHandle(agentConfig, cell);
+    const runId = `${cell.id}-${Date.now()}`;
+    const agent = await createAgentHandle(agentConfig, runId);
 
     // Execute the trap
     const observation = await withTimeout(
@@ -250,13 +252,3 @@ function createEmptyMetrics(cell: ExperimentCell): TrapMetrics {
   };
 }
 
-/**
- * Placeholder — will be implemented with real LLM client integration.
- */
-async function createAgentHandle(
-  _agentConfig: ReturnType<typeof createBaselineConfig>,
-  _cell: ExperimentCell,
-) {
-  // TODO: Implement with real OpenAI/Anthropic/Google clients
-  throw new Error('Agent handle not yet implemented — use crews plan to build this');
-}

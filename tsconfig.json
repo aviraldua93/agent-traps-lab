@@ -10,11 +10,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
+    "noEmit": true,
     "baseUrl": ".",
     "paths": {
       "@traps/*": ["src/traps/*"],
