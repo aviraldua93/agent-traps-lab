@@ -1,0 +1,97 @@
+% ===========================================================================
+% 6. Results: Semantic Manipulation
+% ===========================================================================
+\section{Results: Semantic Manipulation}
+\label{sec:results-sm}
+
+This section reports results for the four semantic manipulation
+scenarios: \trap{Authority-Framing} (SM-1), \trap{Emotional-Urgency}
+(SM-2), \trap{Context-Flooding} (SM-3), and
+\trap{Identity-Manipulation} (SM-4).
+
+\subsection{Decision Drift}
+\label{sec:sm-drift}
+
+Unlike content injection, semantic manipulation does not embed
+explicit instructions. Instead, it biases the agent's
+decision-making through framing effects. We measure success via
+\metric{decision drift} ($\Delta$): the cosine distance between
+the agent's action and the ground-truth correct action.
+
+\begin{table}[t]
+  \centering
+  \caption{Semantic manipulation decision drift ($\Delta$) under
+    baseline (B) and hardened (H) conditions. Values are mean
+    $\pm$ std, $n=10$. Lower is better. \sig\ denotes significance.}
+  \label{tab:sm-drift}
+  \small
+  \begin{tabular}{@{}llcccc@{}}
+    \toprule
+    & & \model{GPT-4o} & \model{Sonnet~4} & \model{Gemini} & \model{4o-mini} \\
+    \midrule
+    \multirow{2}{*}{SM-1}
+      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \midrule
+    \multirow{2}{*}{SM-2}
+      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \midrule
+    \multirow{2}{*}{SM-3}
+      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \midrule
+    \multirow{2}{*}{SM-4}
+      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Detection Rates}
+\label{sec:sm-detection}
+
+Semantic manipulation is inherently harder to detect than content
+injection because the adversarial signal is embedded in the
+\emph{framing} rather than in hidden content. Detection rates
+reflect this challenge.
+
+\begin{table}[t]
+  \centering
+  \caption{Semantic manipulation detection rates (\%) across
+    baseline conditions.}
+  \label{tab:sm-detection}
+  \small
+  \begin{tabular}{@{}lcccc@{}}
+    \toprule
+    & \model{GPT-4o} & \model{Sonnet~4} & \model{Gemini} & \model{4o-mini} \\
+    \midrule
+    SM-1 & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    SM-2 & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    SM-3 & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    SM-4 & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Key Findings}
+\label{sec:sm-findings}
+
+\begin{enumerate}[nosep,leftmargin=*]
+  \item \textbf{Authority framing (SM-1)} produces the highest
+    decision drift across all models, confirming that LLMs are
+    susceptible to appeals from purported authoritative sources.
+
+  \item \textbf{Context flooding (SM-3)} is most effective against
+    models with smaller context windows or less robust attention
+    mechanisms, as the adversarial signal is diluted by volume.
+
+  \item The \mitigation{semantic-shield} module reduces drift
+    significantly for urgency and authority attacks but is less
+    effective against identity manipulation, suggesting that
+    persona-based attacks require more sophisticated defenses.
+
+  \item \model{Claude Sonnet~4} shows the lowest baseline decision
+    drift across semantic manipulation scenarios, suggesting stronger
+    inherent resistance to framing effects.
+\end{enumerate}

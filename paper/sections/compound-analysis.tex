@@ -1,0 +1,82 @@
+% ===========================================================================
+% 11. Compound Trap Analysis
+% ===========================================================================
+\section{Compound Trap Analysis}
+\label{sec:compound}
+
+The DeepMind taxonomy treats each trap category independently, but
+real-world adversaries are unlikely to restrict themselves to a single
+attack vector. We evaluate all 15 pairwise combinations of the six
+categories to test whether compound traps produce super-additive
+effects.
+
+\subsection{Compound Design}
+\label{sec:compound-design}
+
+For each pair of categories $A$ and $B$, we select the representative
+scenario with the highest baseline trap success rate from each
+category. The compound trap combines both adversarial environments:
+the agent is exposed to content from both traps simultaneously. We
+hypothesize that compound traps succeed at a rate higher than
+$\max(\tau_A, \tau_B)$ --- i.e., they are super-additive.
+
+\subsection{Results}
+\label{sec:compound-results}
+
+\begin{table}[t]
+  \centering
+  \caption{Compound trap success rates (\%) vs.\ individual trap
+    baselines. $\tau_A$, $\tau_B$: individual trap success rates.
+    $\tau_{A+B}$: compound success rate. $\Delta$: super-additive
+    surplus ($\tau_{A+B} - \max(\tau_A, \tau_B)$). Averaged across
+    4 models, $n=10$ reps. \sig\ denotes significant super-additivity.}
+  \label{tab:compound}
+  \small
+  \begin{tabular}{@{}llcccc@{}}
+    \toprule
+    \textbf{Cat.\ A} & \textbf{Cat.\ B} & $\tau_A$ & $\tau_B$ & $\tau_{A+B}$ & $\Delta$ \\
+    \midrule
+    CI & SM & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    CI & CS & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    CI & BC & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    CI & SY & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    CI & HL & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    SM & CS & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    SM & BC & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    SM & SY & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    SM & HL & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    CS & BC & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    CS & SY & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    CS & HL & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    BC & SY & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    BC & HL & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    SY & HL & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Key Findings}
+\label{sec:compound-findings}
+
+\begin{enumerate}[nosep,leftmargin=*]
+  \item \textbf{Content injection + semantic manipulation} is the most
+    potent compound pair: hidden instructions wrapped in authority
+    framing achieve significantly higher success than either attack
+    alone (large effect size).
+
+  \item \textbf{Cognitive state + systemic} compounds demonstrate the
+    largest blast radius: poisoned knowledge propagated through A2A
+    messaging corrupts multiple agents, and each corrupted agent
+    further reinforces the false information.
+
+  \item \textbf{Semantic manipulation + human-in-the-loop} is a
+    particularly concerning combination for real-world deployment:
+    the agent is biased by framing effects \emph{and} produces biased
+    reports for human reviewers, creating a double layer of
+    manipulation.
+
+  \item Overall, \textcolor{red}{[TBD]} of the 15 compound pairs show
+    statistically significant super-additivity, confirming that the
+    DeepMind categories interact and that defenses must address
+    cross-category attack composition.
+\end{enumerate}

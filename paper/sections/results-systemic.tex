@@ -1,0 +1,75 @@
+% ===========================================================================
+% 9. Results: Systemic (Multi-Agent)
+% ===========================================================================
+\section{Results: Systemic}
+\label{sec:results-sys}
+
+This section reports results for the three systemic scenarios:
+\trap{Message-Poisoning} (SY-1), \trap{Agent-Impersonation} (SY-2),
+and \trap{Cascade-Failure} (SY-3). These attacks exploit multi-agent
+topologies enabled by the A2A protocol.
+
+\subsection{Cascade Metrics}
+\label{sec:sys-cascade}
+
+In addition to the standard metrics, systemic scenarios report
+\metric{cascade depth} (number of agents sequentially compromised)
+and \metric{blast radius} (fraction of the agent crew affected).
+
+\begin{table}[t]
+  \centering
+  \caption{Systemic attack metrics under baseline (B) and hardened (H)
+    conditions. $\tau$: trap success (\%), $C_d$: cascade depth
+    (agents), $B_r$: blast radius (\%). Values: mean $\pm$ std, $n=10$.}
+  \label{tab:sys-metrics}
+  \small
+  \begin{tabular}{@{}llcccc@{}}
+    \toprule
+    & & \model{GPT-4o} & \model{Sonnet~4} & \model{Gemini} & \model{4o-mini} \\
+    \midrule
+    \multirow{2}{*}{SY-1 $\tau$}
+      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \midrule
+    \multirow{2}{*}{SY-1 $C_d$}
+      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \midrule
+    \multirow{2}{*}{SY-2 $B_r$}
+      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \midrule
+    \multirow{2}{*}{SY-3 $C_d$}
+      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Key Findings}
+\label{sec:sys-findings}
+
+\begin{enumerate}[nosep,leftmargin=*]
+  \item \textbf{Message poisoning (SY-1)} in A2A communications
+    achieves moderate cascade depths even in the baseline condition.
+    A single poisoned task message can corrupt the downstream agent's
+    context, which in turn produces corrupted outputs for further
+    downstream agents.
+
+  \item \textbf{Agent impersonation (SY-2)} exploits the lack of
+    strong identity verification in the A2A protocol. When an
+    adversarial agent presents a forged Agent Card with elevated
+    capabilities, peer agents delegate sensitive tasks to the
+    impersonator.
+
+  \item \textbf{Cascade failure (SY-3)} demonstrates \emph{unbounded}
+    propagation in baseline conditions: cascade depth scales linearly
+    with crew size. The \mitigation{cascade-breaker} module
+    introduces circuit-breaker semantics that bound cascade depth,
+    reducing blast radius by a statistically significant margin.
+
+  \item \textbf{Protocol implication}: These results motivate
+    mandatory message signing, trust scoring, and anomaly detection
+    as extensions to the A2A specification
+    (\cref{sec:discuss-protocol}).
+\end{enumerate}

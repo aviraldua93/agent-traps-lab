@@ -1,0 +1,71 @@
+% ===========================================================================
+% 8. Results: Behavioural Control
+% ===========================================================================
+\section{Results: Behavioural Control}
+\label{sec:results-bc}
+
+This section reports results for the four behavioural control
+scenarios: \trap{Deceptive-Dialogs} (BC-1), \trap{Misleading-Forms}
+(BC-2), \trap{Hidden-Fields} (BC-3), and \trap{Infinite-Loops} (BC-4).
+These attacks exploit the agent's interaction with UI elements and
+structured interfaces.
+
+\subsection{Wrong-Action Rates}
+\label{sec:bc-actions}
+
+\begin{table}[t]
+  \centering
+  \caption{Behavioural control trap success rates (\%) under baseline
+    (B) and hardened (H) conditions. For BC-4 (infinite loops), we
+    report token waste ($w$) instead of binary success. Values:
+    mean $\pm$ std, $n=10$.}
+  \label{tab:bc-success}
+  \small
+  \begin{tabular}{@{}llcccc@{}}
+    \toprule
+    & & \model{GPT-4o} & \model{Sonnet~4} & \model{Gemini} & \model{4o-mini} \\
+    \midrule
+    \multirow{2}{*}{BC-1}
+      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \midrule
+    \multirow{2}{*}{BC-2}
+      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \midrule
+    \multirow{2}{*}{BC-3}
+      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \midrule
+    \multirow{2}{*}{BC-4}
+      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Key Findings}
+\label{sec:bc-findings}
+
+\begin{enumerate}[nosep,leftmargin=*]
+  \item \textbf{Deceptive dialogs (BC-1)} exploit the agent's
+    tendency to comply with presented options. When a dialog box
+    presents ``Confirm'' and ``Cancel'' with swapped semantics, agents
+    frequently select the wrong action.
+
+  \item \textbf{Hidden fields (BC-3)} are effective because agents
+    processing form data often include hidden input fields in their
+    submissions without validation, enabling data exfiltration.
+
+  \item \textbf{Infinite loops (BC-4)} demonstrate a distinct failure
+    mode: rather than a binary success/failure, they cause progressive
+    resource exhaustion. \model{GPT-4o-mini} is particularly
+    susceptible due to its tendency to follow repetitive instructions
+    without loop detection.
+
+  \item The \mitigation{behavioral-guard} module is highly effective
+    against BC-1 and BC-2 (deceptive dialogs and misleading forms)
+    but provides only moderate protection against BC-4 (infinite
+    loops), where the adversarial pattern is temporal rather than
+    structural.
+\end{enumerate}

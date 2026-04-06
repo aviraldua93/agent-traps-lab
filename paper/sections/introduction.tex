@@ -1,0 +1,85 @@
+% ===========================================================================
+% 1. Introduction
+% ===========================================================================
+\section{Introduction}
+\label{sec:introduction}
+
+The deployment of autonomous AI agents---systems capable of browsing the
+web, executing code, sending messages, and making decisions on behalf of
+users---has accelerated dramatically in recent years~\cite{yao2023react,
+shinn2023reflexion, openai2024gpt4o}. Multi-agent orchestration
+protocols such as Google's Agent-to-Agent (A2A)~\cite{google2025a2a}
+further amplify both the capability and the attack surface of these
+systems by enabling agents to delegate tasks, share context, and
+coordinate actions across organizational boundaries.
+
+Google DeepMind's seminal ``AI Agent Traps'' paper~\cite{yuntao2025agenttraps}
+provides a rigorous taxonomy of six categories of environmental attacks
+that exploit the operational context of AI agents rather than the models
+themselves. The taxonomy spans \category{content injection} (hidden
+instructions in rendered content), \category{semantic manipulation}
+(social-engineering framing), \category{cognitive state corruption}
+(RAG and knowledge-base poisoning), \category{behavioural control}
+(deceptive UI elements), \category{systemic} attacks (multi-agent
+cascade failures), and \category{human-in-the-loop} manipulation
+(biased reporting to human reviewers). This contribution is
+foundational---yet it remains \emph{purely theoretical}. No open
+testbed exists to empirically validate how real agents react when
+deployed into these adversarial environments across different models,
+defense configurations, and protocol topologies.
+
+\paragraph{The gap.}
+Without empirical measurement, the security community lacks answers
+to critical questions: Which trap categories pose the greatest risk to
+which models? How effective are defense-in-depth mitigations, and which
+individual defenses contribute the most marginal value? Do compound
+traps (combining two categories) produce super-additive effects? Are
+multi-agent cascade failures bounded or unbounded? These questions
+demand a reproducible experimental framework, not further theoretical
+analysis.
+
+\paragraph{Our contribution.}
+We present \textsc{agent-traps-lab}, an open-source testbed that
+operationalizes all six DeepMind trap categories as 22 concrete
+adversarial scenarios and evaluates them against four production-grade
+LLMs across 9{,}120 controlled experiments. Our contributions are:
+
+\begin{enumerate}[nosep,leftmargin=*]
+  \item \textbf{Testbed.} A modular, extensible framework implementing
+    22 trap scenarios across all six categories, with a pluggable
+    agent interface, mitigation registry, and automated experiment
+    harness (\cref{sec:testbed}).
+
+  \item \textbf{Experiment matrix.} A full factorial design:
+    22~scenarios $\times$ 4~models $\times$ 3~conditions (baseline,
+    hardened, ablated) $\times$ 10~repetitions, plus 600 compound-trap
+    and 6{,}160 ablation experiments (\cref{sec:methodology}).
+
+  \item \textbf{Empirical results.} Per-category trap success rates,
+    detection rates, escape rates, and decision drift with 95\%
+    confidence intervals, non-parametric significance tests, and
+    effect sizes (\cref{sec:results-ci}--\cref{sec:results-hitl}).
+
+  \item \textbf{Defense analysis.} Ablation studies revealing the
+    marginal contribution of each of seven mitigation modules, with
+    Bonferroni-corrected comparisons (\cref{sec:mitigations}).
+
+  \item \textbf{Compound traps.} Evidence of super-additive failure
+    modes when two trap categories are combined
+    (\cref{sec:compound}).
+
+  \item \textbf{Artifacts.} The full testbed, experiment data, and
+    paper assets are publicly released for reproducibility
+    (\cref{app:artifacts}).
+\end{enumerate}
+
+The remainder of this paper is organized as follows.
+\Cref{sec:background} surveys the DeepMind taxonomy, the A2A protocol,
+and multi-agent orchestration. \Cref{sec:testbed} describes our testbed
+architecture. \Cref{sec:methodology} details the experiment design.
+\Cref{sec:results-ci} through \cref{sec:results-hitl} present
+per-category results. \Cref{sec:compound} analyzes compound traps.
+\Cref{sec:mitigations} reports mitigation and ablation findings.
+\Cref{sec:discussion} discusses implications and limitations.
+\Cref{sec:related} positions our work in the literature, and
+\cref{sec:conclusion} concludes.

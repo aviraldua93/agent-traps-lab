@@ -1,0 +1,122 @@
+% ===========================================================================
+% Experiment Matrix Flow Diagram
+% ===========================================================================
+% Included by: \input{figures/matrix-flow}
+% Shows: the 22 × 4 × 3 × 10 experimental design
+%
+\begin{tikzpicture}[
+  box/.style={
+    rectangle,
+    draw=black!70,
+    fill=#1,
+    rounded corners=2pt,
+    minimum height=0.7cm,
+    font=\small\sffamily,
+    align=center,
+    thick,
+    inner sep=4pt,
+  },
+  box/.default=blue!8,
+  bigbox/.style={
+    rectangle,
+    draw=black!50,
+    fill=#1,
+    rounded corners=4pt,
+    minimum height=1.0cm,
+    font=\sffamily,
+    align=center,
+    thick,
+    inner sep=6pt,
+  },
+  bigbox/.default=white,
+  arrow/.style={-Stealth, thick, black!70},
+  multiply/.style={
+    circle,
+    draw=black!60,
+    fill=gray!10,
+    font=\small\bfseries,
+    inner sep=2pt,
+    minimum size=0.5cm,
+  },
+  total/.style={
+    rectangle,
+    draw=black!80,
+    fill=red!10,
+    rounded corners=3pt,
+    minimum height=0.8cm,
+    font=\small\sffamily\bfseries,
+    align=center,
+    thick,
+    inner sep=5pt,
+  },
+  sublabel/.style={
+    font=\scriptsize\sffamily,
+    text=black!60,
+  },
+]
+
+% ── Column 1: Scenarios ──
+\node[box=blue!10] (scenarios) at (0, 0) {22 Scenarios};
+\node[sublabel, below=1pt of scenarios] {6 categories};
+
+% ── Multiply ──
+\node[multiply] (x1) at (1.8, 0) {$\times$};
+
+% ── Column 2: Models ──
+\node[box=green!10] (models) at (3.4, 0) {4 Models};
+\node[sublabel, below=1pt of models] {3 providers};
+
+% ── Multiply ──
+\node[multiply] (x2) at (5.0, 0) {$\times$};
+
+% ── Column 3: Conditions ──
+\node[box=orange!10] (conditions) at (6.8, 0) {3 Conditions};
+\node[sublabel, below=1pt of conditions] {B / H / A};
+
+% ── Multiply ──
+\node[multiply] (x3) at (8.5, 0) {$\times$};
+
+% ── Column 4: Repetitions ──
+\node[box=purple!10] (reps) at (10.2, 0) {10 Reps};
+\node[sublabel, below=1pt of reps] {statistical power};
+
+% ── Arrows ──
+\draw[arrow] (scenarios) -- (x1);
+\draw[arrow] (x1) -- (models);
+\draw[arrow] (models) -- (x2);
+\draw[arrow] (x2) -- (conditions);
+\draw[arrow] (conditions) -- (x3);
+\draw[arrow] (x3) -- (reps);
+
+% ── Sub-matrices (below) ──
+\node[bigbox=blue!5] (main) at (1.7, -2.2) {
+  \textbf{Main Matrix}\\
+  {\small $22 \times 4 \times 2 \times 10$}\\
+  {\small = 1,760 cells}
+};
+
+\node[bigbox=orange!5] (ablation) at (5.2, -2.2) {
+  \textbf{Ablation Matrix}\\
+  {\small $22 \times 4 \times 7 \times 10$}\\
+  {\small = 6,160 cells}
+};
+
+\node[bigbox=green!5] (compound) at (9.0, -2.2) {
+  \textbf{Compound Matrix}\\
+  {\small $15 \times 4 \times 2 \times 10$}\\
+  {\small = 1,200 cells}
+};
+
+% ── Convergence arrow ──
+\node[total] (total) at (5.2, -4.2) {Total: 9,120 experiment cells};
+
+\draw[arrow] (main.south) -- (total.north west);
+\draw[arrow] (ablation.south) -- (total.north);
+\draw[arrow] (compound.south) -- (total.north east);
+
+% ── Top connection to sub-matrices ──
+\draw[arrow, dashed, black!40] (reps.south) -- ++(0, -0.5) -| (main.north);
+\draw[arrow, dashed, black!40] (reps.south) -- ++(0, -0.5) -| (ablation.north);
+\draw[arrow, dashed, black!40] (reps.south) -- ++(0, -0.5) -| (compound.north);
+
+\end{tikzpicture}

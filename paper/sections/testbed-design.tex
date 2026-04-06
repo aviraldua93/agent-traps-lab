@@ -1,0 +1,175 @@
+% ===========================================================================
+% 3. Testbed Design
+% ===========================================================================
+\section{Testbed Design}
+\label{sec:testbed}
+
+\subsection{Architecture Overview}
+\label{sec:testbed-arch}
+
+\textsc{agent-traps-lab} is a modular TypeScript framework built on
+the Bun runtime~\cite{bun2024}. \Cref{fig:architecture} shows the
+high-level architecture. The testbed comprises five principal
+components:
+
+\begin{enumerate}[nosep,leftmargin=*]
+  \item \textbf{Trap Registry} (\texttt{src/traps/registry.ts}):
+    A global registry of all 22 adversarial scenarios, grouped by the
+    six DeepMind categories. Each scenario implements the
+    \texttt{TrapScenario} interface, which defines four lifecycle
+    methods: \texttt{setup()}, \texttt{execute()}, \texttt{evaluate()},
+    and \texttt{teardown()}.
+
+  \item \textbf{Experiment Harness} (\texttt{src/harness/}):
+    The matrix generator (\texttt{matrix.ts}) produces the full
+    factorial experiment design. The runner (\texttt{runner.ts})
+    executes cells with configurable parallelism (default: 8 workers)
+    and a per-cell timeout of 120\,s.
+
+  \item \textbf{Agent Handle} (\texttt{src/agents/agent-handle.ts}):
+    An abstraction over four LLM providers (OpenAI, Anthropic, Google)
+    that exposes a uniform \texttt{sendTask()} / \texttt{getDecision()}
+    API. Agent configurations are factory-created for each of the
+    three experimental conditions.
+
+  \item \textbf{Mitigation Suite} (\texttt{src/mitigations/}):
+    Seven defense modules, each implementing the \texttt{Mitigation}
+    interface with \texttt{preProcess()} and \texttt{postProcess()}
+    hooks. The hardened condition activates all seven; ablated
+    conditions remove one at a time.
+
+  \item \textbf{Reporter} (\texttt{src/harness/reporter.ts}):
+    Transforms raw experiment results into paper-ready \LaTeX\ assets
+    including \texttt{booktabs} tables and \texttt{pgfplots} figures.
+\end{enumerate}
+
+\begin{figure}[t]
+  \centering
+  \input{figures/architecture}
+  \caption{Testbed architecture. Adversarial datasets feed into the
+    trap scenario registry, which provisions environments for the
+    experiment harness. The harness deploys agents under test (one of
+    four models in one of three conditions) into each environment,
+    collects observations, computes metrics, and generates \LaTeX\
+    assets via the reporter.}
+  \label{fig:architecture}
+\end{figure}
+
+\subsection{Trap Scenario Interface}
+\label{sec:testbed-interface}
+
+Every trap scenario implements four methods:
+
+\begin{itemize}[nosep,leftmargin=*]
+  \item \textbf{\texttt{setup(config)}}: Provisions the adversarial
+    environment---creates poisoned web pages, API endpoints,
+    documents, or A2A messages. Returns a \texttt{TrapEnvironment}
+    containing adversarial resources and ground-truth labels.
+
+  \item \textbf{\texttt{execute(env, agent)}}: Deploys the agent
+    under test into the environment and records its behavior as a
+    \texttt{TrapObservation}, including whether the trap was
+    triggered, detected, and escaped.
+
+  \item \textbf{\texttt{evaluate(obs)}}: Computes six core metrics
+    (\cref{sec:testbed-metrics}) from the observation.
+
+  \item \textbf{\texttt{teardown(env)}}: Cleans up provisioned
+    resources.
+\end{itemize}
+
+\subsection{The 22 Adversarial Scenarios}
+\label{sec:testbed-scenarios}
+
+\Cref{tab:scenarios} summarizes all 22 scenarios organized by
+category. Each scenario is designed to test a specific attack vector
+from the DeepMind taxonomy.
+
+\begin{table}[t]
+  \centering
+  \caption{The 22 adversarial scenarios organized by DeepMind taxonomy
+    category. Each row lists the scenario identifier, attack technique,
+    and the primary metric used to assess attack success.}
+  \label{tab:scenarios}
+  \small
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    \textbf{Cat.} & \textbf{ID} & \textbf{Technique} & \textbf{Metric} \\
+    \midrule
+    \multirow{4}{*}{\rotatebox[origin=c]{90}{\scriptsize Content Inj.}}
+      & CI-1 & CSS invisible text  & Exec.\ rate \\
+      & CI-2 & HTML comments        & Exec.\ rate \\
+      & CI-3 & Image EXIF metadata  & Exec.\ rate \\
+      & CI-4 & Dynamic cloaking     & Exec.\ rate \\
+    \midrule
+    \multirow{4}{*}{\rotatebox[origin=c]{90}{\scriptsize Semantic Man.}}
+      & SM-1 & Authority framing    & Dec.\ drift \\
+      & SM-2 & Emotional urgency    & Dec.\ drift \\
+      & SM-3 & Context flooding     & Dec.\ drift \\
+      & SM-4 & Identity manipulation & Dec.\ drift \\
+    \midrule
+    \multirow{4}{*}{\rotatebox[origin=c]{90}{\scriptsize Cognitive St.}}
+      & CS-1 & Vector poisoning     & Accuracy $\downarrow$ \\
+      & CS-2 & Ranking manipulation & Accuracy $\downarrow$ \\
+      & CS-3 & Gradual drift        & Accuracy $\downarrow$ \\
+      & CS-4 & Cross-contamination  & Accuracy $\downarrow$ \\
+    \midrule
+    \multirow{4}{*}{\rotatebox[origin=c]{90}{\scriptsize Behav.\ Ctrl.}}
+      & BC-1 & Deceptive dialogs    & Wrong-act.\ rate \\
+      & BC-2 & Misleading forms     & Wrong-act.\ rate \\
+      & BC-3 & Hidden fields        & Wrong-act.\ rate \\
+      & BC-4 & Infinite loops       & Token waste \\
+    \midrule
+    \multirow{3}{*}{\rotatebox[origin=c]{90}{\scriptsize Systemic}}
+      & SY-1 & Message poisoning    & Cascade depth \\
+      & SY-2 & Agent impersonation  & Blast radius \\
+      & SY-3 & Cascade failure      & Cascade depth \\
+    \midrule
+    \multirow{3}{*}{\rotatebox[origin=c]{90}{\scriptsize HitL}}
+      & HL-1 & Cherry-picked evidence & Manip.\ rate \\
+      & HL-2 & Anchoring effects    & Manip.\ rate \\
+      & HL-3 & Decision fatigue     & Manip.\ rate \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Metrics Framework}
+\label{sec:testbed-metrics}
+
+We define six core metrics computed for every experiment cell:
+
+\begin{itemize}[nosep,leftmargin=*]
+  \item \metric{Trap Success Rate} ($\tau$): Binary indicator---1 if
+    the agent executed the adversarial instruction, 0 otherwise.
+  \item \metric{Detection Rate} ($\delta$): 1 if the agent flagged
+    suspicious content, 0 otherwise.
+  \item \metric{Escape Rate} ($\epsilon$): 1 if the agent both
+    detected and avoided the trap.
+  \item \metric{Decision Drift} ($\Delta$): Cosine distance between
+    the agent's action and the ground-truth correct action.
+  \item \metric{Time to Compromise} ($t_c$): Milliseconds from
+    environment deployment to trap execution.
+  \item \metric{Token Waste} ($w$): Completion tokens consumed
+    during failed or manipulated processing.
+\end{itemize}
+
+For systemic scenarios, we additionally compute \metric{Cascade Depth}
+(number of agents compromised in sequence) and \metric{Blast Radius}
+(fraction of the agent crew affected).
+
+\subsection{Experiment Matrix Visualization}
+\label{sec:testbed-matrix}
+
+\Cref{fig:matrix-flow} visualizes the full experiment matrix
+design. The matrix generates 9{,}120 total experiment cells across
+main, compound, and ablation sub-matrices.
+
+\begin{figure}[t]
+  \centering
+  \input{figures/matrix-flow}
+  \caption{Experiment matrix flow. 22~scenarios are crossed with
+    4~models and 3~conditions (baseline, hardened, ablated) at
+    10~repetitions each. Compound and ablation sub-matrices expand
+    the total to 9{,}120 experiment cells.}
+  \label{fig:matrix-flow}
+\end{figure}

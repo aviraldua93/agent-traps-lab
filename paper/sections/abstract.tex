@@ -1,0 +1,33 @@
+% ===========================================================================
+% Abstract
+% ===========================================================================
+\begin{abstract}
+Google DeepMind's ``AI Agent Traps'' taxonomy identifies six categories
+of environmental attacks against autonomous AI agents, yet the original
+work remains purely theoretical---no open testbed exists to empirically
+measure how real agents behave when deployed into adversarial
+environments. We bridge this gap with \textsc{agent-traps-lab}, an
+open-source framework that operationalizes all six trap categories as
+22 reproducible adversarial scenarios and executes them against four
+production-grade large language models (GPT-4o, Claude Sonnet~4,
+Gemini~2.5~Pro, GPT-4o-mini) over Google's Agent-to-Agent (A2A)
+protocol. Our experiment matrix comprises 9{,}120 individual runs
+spanning three conditions---\emph{baseline} (no defenses),
+\emph{hardened} (seven mitigation modules active), and \emph{ablated}
+(single-mitigation removal)---each repeated 10 times for statistical
+power. We report trap success rates, detection rates, escape rates,
+decision drift, and cascade metrics with 95\% confidence intervals,
+Wilcoxon signed-rank tests, Cohen's $d$ effect sizes, and Bonferroni
+correction for multiple comparisons. Key findings include: (1)~content
+injection traps via hidden CSS and HTML comments achieve the highest
+baseline success rates; (2)~semantic manipulation through authority
+framing is the most difficult trap category for agents to detect;
+(3)~systemic multi-agent cascades produce super-additive failure modes;
+(4)~the hardened mitigation suite reduces overall trap success by a
+statistically significant margin with large effect sizes; and
+(5)~ablation analysis reveals that input sanitization and cascade
+breaking contribute the greatest marginal defense value. We release the
+complete testbed, all experimental data, and paper-ready statistical
+assets to enable reproducible adversarial evaluation of multi-agent
+systems.
+\end{abstract}

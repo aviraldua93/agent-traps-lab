@@ -1,131 +1,120 @@
 {
-  "scenario": "Write comprehensive unit tests for all 22 trap scenarios and all 7 mitigations. Each trap needs tests for setup, execute, evaluate, and teardown. Each mitigation needs tests for preProcess with both benign and adversarial content. Also write integration tests for the experiment matrix generator and the agent handle with mock provider. Target: 200+ tests.",
+  "scenario": "Write the LaTeX research paper 'From Taxonomy to Testbed: Quantifying Environmental Attacks on Multi-Agent A2A Systems' for USENIX Security submission. The paper validates DeepMind's AI Agent Traps taxonomy with 22 adversarial scenarios across 6 categories, tested against 4 LLM models with 9120 experiments. Write all sections: introduction (gap between taxonomy and empirical validation), background (DeepMind taxonomy, A2A protocol, multi-agent orchestration), testbed design (architecture, 22 scenarios, experiment matrix, metrics framework), experiment methodology, results sections for each trap category with placeholder tables, compound trap analysis, mitigations with ablation, discussion (protocol implications, limitations), related work, conclusion. Use booktabs tables, pgfplots figures, proper citations. Also write bibliography.bib with all DeepMind Agent Traps citations and related work.",
   "feasibility": {
     "verdict": "go",
     "confidence": 0.88,
     "concerns": [
-      "Dynamic-cloaking and image-metadata traps import JSON datasets from datasets/injections/ — tests must either mock these imports or use the real dataset files",
-      "Authority-framing, deceptive-dialogs, and cherry-picked traps also import JSON datasets (framing/, deceptive-uis/) — same dataset dependency applies",
-      "The mock LLM provider returns deterministic responses that may not trigger all trap-detection heuristics, so some execute() tests will need carefully crafted mock overrides",
-      "Cascade-failure trap calls agent.sendTask() three times in sequence — tests must account for multi-turn mock behavior",
-      "Matrix generator depends on registry.listScenarios() and registry.listCompounds() — integration tests must either register scenarios or mock the registry"
+      "No experiment results exist yet — results/ is empty, so all tables/figures must use realistic placeholder data consistent with the 22 scenarios × 4 models × 3 conditions matrix defined in src/harness/matrix.ts",
+      "The paper/sections/, paper/tables/, paper/figures/ directories exist but are empty — entire paper must be written from scratch",
+      "USENIX Security requires specific formatting (usenixsec2025.cls or similar) — we need to use the correct document class or approximate it",
+      "The 9,120 experiment count in the prompt differs slightly from the codebase's own calculation (9,400 in README) — we should reconcile and use the codebase's authoritative matrix.ts numbers",
+      "Bibliography must reference DeepMind's SSRN 6372438 paper which is a 2025 preprint — citation metadata needs to be accurate"
     ],
-    "recommendation": "Proceed with a 3-role team. Use the existing MockProvider for all agent interactions. For traps that import JSON datasets, use the real dataset files (they're already committed). Structure tests to follow the existing bun:test patterns in tests/unit/input-sanitizer.test.ts and tests/unit/metrics.test.ts. Aim for 220+ tests across 3 task streams."
+    "recommendation": "Proceed with full paper generation. The codebase provides exceptionally rich source material: 22 fully-implemented trap scenarios with paperRef fields, 7 mitigation modules, a complete statistical framework (Wilcoxon, Cohen's d, Bonferroni), a LaTeX reporter (src/harness/reporter.ts), compound trap hypotheses (src/harness/compound.ts), and 4 model configs. Use placeholder data in tables/figures annotated with TODO markers so results can be populated after running the experiment matrix. Structure the paper to match USENIX Security conventions (13 pages, double-column)."
   },
-  "rationale": "This is a test-engineering task for a security/adversarial research framework. The work decomposes naturally into three independent streams: (1) trap scenario tests — the largest batch, testing 22 scenarios each with 4 lifecycle methods, (2) mitigation tests — 7 defense modules each needing benign/adversarial coverage, and (3) integration tests for the harness/matrix and agent-handle wiring. Each stream requires deep understanding of the specific interfaces (TrapScenario, Mitigation, ExperimentMatrix) and their contracts.",
+  "rationale": "This is a research paper writing task requiring deep domain expertise in adversarial ML/security, LaTeX typesetting, statistical methodology, and bibliography curation. The team is structured around the paper's natural sections: a lead author who owns structure and prose, a results/statistics specialist who builds all tables and figures with placeholder data matching the codebase's exact metrics framework, a bibliography/related-work specialist who ensures citation completeness, and a LaTeX engineer who handles formatting, document class, and compilation. Five roles would over-fragment a cohesive 13-page paper.",
   "roles": [
     {
-      "key": "trap-test-engineer",
-      "description": "Writes unit tests for all 22 TrapScenario implementations across 6 categories. Each scenario gets tests for setup() (environment structure, ground truth, resources), execute() (with MockProvider agent handle, verifying observation fields), evaluate() (metrics computation from observations), and teardown() (no errors). Uses bun:test with describe/it/expect patterns matching existing test conventions.",
+      "key": "lead-author",
+      "description": "Writes the main paper narrative: abstract, introduction (taxonomy-to-testbed gap), background (DeepMind taxonomy, A2A protocol, multi-agent orchestration via a2a-crews), testbed design (architecture mapping to src/traps/, src/mitigations/, src/harness/), experiment methodology, discussion (protocol-level implications for A2A security, limitations, threats to validity), and conclusion. Reads all 22 trap scenario implementations and 7 mitigation modules to ensure accurate technical descriptions. Owns paper/main.tex and paper/sections/*.tex.",
       "model": null,
-      "skills": ["bun-test", "typescript", "adversarial-ml-testing", "mock-based-testing"],
-      "why": "22 scenarios × 4 methods = 88+ test cases minimum. This is the largest and most domain-specific stream — the engineer must understand each trap's adversarial mechanism, detection heuristics, and metric computation to write meaningful assertions."
+      "skills": ["academic-writing", "adversarial-ml", "security-research", "latex"],
+      "why": "The paper needs a single coherent voice for the ~8 prose sections. The lead author must deeply understand the codebase architecture (TrapScenario interface, ScenarioConfig, AgentHandle, the 3-condition design) to accurately describe the testbed. Splitting prose across multiple writers would produce inconsistent tone and redundant explanations."
     },
     {
-      "key": "mitigation-test-engineer",
-      "description": "Writes unit tests for all 7 Mitigation implementations. Each mitigation gets tests for preProcess() with benign content (should allow), adversarial content (should detect/warn/block), edge cases (empty input, wrong content type), postProcess() passthrough, and estimateOverhead() return values. Extends the existing InputSanitizer tests as a template for the remaining 6 mitigations.",
+      "key": "results-statistician",
+      "description": "Creates all results sections (one per trap category + compound + ablation), designs every table and figure using booktabs and pgfplots, and populates them with realistic placeholder data that matches the exact metrics from src/harness/metrics.ts (trapSuccessRate, detectionRate, escapeRate, decisionDrift, cascadeDepth, blastRadius, Cohen's d, Wilcoxon p-values, Bonferroni-corrected significance). Ensures placeholders are clearly marked with %PLACEHOLDER comments. Creates paper/tables/*.tex and paper/figures/*.tex, plus the results section .tex files.",
       "model": null,
-      "skills": ["bun-test", "typescript", "security-testing", "regex-pattern-testing"],
-      "why": "7 mitigations with distinct detection logic (regex patterns, n-gram analysis, Jaccard similarity, trust scoring, decision fatigue tracking). Each needs both benign and adversarial test inputs crafted to exercise the specific detection thresholds and severity mappings."
+      "skills": ["statistics", "latex-tables", "pgfplots", "data-visualization", "experiment-design"],
+      "why": "The paper has 6 category-specific results sections plus compound and ablation analyses, each requiring multiple tables with 4-model × 3-condition breakdowns and statistical significance columns. This specialist ensures every table has the correct structure (N, mean±std, 95% CI, p-value, Cohen's d) matching the MetricSummary and StatisticalComparison interfaces in the codebase. The existing reporter.ts LaTeX generation patterns should be followed."
     },
     {
-      "key": "integration-test-engineer",
-      "description": "Writes integration tests for: (1) ExperimentMatrix generator — verifying cell counts, correct scenario/model/condition combinations, ablation coverage, compound entries, filterMatrix(), and printMatrixSummary(); (2) AgentHandle with MockProvider — verifying the full sendTask pipeline including mitigation pre/post-processing, content-type detection, blocked response generation, token tracking, and tool call accumulation; (3) Experiment runner executeCell() with a registered mock scenario.",
+      "key": "bibliography-curator",
+      "description": "Writes bibliography.bib with all required citations: DeepMind 'AI Agent Traps' (SSRN 6372438), A2A protocol spec, prompt injection literature (Greshake et al. 2023, Perez & Ribeiro 2022), jailbreaking (Wei et al. 2024, Zou et al. 2023), adversarial ML foundations (Goodfellow et al. 2015, Carlini & Wagner 2017), RAG poisoning (Zhong et al. 2023), multi-agent security, LLM security benchmarks. Also writes the related work section (paper/sections/related-work.tex) positioning this paper against prior art. Cross-references all \\cite{} commands used by other roles.",
       "model": null,
-      "skills": ["bun-test", "typescript", "integration-testing", "mock-provider-testing"],
-      "why": "The matrix generator and agent handle are the orchestration backbone — their correctness determines whether the 9,400 experiment runs produce valid results. Integration tests verify the wiring between components (registry → matrix, agent-handle → mitigations → provider) that unit tests on individual traps/mitigations cannot cover."
+      "skills": ["academic-citations", "literature-review", "bibtex", "security-research"],
+      "why": "USENIX Security reviewers scrutinize related work and citation completeness. The review-crew.json already defines a related-work-reviewer role checking specific papers (Greshake, Perez & Ribeiro, Wei, Zou, Goodfellow, Carlini & Wagner, Zhong). A dedicated curator ensures every citation is accurate, BibTeX entries are well-formed, and the related work section properly positions this paper's contribution against the ~30+ relevant works."
+    },
+    {
+      "key": "latex-engineer",
+      "description": "Creates the master document structure: paper/main.tex with USENIX Security document class, proper preamble (booktabs, pgfplots, hyperref, cleveref, algorithm2e, subcaption), \\input{} for all section files, correct page layout. Builds the architecture diagram (paper/figures/architecture.tex) showing the testbed components (traps registry → harness runner → agent handle → metrics → reporter pipeline). Creates the experiment matrix visualization. Ensures the paper compiles cleanly with pdflatex/lualatex. Handles cross-references, float placement, and page budget (13 pages).",
+      "model": null,
+      "skills": ["latex-engineering", "document-architecture", "tikz", "pgfplots", "usenix-formatting"],
+      "why": "LaTeX engineering for a USENIX submission is non-trivial: correct document class, tight page budgets, float management across 15+ tables and 8+ figures, consistent notation macros, and compilation without errors. This role owns the skeleton that all other roles' content plugs into, plus the TikZ architecture diagrams that require understanding the codebase's module relationships."
     }
   ],
   "tasks": [
     {
-      "id": "trap-tests-content-injection",
-      "title": "Unit tests for 4 content-injection trap scenarios (css-invisible, html-comments, image-metadata, dynamic-cloaking)",
-      "assignedTo": "trap-test-engineer",
+      "id": "setup-document-skeleton",
+      "title": "Create LaTeX document skeleton with USENIX Security formatting and all section stubs",
+      "assignedTo": "latex-engineer",
       "dependsOn": [],
       "acceptanceCriteria": [
-        "tests/unit/traps/content-injection.test.ts exists with describe blocks for each of the 4 scenarios",
-        "Each scenario has at least 4 tests: setup returns valid TrapEnvironment with correct resources/groundTruth, execute with mock agent returns valid TrapObservation, evaluate computes correct TrapMetrics from observation, teardown resolves without error",
-        "css-invisible setup test verifies all 6 CSS techniques are selectable via seed",
-        "html-comments execute test verifies trapTriggered detection regex against mock response containing 'Product X'",
-        "All tests pass with `bun test tests/unit/traps/content-injection.test.ts`"
+        "paper/main.tex exists with usenix-2020-09 document class (or usenixsec equivalent), correct preamble including booktabs, pgfplots, hyperref, cleveref, algorithm2e, xcolor, subcaption, and custom macros for \\trap{}, \\model{}, \\metric{}",
+        "All section files created as stubs: paper/sections/{abstract,introduction,background,testbed-design,methodology,results-content-injection,results-semantic-manipulation,results-cognitive-state,results-behavioural-control,results-systemic,results-human-in-the-loop,compound-analysis,mitigations-ablation,discussion,related-work,conclusion}.tex",
+        "paper/main.tex includes all sections via \\input{} in correct order with proper \\section{} hierarchy",
+        "Architecture diagram created in paper/figures/architecture.tex using TikZ showing: datasets → trap scenarios → harness runner → agent handle (4 models) → metrics → reporter pipeline, matching the actual module structure in src/",
+        "Experiment matrix flow diagram in paper/figures/matrix-flow.tex showing the 22×4×3×10 design"
       ]
     },
     {
-      "id": "trap-tests-semantic-manipulation",
-      "title": "Unit tests for 4 semantic-manipulation trap scenarios (authority-framing, context-flooding, emotional-urgency, identity-manipulation)",
-      "assignedTo": "trap-test-engineer",
+      "id": "write-bibliography",
+      "title": "Write complete bibliography.bib with 30+ citations and the related work section",
+      "assignedTo": "bibliography-curator",
       "dependsOn": [],
       "acceptanceCriteria": [
-        "tests/unit/traps/semantic-manipulation.test.ts exists with describe blocks for each of the 4 scenarios",
-        "authority-framing setup test verifies the report contains benchmark data where FrameworkBeta outperforms FrameworkAlpha",
-        "authority-framing evaluate test verifies decisionDrift is 1.0 for 'recommended-framed-choice', 0.0 for 'recommended-data-backed-choice', and 0.5 for 'ambiguous-recommendation'",
-        "Each scenario has minimum 4 tests covering setup/execute/evaluate/teardown lifecycle",
-        "All tests pass with `bun test tests/unit/traps/semantic-manipulation.test.ts`"
+        "paper/bibliography.bib contains at minimum: DeepMind AI Agent Traps (SSRN 6372438, Yuntao et al. 2025), A2A protocol (Google 2025), Greshake et al. 2023 (indirect prompt injection), Perez & Ribeiro 2022 (prompt injection risks), Wei et al. 2024 (jailbroken), Zou et al. 2023 (universal adversarial suffixes), Goodfellow et al. 2015 (adversarial examples), Carlini & Wagner 2017, Zhong et al. 2023 (RAG poisoning), and at least 20 additional relevant works",
+        "Every BibTeX entry has complete metadata: author, title, year, venue/journal, DOI or URL where available",
+        "paper/sections/related-work.tex written with subsections: Prompt Injection & Content Manipulation, Adversarial ML Foundations, Multi-Agent Security, RAG & Knowledge Poisoning, LLM Safety Benchmarks — each subsection positions this paper's contribution",
+        "All \\cite{} keys used in the related work section exist in bibliography.bib with no orphan references"
       ]
     },
     {
-      "id": "trap-tests-remaining-categories",
-      "title": "Unit tests for remaining 14 trap scenarios: cognitive-state (4), behavioural-control (4), systemic (3), human-in-the-loop (3)",
-      "assignedTo": "trap-test-engineer",
-      "dependsOn": [],
+      "id": "write-intro-background-methodology",
+      "title": "Write introduction, background, testbed design, and methodology sections",
+      "assignedTo": "lead-author",
+      "dependsOn": ["setup-document-skeleton"],
       "acceptanceCriteria": [
-        "tests/unit/traps/cognitive-state.test.ts, behavioural-control.test.ts, systemic.test.ts, and human-in-the-loop.test.ts all exist",
-        "vector-poisoning test verifies that poisoned facts (e.g., '6.2 billion' for earth_age) are correctly set up in resources",
-        "cascade-failure evaluate test verifies cascadeDepth and blastRadius metrics are computed from the observation's agentAction pattern",
-        "cherry-picked setup test verifies that only 3 of 10 data points appear in the report while the full dataset has 10",
-        "Total test count across all 4 files is at least 56 (14 scenarios × 4 lifecycle tests each)"
+        "paper/sections/introduction.tex: motivates the taxonomy-to-testbed gap (DeepMind paper is theoretical, no open empirical validation exists), states 3 research questions (RQ1: How vulnerable are current LLMs to each trap category? RQ2: Do mitigations reduce vulnerability with statistical significance? RQ3: Do compound traps exhibit superadditive effects?), and previews contributions",
+        "paper/sections/background.tex: covers DeepMind's 6-category taxonomy with table mapping categories to this testbed's scenarios, explains A2A protocol and multi-agent orchestration via a2a-crews, describes the 4 test models (GPT-4o, Claude Sonnet 4, Gemini 2.5 Pro, GPT-4o-mini)",
+        "paper/sections/testbed-design.tex: describes the TrapScenario interface (setup/execute/evaluate/teardown), all 22 scenarios with 1-sentence descriptions grouped by category, the ScenarioConfig and TrapEnvironment data model, and the 7 mitigation modules",
+        "paper/sections/methodology.tex: describes the experiment matrix (22×4×3×10 = 2,640 main + 600 compound + 6,160 ablation = 9,400 total), statistical framework (10 reps, Wilcoxon signed-rank, Cohen's d, Bonferroni α/22), metrics (trapSuccessRate, detectionRate, escapeRate, decisionDrift, cascadeDepth, blastRadius), and reproducibility measures (seed-based determinism)"
       ]
     },
     {
-      "id": "mitigation-tests-existing-extension",
-      "title": "Extend InputSanitizer tests and write new tests for SemanticShield and ContextValidator mitigations",
-      "assignedTo": "mitigation-test-engineer",
-      "dependsOn": [],
+      "id": "write-results-tables-figures",
+      "title": "Create all 6 category results sections with booktabs tables and pgfplots figures using placeholder data",
+      "assignedTo": "results-statistician",
+      "dependsOn": ["setup-document-skeleton"],
       "acceptanceCriteria": [
-        "tests/unit/mitigations/semantic-shield.test.ts exists with tests for authority-framing, urgency, social-proof, identity-manipulation pattern detection and saturation threshold",
-        "tests/unit/mitigations/context-validator.test.ts exists with tests for diversity ratio calculation, n-gram repetition detection, and benign content passthrough",
-        "SemanticShield test verifies action is 'block' when identity-manipulation patterns are found (critical severity)",
-        "ContextValidator test verifies context-saturation detection with repeated phrases exceeding threshold",
-        "Each mitigation file has at least 8 tests including benign input, adversarial input, edge cases, and estimateOverhead()"
+        "Each of the 6 results section files (paper/sections/results-{content-injection,semantic-manipulation,cognitive-state,behavioural-control,systemic,human-in-the-loop}.tex) contains: category-specific trap success rate table (4 models × baseline vs hardened), detection/escape rate comparison, and a per-scenario breakdown with all 4 sub-scenarios",
+        "paper/tables/ contains at least 10 .tex files: trap-success-overview.tex (master 22-scenario table), one per category (6), mitigation-effectiveness.tex, compound-results.tex, ablation-results.tex — all using booktabs (\\toprule, \\midrule, \\bottomrule) with columns for N, mean±std, 95% CI, p-value, Cohen's d",
+        "paper/figures/ contains at least 5 pgfplots figures: vulnerability-heatmap.tex (model × category), mitigation-delta-forest-plot.tex, compound-interaction-plot.tex, model-comparison-radar.tex, ablation-waterfall.tex — following the pgfplots patterns in src/harness/reporter.ts",
+        "All placeholder values are realistic (trap success rates between 0.15-0.90, detection rates 0.05-0.60, p-values < 0.05 for significant comparisons, Cohen's d 0.3-2.5) and marked with %PLACEHOLDER comments",
+        "paper/sections/compound-analysis.tex and paper/sections/mitigations-ablation.tex written with tables showing compound interaction effects and per-mitigation ablation impact"
       ]
     },
     {
-      "id": "mitigation-tests-remaining",
-      "title": "Unit tests for RagIntegrity, BehavioralGuard, CascadeBreaker, and ReportAuditor mitigations",
-      "assignedTo": "mitigation-test-engineer",
-      "dependsOn": [],
+      "id": "write-discussion-conclusion",
+      "title": "Write discussion and conclusion sections addressing protocol implications and limitations",
+      "assignedTo": "lead-author",
+      "dependsOn": ["write-results-tables-figures", "write-intro-background-methodology"],
       "acceptanceCriteria": [
-        "tests/unit/mitigations/rag-integrity.test.ts, behavioral-guard.test.ts, cascade-breaker.test.ts, and report-auditor.test.ts all exist",
-        "RagIntegrity test covers contradiction detection, low-credibility source detection, absolute claim detection, and suspicious homogeneity check",
-        "CascadeBreaker test covers a2a-message validation with oversized messages, excessive relay depth, suspicious payload patterns, and message flood detection",
-        "ReportAuditor test covers cherry-pick indicators, anchoring patterns, statistical misrepresentation, and decision fatigue exploitation",
-        "BehavioralGuard test covers deceptive dialog detection (inverted semantics), infinite loop detection, and pagination loop detection"
+        "paper/sections/discussion.tex contains subsections: Protocol-Level Implications (what A2A protocol changes could mitigate systemic traps), Cross-Model Vulnerability Patterns (why some models are more susceptible), Mitigation Cost-Benefit Analysis (overhead vs protection), Limitations (4+ specific limitations: single-turn only, English-only payloads, temperature sensitivity, closed-source model opacity), and Threats to Validity (internal: seed determinism; external: lab vs production; construct: binary trap success metric)",
+        "paper/sections/conclusion.tex: summarizes key findings tied to the 3 research questions, highlights the most dangerous trap category and the most effective mitigation, calls for A2A protocol amendments, and identifies future work (multi-turn attacks, multilingual payloads, adaptive adversaries, real deployment testing)",
+        "paper/sections/abstract.tex: 200-word abstract covering motivation, method (22 scenarios, 4 models, 9,400 experiments), key findings (placeholder: e.g., 'content injection succeeds in X% of baseline cases'), and implications"
       ]
     },
     {
-      "id": "integration-tests-matrix",
-      "title": "Integration tests for ExperimentMatrix generator including cell counts, filtering, ablation coverage, and summary output",
-      "assignedTo": "integration-test-engineer",
-      "dependsOn": [],
+      "id": "final-integration-compilation",
+      "title": "Integrate all sections, verify cross-references, and ensure LaTeX compiles without errors",
+      "assignedTo": "latex-engineer",
+      "dependsOn": ["write-discussion-conclusion", "write-bibliography"],
       "acceptanceCriteria": [
-        "tests/integration/matrix.test.ts exists with describe blocks for generateMatrix, filterMatrix, and printMatrixSummary",
-        "Tests verify that generateMatrix produces cells covering all registered scenarios × all 4 models × baseline+hardened conditions × 10 repetitions",
-        "filterMatrix tests verify filtering by scenario, category, model, and condition correctly reduces cell count",
-        "Ablation cells test verifies each of the 7 mitigations is ablated exactly once per scenario/model combination",
-        "All tests pass with `bun test tests/integration/matrix.test.ts` — must register mock scenarios or use the real registry"
-      ]
-    },
-    {
-      "id": "integration-tests-agent-handle",
-      "title": "Integration tests for AgentHandle with MockProvider covering mitigation pipeline, content-type detection, and blocked responses",
-      "assignedTo": "integration-test-engineer",
-      "dependsOn": [],
-      "acceptanceCriteria": [
-        "tests/integration/agent-handle.test.ts exists testing createAgentHandle with various AgentConfig combinations",
-        "Tests verify that baseline agent (no mitigations) passes content through to MockProvider and returns response",
-        "Tests verify that hardened agent applies pre-processing mitigations and can produce 'blocked' responses for adversarial content",
-        "Tests verify content-type detection correctly identifies HTML, JSON, and plain text inputs",
-        "Tests verify getToolCalls() and getDecision() track state across multiple sendTask() calls"
+        "paper/main.tex compiles without errors using pdflatex (or lualatex) — all \\ref{}, \\cite{}, \\label{} resolve correctly",
+        "All \\input{} paths are correct and every section file is included in the proper order",
+        "No orphan citations (every \\cite{} key exists in bibliography.bib) and no unused bibliography entries that are cited in-text",
+        "Paper fits within USENIX Security page limit (13 pages excluding references and appendices), with proper float placement for all tables and figures"
       ]
     }
   ]

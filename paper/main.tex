@@ -1,0 +1,177 @@
+% ===========================================================================
+% From Taxonomy to Testbed: Quantifying Environmental Attacks
+% on Multi-Agent A2A Systems
+%
+% Target venue: USENIX Security 2027
+% Page budget: 13 pages (excluding references and appendices)
+% ===========================================================================
+\documentclass[letterpaper,twocolumn,10pt]{article}
+\usepackage{usenix-2020-09}
+
+% ── Core packages ──────────────────────────────────────────────────────
+\usepackage{booktabs}           % Professional tables (\toprule, \midrule, \bottomrule)
+\usepackage{pgfplots}           % Publication-quality plots
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{statistics,colorbrewer,groupplots}
+\usepackage{tikz}               % Diagrams and figures
+\usetikzlibrary{
+  arrows.meta,
+  positioning,
+  shapes.geometric,
+  shapes.multipart,
+  fit,
+  backgrounds,
+  calc,
+  decorations.pathreplacing,
+  matrix,
+  chains
+}
+\usepackage{algorithm2e}        % Algorithm pseudocode
+\SetAlgoLined
+\SetKwComment{Comment}{$\triangleright$\ }{}
+\usepackage[font=small,labelfont=bf]{subcaption} % Sub-figures
+\usepackage{multirow}           % Multi-row table cells
+\usepackage{makecell}           % Better table cell formatting
+\usepackage{enumitem}           % Customizable lists
+\usepackage{balance}            % Balance last page columns
+\usepackage{amsmath,amssymb}    % Math notation
+\usepackage{textcomp}           % Additional text symbols
+\usepackage{pifont}             % \ding symbols for check/cross marks
+\usepackage{listings}           % Code listings
+\usepackage{cleveref}           % Smart cross-references (\cref)
+\crefname{section}{Section}{Sections}
+\crefname{figure}{Figure}{Figures}
+\crefname{table}{Table}{Tables}
+\crefname{algorithm}{Algorithm}{Algorithms}
+\crefname{listing}{Listing}{Listings}
+
+% ── Custom semantic macros ─────────────────────────────────────────────
+\newcommand{\trap}[1]{\textsc{#1}}           % Trap scenario names
+\newcommand{\model}[1]{\textsf{#1}}          % Model identifiers
+\newcommand{\metric}[1]{\textit{#1}}         % Metric names
+\newcommand{\mitigation}[1]{\texttt{#1}}     % Mitigation module names
+\newcommand{\category}[1]{\textbf{#1}}       % Trap category names
+\newcommand{\pval}[1]{$p = #1$}              % p-value formatting
+\newcommand{\cohend}[1]{$d = #1$}            % Cohen's d formatting
+\newcommand{\ci}[2]{[#1, #2]}               % Confidence interval
+\newcommand{\meanstd}[2]{$#1 \pm #2$}        % Mean ± std
+\newcommand{\sig}[0]{$^{*}$}                 % Significance marker
+\newcommand{\placeholder}[1]{\textcolor{red}{\textbf{[#1]}}} % TBD placeholder
+
+% ── Listing style for TypeScript/JSON ──────────────────────────────────
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue!70!black},
+  commentstyle=\color{green!60!black},
+  stringstyle=\color{red!70!black},
+  tabsize=2,
+  showstringspaces=false,
+}
+
+% ── Float placement tuning ─────────────────────────────────────────────
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.8}
+
+% ===========================================================================
+% Document metadata
+% ===========================================================================
+\date{}
+\title{\Large \bf From Taxonomy to Testbed: Quantifying Environmental Attacks\\
+on Multi-Agent A2A Systems}
+
+\author{
+{\rm Aviral Dua}\\
+Independent Researcher\\
+\texttt{aviral@example.com}
+}
+
+% ===========================================================================
+\begin{document}
+% ===========================================================================
+
+\maketitle
+
+% ── Abstract ───────────────────────────────────────────────────────────
+\input{sections/abstract}
+
+% ── 1. Introduction ────────────────────────────────────────────────────
+\input{sections/introduction}
+
+% ── 2. Background ──────────────────────────────────────────────────────
+\input{sections/background}
+
+% ── 3. Testbed Design ─────────────────────────────────────────────────
+\input{sections/testbed-design}
+
+% ── 4. Experiment Methodology ──────────────────────────────────────────
+\input{sections/methodology}
+
+% ── 5. Results: Content Injection ──────────────────────────────────────
+\input{sections/results-content-injection}
+
+% ── 6. Results: Semantic Manipulation ──────────────────────────────────
+\input{sections/results-semantic-manipulation}
+
+% ── 7. Results: Cognitive State ────────────────────────────────────────
+\input{sections/results-cognitive-state}
+
+% ── 8. Results: Behavioural Control ────────────────────────────────────
+\input{sections/results-behavioural-control}
+
+% ── 9. Results: Systemic ──────────────────────────────────────────────
+\input{sections/results-systemic}
+
+% ── 10. Results: Human-in-the-Loop ─────────────────────────────────────
+\input{sections/results-human-in-the-loop}
+
+% ── 11. Compound Trap Analysis ─────────────────────────────────────────
+\input{sections/compound-analysis}
+
+% ── 12. Mitigations and Ablation ───────────────────────────────────────
+\input{sections/mitigations-ablation}
+
+% ── 13. Discussion ─────────────────────────────────────────────────────
+\input{sections/discussion}
+
+% ── 14. Related Work ───────────────────────────────────────────────────
+\input{sections/related-work}
+
+% ── 15. Conclusion ─────────────────────────────────────────────────────
+\input{sections/conclusion}
+
+% ── Acknowledgments ────────────────────────────────────────────────────
+\section*{Acknowledgments}
+We thank the open-source communities behind the A2A protocol, Bun, and the LLM provider SDKs.
+This work was conducted independently without external funding.
+
+% ── References ─────────────────────────────────────────────────────────
+\bibliographystyle{plain}
+\bibliography{bibliography}
+
+% ── Appendices (do not count toward page limit) ───────────────────────
+\newpage
+\appendix
+\section{Full Scenario Catalog}
+\label{app:scenarios}
+A complete listing of all 22 trap scenarios with their adversarial payloads,
+success criteria, and paper references is available in the supplementary materials.
+
+\section{Extended Statistical Tables}
+\label{app:stats}
+Per-scenario, per-model raw metrics with full confidence intervals
+are provided in the supplementary JSON artifacts.
+
+\section{Artifact Availability}
+\label{app:artifacts}
+The complete testbed, including all 22 adversarial scenarios, 7 mitigation modules,
+experiment harness, and analysis scripts, is available at:
+\url{https://github.com/aviraldua93/agent-traps-lab}.
+All experiment data is archived at \url{https://doi.org/XX.XXXX/zenodo.XXXXXXX}.
+
+\end{document}

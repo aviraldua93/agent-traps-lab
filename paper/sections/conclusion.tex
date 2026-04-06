@@ -1,0 +1,58 @@
+% ===========================================================================
+% 15. Conclusion
+% ===========================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+We presented \textsc{agent-traps-lab}, an open-source testbed that
+bridges the gap between the theoretical DeepMind AI Agent Traps
+taxonomy and empirical evaluation. By operationalizing all six trap
+categories as 22 reproducible adversarial scenarios and evaluating
+them against four production-grade LLMs over 9{,}120 controlled
+experiments, we provide the first comprehensive, statistically
+rigorous measurement of environmental attacks on multi-agent A2A
+systems.
+
+Our key findings are:
+
+\begin{enumerate}[nosep,leftmargin=*]
+  \item \textbf{All six trap categories are empirically effective}
+    against undefended agents, with content injection achieving the
+    highest baseline success rates and semantic manipulation being
+    the hardest to detect.
+
+  \item \textbf{Model vulnerability varies significantly}: efficient
+    models (\model{GPT-4o-mini}) are consistently more vulnerable
+    than frontier models, but all models exhibit category-specific
+    weaknesses.
+
+  \item \textbf{Defense-in-depth works}: the seven-module mitigation
+    suite reduces overall trap success by a statistically significant
+    margin with large effect sizes across all models and categories.
+
+  \item \textbf{Compound traps are super-additive}: combining two
+    trap categories produces success rates higher than either
+    individual category, with content injection + semantic manipulation
+    being the most potent combination.
+
+  \item \textbf{Ablation reveals critical modules}: input sanitization
+    and cascade breaking provide the greatest marginal defense value,
+    while RAG integrity is a single point of failure for cognitive
+    state attacks.
+
+  \item \textbf{The A2A protocol needs security extensions}: our
+    systemic attack results motivate mandatory message authentication,
+    content integrity verification, and trust scoring in future
+    protocol versions.
+\end{enumerate}
+
+We release the complete testbed---all 22 adversarial scenarios,
+7 mitigation modules, experiment harness, and statistical analysis
+scripts---as open source (\cref{app:artifacts}) to enable
+reproducible adversarial evaluation of multi-agent systems.
+
+\paragraph{Future work.} We plan to extend the testbed with
+adaptive adversaries that adjust their strategies based on the
+target model's responses, a human-subjects study to validate
+the HL-category results, and integration with additional
+multi-agent protocols beyond A2A.

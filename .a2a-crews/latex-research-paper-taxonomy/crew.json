@@ -1,0 +1,180 @@
+{
+  "name": "latex-research-paper-taxonomy",
+  "scenario": "Write the LaTeX research paper 'From Taxonomy to Testbed: Quantifying Environmental Attacks on Multi-Agent A2A Systems' for USENIX Security submission. The paper validates DeepMind's AI Agent Traps taxonomy with 22 adversarial scenarios across 6 categories, tested against 4 LLM models with 9120 experiments. Write all sections: introduction (gap between taxonomy and empirical validation), background (DeepMind taxonomy, A2A protocol, multi-agent orchestration), testbed design (architecture, 22 scenarios, experiment matrix, metrics framework), experiment methodology, results sections for each trap category with placeholder tables, compound trap analysis, mitigations with ablation, discussion (protocol implications, limitations), related work, conclusion. Use booktabs tables, pgfplots figures, proper citations. Also write bibliography.bib with all DeepMind Agent Traps citations and related work.",
+  "process": "wave",
+  "agents": [
+    {
+      "key": "lead-author",
+      "name": "Lead Author",
+      "description": "Writes the main paper narrative: abstract, introduction (taxonomy-to-testbed gap), background (DeepMind taxonomy, A2A protocol, multi-agent orchestration via a2a-crews), testbed design (architecture mapping to src/traps/, src/mitigations/, src/harness/), experiment methodology, discussion (protocol-level implications for A2A security, limitations, threats to validity), and conclusion. Reads all 22 trap scenario implementations and 7 mitigation modules to ensure accurate technical descriptions. Owns paper/main.tex and paper/sections/*.tex.",
+      "skills": [
+        "academic-writing",
+        "adversarial-ml",
+        "security-research",
+        "latex"
+      ],
+      "allowedTools": [
+        "view",
+        "glob",
+        "grep",
+        "explore",
+        "edit",
+        "create",
+        "powershell"
+      ]
+    },
+    {
+      "key": "results-statistician",
+      "name": "Results Statistician",
+      "description": "Creates all results sections (one per trap category + compound + ablation), designs every table and figure using booktabs and pgfplots, and populates them with realistic placeholder data that matches the exact metrics from src/harness/metrics.ts (trapSuccessRate, detectionRate, escapeRate, decisionDrift, cascadeDepth, blastRadius, Cohen's d, Wilcoxon p-values, Bonferroni-corrected significance). Ensures placeholders are clearly marked with %PLACEHOLDER comments. Creates paper/tables/*.tex and paper/figures/*.tex, plus the results section .tex files.",
+      "skills": [
+        "statistics",
+        "latex-tables",
+        "pgfplots",
+        "data-visualization",
+        "experiment-design"
+      ],
+      "allowedTools": [
+        "view",
+        "glob",
+        "grep",
+        "explore",
+        "edit",
+        "create",
+        "powershell"
+      ]
+    },
+    {
+      "key": "bibliography-curator",
+      "name": "Bibliography Curator",
+      "description": "Writes bibliography.bib with all required citations: DeepMind 'AI Agent Traps' (SSRN 6372438), A2A protocol spec, prompt injection literature (Greshake et al. 2023, Perez & Ribeiro 2022), jailbreaking (Wei et al. 2024, Zou et al. 2023), adversarial ML foundations (Goodfellow et al. 2015, Carlini & Wagner 2017), RAG poisoning (Zhong et al. 2023), multi-agent security, LLM security benchmarks. Also writes the related work section (paper/sections/related-work.tex) positioning this paper against prior art. Cross-references all \\cite{} commands used by other roles.",
+      "skills": [
+        "academic-citations",
+        "literature-review",
+        "bibtex",
+        "security-research"
+      ],
+      "allowedTools": [
+        "view",
+        "glob",
+        "grep",
+        "explore",
+        "edit",
+        "create",
+        "powershell"
+      ]
+    },
+    {
+      "key": "latex-engineer",
+      "name": "Latex Engineer",
+      "description": "Creates the master document structure: paper/main.tex with USENIX Security document class, proper preamble (booktabs, pgfplots, hyperref, cleveref, algorithm2e, subcaption), \\input{} for all section files, correct page layout. Builds the architecture diagram (paper/figures/architecture.tex) showing the testbed components (traps registry → harness runner → agent handle → metrics → reporter pipeline). Creates the experiment matrix visualization. Ensures the paper compiles cleanly with pdflatex/lualatex. Handles cross-references, float placement, and page budget (13 pages).",
+      "skills": [
+        "latex-engineering",
+        "document-architecture",
+        "tikz",
+        "pgfplots",
+        "usenix-formatting"
+      ],
+      "allowedTools": [
+        "view",
+        "glob",
+        "grep",
+        "explore",
+        "edit",
+        "create",
+        "powershell"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "setup-document-skeleton",
+      "title": "Create LaTeX document skeleton with USENIX Security formatting and all section stubs",
+      "assignedTo": "latex-engineer",
+      "dependsOn": [],
+      "acceptanceCriteria": [
+        "paper/main.tex exists with usenix-2020-09 document class (or usenixsec equivalent), correct preamble including booktabs, pgfplots, hyperref, cleveref, algorithm2e, xcolor, subcaption, and custom macros for \\trap{}, \\model{}, \\metric{}",
+        "All section files created as stubs: paper/sections/{abstract,introduction,background,testbed-design,methodology,results-content-injection,results-semantic-manipulation,results-cognitive-state,results-behavioural-control,results-systemic,results-human-in-the-loop,compound-analysis,mitigations-ablation,discussion,related-work,conclusion}.tex",
+        "paper/main.tex includes all sections via \\input{} in correct order with proper \\section{} hierarchy",
+        "Architecture diagram created in paper/figures/architecture.tex using TikZ showing: datasets → trap scenarios → harness runner → agent handle (4 models) → metrics → reporter pipeline, matching the actual module structure in src/",
+        "Experiment matrix flow diagram in paper/figures/matrix-flow.tex showing the 22×4×3×10 design"
+      ],
+      "deliverable": "artifacts/setup-document-skeleton.md"
+    },
+    {
+      "id": "write-bibliography",
+      "title": "Write complete bibliography.bib with 30+ citations and the related work section",
+      "assignedTo": "bibliography-curator",
+      "dependsOn": [],
+      "acceptanceCriteria": [
+        "paper/bibliography.bib contains at minimum: DeepMind AI Agent Traps (SSRN 6372438, Yuntao et al. 2025), A2A protocol (Google 2025), Greshake et al. 2023 (indirect prompt injection), Perez & Ribeiro 2022 (prompt injection risks), Wei et al. 2024 (jailbroken), Zou et al. 2023 (universal adversarial suffixes), Goodfellow et al. 2015 (adversarial examples), Carlini & Wagner 2017, Zhong et al. 2023 (RAG poisoning), and at least 20 additional relevant works",
+        "Every BibTeX entry has complete metadata: author, title, year, venue/journal, DOI or URL where available",
+        "paper/sections/related-work.tex written with subsections: Prompt Injection & Content Manipulation, Adversarial ML Foundations, Multi-Agent Security, RAG & Knowledge Poisoning, LLM Safety Benchmarks — each subsection positions this paper's contribution",
+        "All \\cite{} keys used in the related work section exist in bibliography.bib with no orphan references"
+      ],
+      "deliverable": "artifacts/write-bibliography.md"
+    },
+    {
+      "id": "write-intro-background-methodology",
+      "title": "Write introduction, background, testbed design, and methodology sections",
+      "assignedTo": "lead-author",
+      "dependsOn": [
+        "setup-document-skeleton"
+      ],
+      "acceptanceCriteria": [
+        "paper/sections/introduction.tex: motivates the taxonomy-to-testbed gap (DeepMind paper is theoretical, no open empirical validation exists), states 3 research questions (RQ1: How vulnerable are current LLMs to each trap category? RQ2: Do mitigations reduce vulnerability with statistical significance? RQ3: Do compound traps exhibit superadditive effects?), and previews contributions",
+        "paper/sections/background.tex: covers DeepMind's 6-category taxonomy with table mapping categories to this testbed's scenarios, explains A2A protocol and multi-agent orchestration via a2a-crews, describes the 4 test models (GPT-4o, Claude Sonnet 4, Gemini 2.5 Pro, GPT-4o-mini)",
+        "paper/sections/testbed-design.tex: describes the TrapScenario interface (setup/execute/evaluate/teardown), all 22 scenarios with 1-sentence descriptions grouped by category, the ScenarioConfig and TrapEnvironment data model, and the 7 mitigation modules",
+        "paper/sections/methodology.tex: describes the experiment matrix (22×4×3×10 = 2,640 main + 600 compound + 6,160 ablation = 9,400 total), statistical framework (10 reps, Wilcoxon signed-rank, Cohen's d, Bonferroni α/22), metrics (trapSuccessRate, detectionRate, escapeRate, decisionDrift, cascadeDepth, blastRadius), and reproducibility measures (seed-based determinism)"
+      ],
+      "deliverable": "artifacts/write-intro-background-methodology.md"
+    },
+    {
+      "id": "write-results-tables-figures",
+      "title": "Create all 6 category results sections with booktabs tables and pgfplots figures using placeholder data",
+      "assignedTo": "results-statistician",
+      "dependsOn": [
+        "setup-document-skeleton"
+      ],
+      "acceptanceCriteria": [
+        "Each of the 6 results section files (paper/sections/results-{content-injection,semantic-manipulation,cognitive-state,behavioural-control,systemic,human-in-the-loop}.tex) contains: category-specific trap success rate table (4 models × baseline vs hardened), detection/escape rate comparison, and a per-scenario breakdown with all 4 sub-scenarios",
+        "paper/tables/ contains at least 10 .tex files: trap-success-overview.tex (master 22-scenario table), one per category (6), mitigation-effectiveness.tex, compound-results.tex, ablation-results.tex — all using booktabs (\\toprule, \\midrule, \\bottomrule) with columns for N, mean±std, 95% CI, p-value, Cohen's d",
+        "paper/figures/ contains at least 5 pgfplots figures: vulnerability-heatmap.tex (model × category), mitigation-delta-forest-plot.tex, compound-interaction-plot.tex, model-comparison-radar.tex, ablation-waterfall.tex — following the pgfplots patterns in src/harness/reporter.ts",
+        "All placeholder values are realistic (trap success rates between 0.15-0.90, detection rates 0.05-0.60, p-values < 0.05 for significant comparisons, Cohen's d 0.3-2.5) and marked with %PLACEHOLDER comments",
+        "paper/sections/compound-analysis.tex and paper/sections/mitigations-ablation.tex written with tables showing compound interaction effects and per-mitigation ablation impact"
+      ],
+      "deliverable": "artifacts/write-results-tables-figures.md"
+    },
+    {
+      "id": "write-discussion-conclusion",
+      "title": "Write discussion and conclusion sections addressing protocol implications and limitations",
+      "assignedTo": "lead-author",
+      "dependsOn": [
+        "write-results-tables-figures",
+        "write-intro-background-methodology"
+      ],
+      "acceptanceCriteria": [
+        "paper/sections/discussion.tex contains subsections: Protocol-Level Implications (what A2A protocol changes could mitigate systemic traps), Cross-Model Vulnerability Patterns (why some models are more susceptible), Mitigation Cost-Benefit Analysis (overhead vs protection), Limitations (4+ specific limitations: single-turn only, English-only payloads, temperature sensitivity, closed-source model opacity), and Threats to Validity (internal: seed determinism; external: lab vs production; construct: binary trap success metric)",
+        "paper/sections/conclusion.tex: summarizes key findings tied to the 3 research questions, highlights the most dangerous trap category and the most effective mitigation, calls for A2A protocol amendments, and identifies future work (multi-turn attacks, multilingual payloads, adaptive adversaries, real deployment testing)",
+        "paper/sections/abstract.tex: 200-word abstract covering motivation, method (22 scenarios, 4 models, 9,400 experiments), key findings (placeholder: e.g., 'content injection succeeds in X% of baseline cases'), and implications"
+      ],
+      "deliverable": "artifacts/write-discussion-conclusion.md"
+    },
+    {
+      "id": "final-integration-compilation",
+      "title": "Integrate all sections, verify cross-references, and ensure LaTeX compiles without errors",
+      "assignedTo": "latex-engineer",
+      "dependsOn": [
+        "write-discussion-conclusion",
+        "write-bibliography"
+      ],
+      "acceptanceCriteria": [
+        "paper/main.tex compiles without errors using pdflatex (or lualatex) — all \\ref{}, \\cite{}, \\label{} resolve correctly",
+        "All \\input{} paths are correct and every section file is included in the proper order",
+        "No orphan citations (every \\cite{} key exists in bibliography.bib) and no unused bibliography entries that are cited in-text",
+        "Paper fits within USENIX Security page limit (13 pages excluding references and appendices), with proper float placement for all tables and figures"
+      ],
+      "deliverable": "artifacts/final-integration-compilation.md"
+    }
+  ]
+}

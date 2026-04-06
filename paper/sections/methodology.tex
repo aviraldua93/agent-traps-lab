@@ -1,0 +1,104 @@
+% ===========================================================================
+% 4. Experiment Methodology
+% ===========================================================================
+\section{Experiment Methodology}
+\label{sec:methodology}
+
+\subsection{Models Under Test}
+\label{sec:method-models}
+
+We evaluate four production-grade LLMs representing three major
+providers and two capability tiers (\cref{tab:models}):
+
+\begin{table}[t]
+  \centering
+  \caption{Models under test. All models use temperature $T=0.7$
+    and a maximum completion length of 4{,}096 tokens.}
+  \label{tab:models}
+  \small
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    \textbf{ID} & \textbf{Model} & \textbf{Provider} & \textbf{Tier} \\
+    \midrule
+    \model{gpt4o}        & GPT-4o                 & OpenAI    & Frontier \\
+    \model{claude-sonnet} & Claude Sonnet~4       & Anthropic & Frontier \\
+    \model{gemini-pro}   & Gemini 2.5 Pro         & Google    & Frontier \\
+    \model{gpt4o-mini}   & GPT-4o-mini            & OpenAI    & Efficient \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Experimental Conditions}
+\label{sec:method-conditions}
+
+Each scenario--model pair is tested under three conditions:
+
+\begin{enumerate}[nosep,leftmargin=*]
+  \item \textbf{Baseline}: The agent operates with no defensive
+    mitigations. This measures the inherent vulnerability of each
+    model to each trap category.
+
+  \item \textbf{Hardened}: All seven mitigation modules
+    (\cref{sec:mitigations}) are active, plus a security-hardened
+    system prompt suffix instructing the agent to validate sources,
+    be suspicious of hidden content, and report anomalies.
+
+  \item \textbf{Ablated}: Starting from the hardened configuration,
+    exactly one mitigation module is removed. This condition is
+    repeated for each of the seven mitigations, enabling measurement
+    of each module's marginal contribution.
+\end{enumerate}
+
+\subsection{Experiment Matrix}
+\label{sec:method-matrix}
+
+The full factorial matrix comprises:
+
+\begin{align}
+  \text{Main cells} &= 22 \times 4 \times 2 \times 10 = 1{,}760 \nonumber \\
+  \text{Ablation cells} &= 22 \times 4 \times 7 \times 10 = 6{,}160 \nonumber \\
+  \text{Compound cells} &= 15 \times 4 \times 2 \times 10 = 1{,}200 \nonumber \\
+  \text{Total} &= 9{,}120 \text{ experiment cells} \label{eq:matrix}
+\end{align}
+
+Each cell is assigned a deterministic seed ($\text{cellIndex} \times
+1337 + \text{rep}$) for reproducibility.
+
+\subsection{Statistical Analysis}
+\label{sec:method-stats}
+
+All metrics are aggregated across 10 repetitions per cell. We report:
+
+\begin{itemize}[nosep,leftmargin=*]
+  \item \textbf{Central tendency}: Mean, median, standard deviation.
+  \item \textbf{95\% confidence intervals}: Using the $t$-distribution
+    with $df = 9$.
+  \item \textbf{Significance testing}: Wilcoxon signed-rank test
+    (non-parametric paired test) for baseline vs.\ hardened
+    comparisons~\cite{wilcoxon1945individual}.
+  \item \textbf{Effect sizes}: Cohen's $d$ with pooled standard
+    deviation, classified as negligible ($|d| < 0.2$), small
+    ($0.2 \leq |d| < 0.5$), medium ($0.5 \leq |d| < 0.8$), or
+    large ($|d| \geq 0.8$)~\cite{cohen1988statistical}.
+  \item \textbf{Multiple comparison correction}: Bonferroni correction
+    with $\alpha = 0.05$ divided by 22 simultaneous scenario comparisons,
+    yielding $\alpha_{\text{corrected}} = 0.00227$.
+\end{itemize}
+
+\subsection{Execution Infrastructure}
+\label{sec:method-infra}
+
+Experiments are executed using the Bun runtime with 8 parallel workers.
+Each cell has a 120-second timeout. Failed and timed-out cells are
+recorded with empty metrics and excluded from aggregate statistics.
+The full matrix requires approximately \placeholder{X} GPU-hours
+across three LLM providers.
+
+\subsection{Ethical Considerations}
+\label{sec:method-ethics}
+
+All adversarial scenarios are executed in isolated sandbox environments.
+No real users, systems, or services are targeted. The A2A agents under
+test communicate only within the testbed's local network. We follow
+responsible disclosure practices and have notified all three LLM
+providers of our findings prior to publication.

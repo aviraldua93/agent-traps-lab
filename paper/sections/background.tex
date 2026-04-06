@@ -1,0 +1,91 @@
+% ===========================================================================
+% 2. Background
+% ===========================================================================
+\section{Background}
+\label{sec:background}
+
+\subsection{The DeepMind AI Agent Traps Taxonomy}
+\label{sec:bg-taxonomy}
+
+Hammond et al.~\cite{yuntao2025agenttraps} introduce a taxonomy of
+environmental attacks targeting AI agents. Unlike adversarial attacks
+on model weights or prompts, ``agent traps'' exploit the
+\emph{operational environment}---the web pages, APIs, documents, and
+inter-agent messages that an autonomous agent must process to complete
+its tasks. The taxonomy identifies six attack categories:
+
+\begin{enumerate}[nosep,leftmargin=*]
+  \item \category{Content Injection}: Adversarial instructions are
+    hidden within otherwise benign content using techniques such as
+    invisible CSS styling, HTML comments, image metadata, and dynamic
+    cloaking~\cite{greshake2023indirect, yi2023benchmarking}.
+
+  \item \category{Semantic Manipulation}: The framing, emotional
+    valence, or social context of content is crafted to bias agent
+    decision-making---authority framing, urgency appeals, context
+    flooding, and identity manipulation~\cite{perez2022red,
+    carlini2024aligned}.
+
+  \item \category{Cognitive State Corruption}: The agent's knowledge
+    base or retrieval-augmented generation (RAG) pipeline is poisoned
+    through vector embedding manipulation, ranking distortion, gradual
+    drift, and cross-contamination~\cite{zou2024poisonedrag,
+    zhong2023poisoning, chaudhari2024phantom}.
+
+  \item \category{Behavioural Control}: Deceptive UI elements---
+    misleading dialogs, hidden form fields, and infinite loops---trick
+    the agent into taking unintended actions~\cite{liao2024eia,
+    wu2024agentattack}.
+
+  \item \category{Systemic (Multi-Agent)}: In multi-agent topologies,
+    attacks cascade across agents through message poisoning, agent
+    impersonation, and cascade failures~\cite{gu2024agent,
+    cohen2024here}.
+
+  \item \category{Human-in-the-Loop}: The agent produces biased
+    reports that exploit cognitive biases in human
+    reviewers---cherry-picked evidence, anchoring effects, and
+    decision fatigue~\cite{kahneman2011thinking, tversky1974judgment}.
+\end{enumerate}
+
+The original paper provides detailed descriptions and threat models
+for each category but stops short of empirical evaluation, noting that
+``building reproducible testbeds for these attacks remains an open
+challenge''~\cite{yuntao2025agenttraps}.
+
+\subsection{The A2A Protocol}
+\label{sec:bg-a2a}
+
+Google's Agent-to-Agent (A2A) protocol~\cite{google2025a2a} defines
+a standardized communication layer for autonomous agents. Key
+primitives include:
+
+\begin{itemize}[nosep,leftmargin=*]
+  \item \textbf{Agent Cards}: JSON-LD discovery documents advertising
+    an agent's capabilities, skills, and endpoint URLs.
+  \item \textbf{Task lifecycle}: \texttt{message/send} and
+    \texttt{message/stream} RPCs that create, update, and complete
+    tasks between agents.
+  \item \textbf{Artifact exchange}: Typed data payloads (text, files,
+    structured data) attached to task messages.
+  \item \textbf{Push notifications}: Webhook-based callbacks for
+    asynchronous task completion.
+\end{itemize}
+
+A2A enables rich multi-agent topologies---hub-and-spoke orchestration,
+peer-to-peer delegation, and hierarchical crews---but the protocol
+specification provides no built-in authentication, message integrity,
+or content validation beyond transport-layer TLS. This makes A2A an
+ideal substrate for studying systemic agent traps.
+
+\subsection{Multi-Agent Orchestration}
+\label{sec:bg-orchestration}
+
+Modern multi-agent frameworks---AutoGen~\cite{wu2023autogen},
+CrewAI~\cite{crewai2024}, LangGraph~\cite{langgraph2024}, and
+a2a-crews~\cite{dua2026a2acrews}---enable developers to compose
+agents into teams (``crews'') that collaborate on complex tasks.
+In these systems, a single compromised agent can propagate corrupted
+context to downstream agents, amplifying the blast radius of an
+environmental attack. Our testbed specifically targets this
+amplification via the A2A protocol.

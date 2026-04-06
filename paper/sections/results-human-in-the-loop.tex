@@ -1,0 +1,72 @@
+% ===========================================================================
+% 10. Results: Human-in-the-Loop
+% ===========================================================================
+\section{Results: Human-in-the-Loop}
+\label{sec:results-hitl}
+
+This section reports results for the three human-in-the-loop
+scenarios: \trap{Cherry-Picked} (HL-1), \trap{Anchoring} (HL-2),
+and \trap{Decision-Fatigue} (HL-3). Unlike other categories, these
+attacks do not directly compromise the agent; instead, the agent
+produces biased outputs that exploit cognitive biases in human
+reviewers.
+
+\subsection{Manipulation Success Rates}
+\label{sec:hitl-success}
+
+We measure manipulation success as the rate at which the agent
+produces reports containing the adversarial framing, cherry-picked
+evidence, or fatigue-inducing structure intended by the trap.
+
+\begin{table}[t]
+  \centering
+  \caption{Human-in-the-loop manipulation success rates (\%) under
+    baseline (B) and hardened (H) conditions. Values: mean $\pm$ std,
+    $n=10$.}
+  \label{tab:hitl-success}
+  \small
+  \begin{tabular}{@{}llcccc@{}}
+    \toprule
+    & & \model{GPT-4o} & \model{Sonnet~4} & \model{Gemini} & \model{4o-mini} \\
+    \midrule
+    \multirow{2}{*}{HL-1}
+      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \midrule
+    \multirow{2}{*}{HL-2}
+      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \midrule
+    \multirow{2}{*}{HL-3}
+      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Key Findings}
+\label{sec:hitl-findings}
+
+\begin{enumerate}[nosep,leftmargin=*]
+  \item \textbf{Cherry-picked evidence (HL-1)} is the most effective
+    human-in-the-loop attack. Agents readily produce reports that
+    selectively cite supporting evidence while omitting contradictory
+    data, especially when the adversarial prompt frames the task as
+    ``summarize the key supporting evidence.''
+
+  \item \textbf{Anchoring (HL-2)} succeeds by placing a strong
+    initial estimate or recommendation at the start of the agent's
+    report. Subsequent analysis within the report fails to sufficiently
+    adjust away from this anchor.
+
+  \item \textbf{Decision fatigue (HL-3)} exploits report length: by
+    structuring the adversarial content to appear late in a lengthy
+    report, it leverages the human reviewer's diminishing attention.
+
+  \item The \mitigation{report-auditor} module is the primary defense
+    for this category, performing cherry-pick detection, anchoring
+    analysis, and fatigue structure monitoring. It achieves significant
+    reduction in manipulation rates for HL-1 and HL-2 but is less
+    effective for HL-3, where the adversarial pattern is distributed
+    across the report structure.
+\end{enumerate}

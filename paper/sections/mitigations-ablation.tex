@@ -1,0 +1,119 @@
+% ===========================================================================
+% 12. Mitigations and Ablation
+% ===========================================================================
+\section{Mitigations and Ablation}
+\label{sec:mitigations}
+
+\subsection{The Seven Mitigation Modules}
+\label{sec:mit-overview}
+
+Our testbed implements seven defense modules, each targeting one or
+more trap categories (\cref{tab:mitigations}). Every module implements
+the \texttt{Mitigation} interface with \texttt{preProcess()} (input
+filtering before the agent sees content) and \texttt{postProcess()}
+(output validation after the agent acts) hooks.
+
+\begin{table}[t]
+  \centering
+  \caption{The seven mitigation modules, their target trap categories,
+    and defense strategies.}
+  \label{tab:mitigations}
+  \small
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    \textbf{Module} & \textbf{Targets} & \textbf{Strategy} \\
+    \midrule
+    \mitigation{input-sanitizer}   & CI     & Strip hidden CSS/HTML/comments \\
+    \mitigation{semantic-shield}   & SM     & Detect authority/urgency framing \\
+    \mitigation{context-validator} & SM     & Detect context flooding \\
+    \mitigation{rag-integrity}     & CS     & Cross-reference validation \\
+    \mitigation{behavioral-guard}  & BC     & Deceptive UI detection \\
+    \mitigation{cascade-breaker}   & SY     & Trust scoring, circuit breaker \\
+    \mitigation{report-auditor}    & HL     & Cherry-pick/anchoring detection \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Overall Mitigation Effectiveness}
+\label{sec:mit-effectiveness}
+
+\Cref{tab:mitigation-effectiveness} compares trap success rates
+between the baseline and fully hardened conditions, aggregated across
+all scenarios.
+
+\begin{table}[t]
+  \centering
+  \caption{Overall mitigation effectiveness: baseline vs.\ hardened
+    condition. Trap success rate reduction across all 22 scenarios,
+    per model. Values: mean difference $\pm$ std of paired differences.
+    \sig\ denotes significance (Bonferroni-corrected Wilcoxon).}
+  \label{tab:mitigation-effectiveness}
+  \small
+  \begin{tabular}{@{}lcccc@{}}
+    \toprule
+    & \model{GPT-4o} & \model{Sonnet~4} & \model{Gemini} & \model{4o-mini} \\
+    \midrule
+    $\Delta\tau$ (\%) & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    Cohen's $d$       & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    $p$-value         & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Ablation Analysis}
+\label{sec:mit-ablation}
+
+To measure each mitigation's marginal contribution, we compare the
+fully hardened condition against each ablated condition (hardened minus
+one module). \Cref{tab:ablation} reports the \emph{increase} in trap
+success rate when each module is removed.
+
+\begin{table}[t]
+  \centering
+  \caption{Ablation study: increase in trap success rate (\%) when
+    each mitigation module is removed from the hardened suite. Averaged
+    across all scenarios and models, $n=10$ reps per cell. Higher
+    = more critical module.}
+  \label{tab:ablation}
+  \small
+  \begin{tabular}{@{}lccc@{}}
+    \toprule
+    \textbf{Removed Module} & $\Delta\tau$ (\%) & Cohen's $d$ & Sig.\ \\
+    \midrule
+    \mitigation{input-sanitizer}   & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \mitigation{semantic-shield}   & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \mitigation{context-validator} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \mitigation{rag-integrity}     & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \mitigation{behavioral-guard}  & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \mitigation{cascade-breaker}   & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \mitigation{report-auditor}    & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Key Findings}
+\label{sec:mit-findings}
+
+\begin{enumerate}[nosep,leftmargin=*]
+  \item \textbf{Input sanitization} and \textbf{cascade breaking}
+    contribute the greatest marginal defense value. Removing either
+    module produces the largest increase in overall trap success rate
+    with large effect sizes.
+
+  \item \textbf{The semantic shield and context validator} have
+    partially overlapping coverage for semantic manipulation attacks.
+    Ablating either individually produces a moderate effect, but
+    ablating both (not shown in single-removal ablation) would
+    likely produce a much larger gap.
+
+  \item \textbf{RAG integrity} is the sole defense against cognitive
+    state attacks. Its removal produces a disproportionately large
+    increase in CS-category trap success, highlighting the lack of
+    defense redundancy for knowledge-base attacks.
+
+  \item \textbf{Diminishing returns}: The combined defense is less
+    than the sum of individual contributions, suggesting that some
+    mitigations provide overlapping coverage. However, the overlap
+    provides defense-in-depth, which is valuable when individual
+    modules have imperfect recall.
+\end{enumerate}

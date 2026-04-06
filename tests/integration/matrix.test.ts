@@ -6,9 +6,13 @@ import {
   type ExperimentMatrix,
   type ExperimentCell,
 } from '../../src/harness/matrix.js';
+import { executeCell, type CellResult } from '../../src/harness/runner.js';
 import { registerScenario, registerCompound, listScenarios, listCompounds } from '../../src/traps/registry.js';
 import type { TrapScenario, ScenarioId, TrapCategory, CompoundTrap } from '../../src/traps/types.js';
 import { MODELS, EXPERIMENT_CONFIG } from '../../src/config.js';
+
+// Force mock provider for all tests
+process.env.AGENT_TRAPS_MOCK = '1';
 
 // ── Helpers ────────────────────────────────────────────────────────────
 
@@ -851,5 +855,454 @@ describe('matrix invariants', () => {
     const sampleAblated = matrix.cells.find(c => c.condition === 'ablated');
     expect(sampleAblated).toBeDefined();
     expect(sampleAblated!.id).toContain(`ablated-${sampleAblated!.ablatedMitigation}`);
+  });
+
+  it('compound cell IDs start with "compound__"', () => {
+    const compoundCells = matrix.cells.filter(c => c.id.startsWith('compound__'));
+    for (const cell of compoundCells) {
+      expect(cell.scenarioId).toContain('+');
+    }
+  });
+
+  it('hardened cells have the same mitigation set as ALL_MITIGATIONS', () => {
+    const hardenedCells = matrix.cells.filter(c => c.condition === 'hardened');
+    for (const cell of hardenedCells) {
+      expect(cell.mitigations).toHaveLength(ALL_MITIGATIONS.length);
+      for (const m of ALL_MITIGATIONS) {
+        expect(cell.mitigations).toContain(m);
+      }
+    }
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════════
+//  Matrix consistency — multiple generation calls
+// ══════════════════════════════════════════════════════════════════════
+
+describe('matrix consistency', () => {
+  it('generates identical matrices on repeated calls', () => {
+    const m1 = generateMatrix();
+    const m2 = generateMatrix();
+    expect(m1.cells.length).toBe(m2.cells.length);
+    expect(m1.summary).toEqual(m2.summary);
+    for (let i = 0; i < m1.cells.length; i++) {
+      expect(m1.cells[i].id).toBe(m2.cells[i].id);
+      expect(m1.cells[i].seed).toBe(m2.cells[i].seed);
+    }
+  });
+
+  it('cell objects are fully formed with all required fields', () => {
+    const matrix = generateMatrix();
+    for (const cell of matrix.cells.slice(0, 50)) {
+      expect(cell.id).toBeDefined();
+      expect(typeof cell.id).toBe('string');
+      expect(cell.scenarioId).toBeDefined();
+      expect(cell.modelId).toBeDefined();
+      expect(cell.condition).toBeDefined();
+      expect(typeof cell.repetition).toBe('number');
+      expect(Array.isArray(cell.mitigations)).toBe(true);
+      expect(typeof cell.seed).toBe('number');
+    }
+  });
+
+  it('matrix is JSON-serializable', () => {
+    const matrix = generateMatrix();
+    const json = JSON.stringify(matrix);
+    const parsed = JSON.parse(json);
+    expect(parsed.cells.length).toBe(matrix.cells.length);
+    expect(parsed.summary.totalCells).toBe(matrix.summary.totalCells);
+  });
+
+  it('ablation cells never appear in compound entries', () => {
+    const matrix = generateMatrix();
+    const compoundAblated = matrix.cells.filter(
+      c => c.id.startsWith('compound__') && c.condition === 'ablated',
+    );
+    expect(compoundAblated.length).toBe(0);
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════════
+//  Filter edge cases
+// ══════════════════════════════════════════════════════════════════════
+
+describe('filterMatrix edge cases', () => {
+  let matrix: ExperimentMatrix;
+
+  beforeAll(() => {
+    matrix = generateMatrix();
+  });
+
+  it('filtering with no filters returns the full matrix', () => {
+    const filtered = filterMatrix(matrix, {});
+    expect(filtered.cells.length).toBe(matrix.cells.length);
+  });
+
+  it('double-filtering produces the same result as a combined filter', () => {
+    const step1 = filterMatrix(matrix, { model: 'gpt4o' });
+    const step2 = filterMatrix(step1, { condition: 'baseline' });
+    const combined = filterMatrix(matrix, { model: 'gpt4o', condition: 'baseline' });
+    expect(step2.cells.length).toBe(combined.cells.length);
+    expect(step2.summary.totalCells).toBe(combined.summary.totalCells);
+  });
+
+  it('filtering by each model produces disjoint sets', () => {
+    const allIds = new Set<string>();
+    for (const modelId of MODEL_IDS) {
+      const filtered = filterMatrix(matrix, { model: modelId as any });
+      for (const cell of filtered.cells) {
+        expect(allIds.has(cell.id)).toBe(false);
+        allIds.add(cell.id);
+      }
+    }
+    expect(allIds.size).toBe(matrix.cells.length);
+  });
+
+  it('filtering by scenario and model returns cells for only that pair', () => {
+    const scenarioId = 'systemic:message-poisoning' as ScenarioId;
+    const filtered = filterMatrix(matrix, { scenario: scenarioId, model: 'claude-sonnet' });
+    for (const cell of filtered.cells) {
+      expect(cell.scenarioId).toBe(scenarioId);
+      expect(cell.modelId).toBe('claude-sonnet');
+    }
+    // 1 scenario × 1 model × (2 main + 7 ablation) × 10 reps = 90
+    expect(filtered.cells.length).toBe((2 + ALL_MITIGATIONS.length) * REPS);
+  });
+
+  it('filtering by ablated condition returns only cells with ablatedMitigation set', () => {
+    const filtered = filterMatrix(matrix, { condition: 'ablated' });
+    for (const cell of filtered.cells) {
+      expect(cell.ablatedMitigation).toBeDefined();
+      expect(typeof cell.ablatedMitigation).toBe('string');
+    }
+  });
+
+  it('category filter is prefix-based — "systemic" does not match "systemic-extra"', () => {
+    // All systemic cells should start with "systemic:"
+    const filtered = filterMatrix(matrix, { category: 'systemic' });
+    for (const cell of filtered.cells) {
+      expect(cell.scenarioId.startsWith('systemic:')).toBe(true);
+    }
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════════
+//  printMatrixSummary edge cases
+// ══════════════════════════════════════════════════════════════════════
+
+describe('printMatrixSummary formatting', () => {
+  it('output contains box-drawing characters', () => {
+    const matrix = generateMatrix();
+    const output = printMatrixSummary(matrix);
+    expect(output).toContain('╔');
+    expect(output).toContain('╗');
+    expect(output).toContain('╚');
+    expect(output).toContain('╝');
+  });
+
+  it('output is multi-line', () => {
+    const matrix = generateMatrix();
+    const output = printMatrixSummary(matrix);
+    const lines = output.split('\n');
+    expect(lines.length).toBeGreaterThan(5);
+  });
+
+  it('summary labels are properly aligned', () => {
+    const matrix = generateMatrix();
+    const output = printMatrixSummary(matrix);
+    // Check that key labels exist with proper spacing
+    expect(output).toMatch(/Scenarios:\s+\d+/);
+    expect(output).toMatch(/Models:\s+\d+/);
+    expect(output).toMatch(/Conditions:\s+\d+/);
+    expect(output).toMatch(/Repetitions:\s+\d+/);
+  });
+
+  it('filtered matrix summary shows reduced total', () => {
+    const matrix = generateMatrix();
+    const filtered = filterMatrix(matrix, { scenario: 'content-injection:css-invisible' as ScenarioId });
+    const output = printMatrixSummary(filtered);
+    expect(output).toContain(`TOTAL:          ${filtered.summary.totalCells} experiment runs`);
+    // The filtered total should be less than the full matrix
+    expect(filtered.summary.totalCells).toBeLessThan(matrix.summary.totalCells);
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════════
+//  executeCell — experiment runner integration
+// ══════════════════════════════════════════════════════════════════════
+
+describe('executeCell', () => {
+  it('executes a baseline cell and returns a success result', async () => {
+    const cell: ExperimentCell = {
+      id: 'content-injection:css-invisible__gpt4o__baseline__rep0',
+      scenarioId: 'content-injection:css-invisible' as ScenarioId,
+      modelId: 'gpt4o',
+      condition: 'baseline',
+      repetition: 0,
+      mitigations: [],
+      seed: 42,
+    };
+
+    const result = await executeCell(cell);
+    expect(result.status).toBe('success');
+    expect(result.cell).toEqual(cell);
+    expect(result.durationMs).toBeGreaterThan(0);
+    expect(result.error).toBeUndefined();
+  });
+
+  it('executes a hardened cell and returns a success result', async () => {
+    const cell: ExperimentCell = {
+      id: 'semantic-manipulation:authority-framing__claude-sonnet__hardened__rep0',
+      scenarioId: 'semantic-manipulation:authority-framing' as ScenarioId,
+      modelId: 'claude-sonnet',
+      condition: 'hardened',
+      repetition: 0,
+      mitigations: ALL_MITIGATIONS,
+      seed: 100,
+    };
+
+    const result = await executeCell(cell);
+    expect(result.status).toBe('success');
+    expect(result.durationMs).toBeGreaterThan(0);
+  });
+
+  it('executes an ablated cell and returns a success result', async () => {
+    const cell: ExperimentCell = {
+      id: 'cognitive-state:vector-poisoning__gemini-pro__ablated-input-sanitizer__rep0',
+      scenarioId: 'cognitive-state:vector-poisoning' as ScenarioId,
+      modelId: 'gemini-pro',
+      condition: 'ablated',
+      repetition: 0,
+      mitigations: ALL_MITIGATIONS.filter(m => m !== 'input-sanitizer'),
+      ablatedMitigation: 'input-sanitizer',
+      seed: 200,
+    };
+
+    const result = await executeCell(cell);
+    expect(result.status).toBe('success');
+  });
+
+  it('result metrics have correct scenarioId, modelId, and condition', async () => {
+    const cell: ExperimentCell = {
+      id: 'behavioural-control:deceptive-dialogs__gpt4o-mini__baseline__rep3',
+      scenarioId: 'behavioural-control:deceptive-dialogs' as ScenarioId,
+      modelId: 'gpt4o-mini',
+      condition: 'baseline',
+      repetition: 3,
+      mitigations: [],
+      seed: 300,
+    };
+
+    const result = await executeCell(cell);
+    expect(result.metrics.scenarioId).toBe(cell.scenarioId);
+    expect(result.metrics.modelId).toBe(cell.modelId);
+    expect(result.metrics.condition).toBe(cell.condition);
+    // repetition in metrics comes from scenario.execute, which may differ from cell.repetition
+    expect(typeof result.metrics.repetition).toBe('number');
+  });
+
+  it('result metrics include core metric fields', async () => {
+    const cell: ExperimentCell = {
+      id: 'systemic:message-poisoning__gpt4o__baseline__rep0',
+      scenarioId: 'systemic:message-poisoning' as ScenarioId,
+      modelId: 'gpt4o',
+      condition: 'baseline',
+      repetition: 0,
+      mitigations: [],
+      seed: 400,
+    };
+
+    const result = await executeCell(cell);
+    expect(result.status).toBe('success');
+    const m = result.metrics;
+    expect(typeof m.trapSuccessRate).toBe('number');
+    expect(typeof m.detectionRate).toBe('number');
+    expect(typeof m.escapeRate).toBe('number');
+    expect(typeof m.decisionDrift).toBe('number');
+    expect(typeof m.timeToCompromiseMs).toBe('number');
+    expect(typeof m.tokenWaste).toBe('number');
+    expect(typeof m.mitigationActive).toBe('boolean');
+  });
+
+  it('baseline cell has mitigationActive = false', async () => {
+    const cell: ExperimentCell = {
+      id: 'human-in-the-loop:anchoring__gpt4o__baseline__rep0',
+      scenarioId: 'human-in-the-loop:anchoring' as ScenarioId,
+      modelId: 'gpt4o',
+      condition: 'baseline',
+      repetition: 0,
+      mitigations: [],
+      seed: 500,
+    };
+
+    const result = await executeCell(cell);
+    expect(result.metrics.mitigationActive).toBe(false);
+  });
+
+  it('hardened cell has mitigationActive = true', async () => {
+    const cell: ExperimentCell = {
+      id: 'human-in-the-loop:cherry-picked__gpt4o__hardened__rep0',
+      scenarioId: 'human-in-the-loop:cherry-picked' as ScenarioId,
+      modelId: 'gpt4o',
+      condition: 'hardened',
+      repetition: 0,
+      mitigations: ALL_MITIGATIONS,
+      seed: 600,
+    };
+
+    const result = await executeCell(cell);
+    expect(result.metrics.mitigationActive).toBe(true);
+  });
+
+  it('result includes the observation with agent response', async () => {
+    const cell: ExperimentCell = {
+      id: 'content-injection:html-comments__gpt4o__baseline__rep0',
+      scenarioId: 'content-injection:html-comments' as ScenarioId,
+      modelId: 'gpt4o',
+      condition: 'baseline',
+      repetition: 0,
+      mitigations: [],
+      seed: 700,
+    };
+
+    const result = await executeCell(cell);
+    expect(result.metrics.observation).toBeDefined();
+    expect(result.metrics.observation.agentResponse).toBeDefined();
+    expect(result.metrics.observation.agentResponse.text.length).toBeGreaterThan(0);
+  });
+
+  it('returns error status for an unknown scenario', async () => {
+    const cell: ExperimentCell = {
+      id: 'nonexistent:fake__gpt4o__baseline__rep0',
+      scenarioId: 'nonexistent:fake' as ScenarioId,
+      modelId: 'gpt4o',
+      condition: 'baseline',
+      repetition: 0,
+      mitigations: [],
+      seed: 800,
+    };
+
+    const result = await executeCell(cell);
+    expect(result.status).toBe('error');
+    expect(result.error).toBeDefined();
+    expect(result.error).toContain('Unknown scenario');
+  });
+
+  it('error result still includes duration', async () => {
+    const cell: ExperimentCell = {
+      id: 'nonexistent:missing__gpt4o__baseline__rep0',
+      scenarioId: 'nonexistent:missing' as ScenarioId,
+      modelId: 'gpt4o',
+      condition: 'baseline',
+      repetition: 0,
+      mitigations: [],
+      seed: 900,
+    };
+
+    const result = await executeCell(cell);
+    expect(result.status).toBe('error');
+    expect(result.durationMs).toBeGreaterThanOrEqual(0);
+  });
+
+  it('error result includes empty metrics', async () => {
+    const cell: ExperimentCell = {
+      id: 'nonexistent:empty__gpt4o__baseline__rep0',
+      scenarioId: 'nonexistent:empty' as ScenarioId,
+      modelId: 'gpt4o',
+      condition: 'baseline',
+      repetition: 0,
+      mitigations: [],
+      seed: 1000,
+    };
+
+    const result = await executeCell(cell);
+    expect(result.status).toBe('error');
+    expect(result.metrics.trapSuccessRate).toBe(0);
+    expect(result.metrics.detectionRate).toBe(0);
+    expect(result.metrics.escapeRate).toBe(0);
+  });
+
+  it('executes cells from different categories successfully', async () => {
+    const scenarioIds: ScenarioId[] = [
+      'content-injection:css-invisible' as ScenarioId,
+      'semantic-manipulation:emotional-urgency' as ScenarioId,
+      'cognitive-state:gradual-drift' as ScenarioId,
+      'behavioural-control:hidden-fields' as ScenarioId,
+      'systemic:cascade-failure' as ScenarioId,
+      'human-in-the-loop:decision-fatigue' as ScenarioId,
+    ];
+
+    for (const scenarioId of scenarioIds) {
+      const cell: ExperimentCell = {
+        id: `${scenarioId}__gpt4o__baseline__rep0`,
+        scenarioId,
+        modelId: 'gpt4o',
+        condition: 'baseline',
+        repetition: 0,
+        mitigations: [],
+        seed: 1100,
+      };
+
+      const result = await executeCell(cell);
+      expect(result.status).toBe('success');
+    }
+  });
+
+  it('executes the same cell with different seeds and gets valid results', async () => {
+    const results: CellResult[] = [];
+    for (let seed = 0; seed < 3; seed++) {
+      const cell: ExperimentCell = {
+        id: `content-injection:image-metadata__gpt4o__baseline__rep${seed}`,
+        scenarioId: 'content-injection:image-metadata' as ScenarioId,
+        modelId: 'gpt4o',
+        condition: 'baseline',
+        repetition: seed,
+        mitigations: [],
+        seed: seed * 1337,
+      };
+      results.push(await executeCell(cell));
+    }
+    for (const r of results) {
+      expect(r.status).toBe('success');
+      expect(r.durationMs).toBeGreaterThan(0);
+    }
+  });
+
+  it('executes the same scenario with all 4 models', async () => {
+    for (const modelId of MODEL_IDS) {
+      const cell: ExperimentCell = {
+        id: `content-injection:dynamic-cloaking__${modelId}__baseline__rep0`,
+        scenarioId: 'content-injection:dynamic-cloaking' as ScenarioId,
+        modelId: modelId as any,
+        condition: 'baseline',
+        repetition: 0,
+        mitigations: [],
+        seed: 1200,
+      };
+      const result = await executeCell(cell);
+      expect(result.status).toBe('success');
+      expect(result.metrics.modelId).toBe(modelId);
+    }
+  });
+
+  it('observation timestamps are valid', async () => {
+    const beforeExec = Date.now();
+    const cell: ExperimentCell = {
+      id: 'systemic:agent-impersonation__gpt4o__baseline__rep0',
+      scenarioId: 'systemic:agent-impersonation' as ScenarioId,
+      modelId: 'gpt4o',
+      condition: 'baseline',
+      repetition: 0,
+      mitigations: [],
+      seed: 1300,
+    };
+    const result = await executeCell(cell);
+    const afterExec = Date.now();
+
+    expect(result.status).toBe('success');
+    const obs = result.metrics.observation;
+    expect(obs.startedAt).toBeGreaterThanOrEqual(beforeExec);
+    expect(obs.completedAt).toBeLessThanOrEqual(afterExec);
+    expect(obs.completedAt).toBeGreaterThanOrEqual(obs.startedAt);
   });
 });

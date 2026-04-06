@@ -1,0 +1,234 @@
+%% ==========================================================================
+%% related-work.tex — Related Work
+%% Paper: "From Taxonomy to Testbed: Quantifying Environmental Attacks
+%%         on Multi-Agent A2A Systems"
+%% ==========================================================================
+
+\section{Related Work}
+\label{sec:related}
+
+Our work bridges several distinct research threads: prompt injection
+and content manipulation attacks, classical adversarial machine learning,
+multi-agent system security, RAG and knowledge-base poisoning, and
+LLM safety evaluation benchmarks.  Table~\ref{tab:related-positioning}
+summarizes how our testbed complements and extends prior work.
+
+% ------------------------------------------------------------------
+\subsection{Prompt Injection \& Content Manipulation}
+\label{sec:rw-injection}
+
+The foundational prompt injection threat was formalized by
+Perez and Ribeiro~\cite{perez2022prompt}, who demonstrated that
+adversarial prompts can override system-level instructions.
+Greshake et~al.~\cite{greshake2023indirect} introduced the more
+insidious \emph{indirect} variant: adversarial payloads planted in
+web pages, emails, and documents that agents encounter during
+tool-augmented retrieval.  Their work showed that LLM-integrated
+applications could be compromised without any direct user interaction,
+motivating our Content Injection trap category (\S\ref{sec:results-ci}).
+
+Liu et~al.~\cite{liu2024formalizing} formalized prompt injection
+against LLM-integrated applications, providing an attack taxonomy and
+demonstrating injection through multiple channels.
+Yi et~al.~\cite{yi2023benchmarking} contributed a benchmark for
+indirect prompt injection defense evaluation.
+Zhan et~al.~\cite{zhan2024injecagent} developed \textsc{InjecAgent},
+benchmarking indirect prompt injections specifically in
+tool-integrated LLM agents.
+
+Our work differs from these contributions in two key ways.
+First, we go beyond single-turn injection to study \emph{environmental}
+attacks where the adversarial payload is embedded in the agent's
+operating environment (CSS-invisible text, HTML comments, image
+metadata, dynamically cloaked content) rather than in the user
+prompt.  Second, we measure injection success across a controlled
+matrix of 4~models $\times$ 3~conditions $\times$ 10~repetitions
+with statistical rigor (Bonferroni-corrected $p$-values, Cohen's $d$
+effect sizes), providing the quantitative grounding that prior work
+has lacked.
+
+% ------------------------------------------------------------------
+\subsection{Adversarial Machine Learning Foundations}
+\label{sec:rw-adversarial}
+
+The adversarial examples paradigm was established by
+Goodfellow et~al.~\cite{goodfellow2015adversarial}, who showed that
+small input perturbations could reliably fool neural classifiers.
+Carlini and Wagner~\cite{carlini2017evaluating} raised the
+evaluation bar by proposing optimization-based attacks that
+defeated most known defenses, establishing that defensive
+claims must be backed by strong adaptive evaluations.
+Madry et~al.~\cite{madry2018towards} introduced adversarial
+training as a principled defense, while
+Biggio et~al.~\cite{biggio2013evasion} formalized evasion attacks
+at test time for traditional ML pipelines.
+
+In the LLM era, Zou et~al.~\cite{zou2023universal} demonstrated
+universal adversarial suffixes that transfer across aligned language
+models, while Wei et~al.~\cite{wei2024jailbroken} systematically
+analyzed how LLM safety training fails through competing
+objectives and mismatched generalization.
+Chao et~al.~\cite{chao2023jailbreaking} showed that black-box
+jailbreaks can be automated in as few as twenty queries.
+Liu et~al.~\cite{liu2024autodan} developed \textsc{AutoDAN}, which
+generates stealthy jailbreak prompts automatically.
+
+Our testbed extends this adversarial perspective from model-level
+perturbations to \emph{environment-level} attacks.  While prior work
+focuses on crafting inputs that bypass alignment at the model
+boundary, we study how adversarial content in the agent's operating
+environment---web pages, documents, API responses, and inter-agent
+messages---can manipulate behavior without ever touching the system
+prompt or the user's direct input.  This distinction is critical
+for multi-agent A2A systems where agents consume content from
+diverse, untrusted sources.
+
+% ------------------------------------------------------------------
+\subsection{Multi-Agent Security}
+\label{sec:rw-multiagent}
+
+The emerging multi-agent LLM ecosystem introduces attack surfaces
+that go beyond single-agent threats.  Cohen et~al.~\cite{cohen2024unleashing}
+demonstrated self-replicating adversarial attacks that propagate
+across multi-agent GenAI systems, compromising new agents through
+inter-agent communication---a ``worm'' for LLM-based systems.
+Gu et~al.~\cite{gu2024agent} showed that a single adversarial
+image can exponentially compromise a population of multimodal
+agents through viral propagation, with attack success scaling
+with population size.
+Tian et~al.~\cite{tian2024evil} explored safety risks specific
+to LLM-based agent systems, revealing emergent dangerous behaviors
+when multiple agents collaborate.
+
+The A2A protocol~\cite{google2025a2a} defines standardized
+inter-agent communication, enabling multi-agent orchestration through
+agent cards~\cite{google2025agentcard}, task delegation, and
+artifact exchange.  Frameworks such as
+AutoGen~\cite{wu2023autogen} and MetaGPT~\cite{hong2024metagpt}
+demonstrate the practical viability of multi-agent collaboration
+but do not systematically evaluate adversarial robustness.
+
+Our work is the first to evaluate environmental attacks
+\emph{specifically within the A2A protocol context}.  We test
+cascade failure propagation (Systemic traps, \S\ref{sec:results-sys}),
+where a compromised agent poisons messages flowing through
+the A2A task graph.  We also introduce agent impersonation and
+message poisoning scenarios unique to protocol-mediated
+multi-agent systems.  Chen et~al.~\cite{chen2024agentpoison}
+concurrently studied agent poisoning through memory and knowledge
+bases, which complements our environment-level attack model.
+
+% ------------------------------------------------------------------
+\subsection{RAG \& Knowledge Poisoning}
+\label{sec:rw-rag}
+
+Retrieval-Augmented Generation (RAG)~\cite{lewis2020rag} enables
+LLMs to access external knowledge, but also opens a new attack
+surface: the retrieval corpus itself.
+Zhong et~al.~\cite{zhong2023poisoning} demonstrated corpus
+poisoning by injecting adversarial passages that manipulate
+retrieval rankings and downstream generation.
+Zou et~al.~\cite{zou2024poisonedrag} developed \textsc{PoisonedRAG},
+showing that even a small number of poisoned documents can
+corrupt RAG output with high success rates.
+Xue et~al.~\cite{xue2024badrag} identified vulnerabilities
+in RAG pipelines through targeted poisoning attacks that
+evade existing detection mechanisms.
+Chaudhari et~al.~\cite{chaudhari2024phantom} proposed
+\textsc{Phantom}, demonstrating general-purpose trigger attacks
+on retrieval-augmented generation that activate only in the
+presence of specific query patterns.
+
+Our Cognitive State trap category (\S\ref{sec:results-cs})
+extends RAG poisoning to the multi-agent context.  We implement
+four scenarios---vector embedding poisoning, gradual knowledge
+drift, cross-contamination between agents, and ranking
+manipulation---that target a live RAG pipeline via the A2A
+protocol.  Unlike prior work that evaluates poisoning in
+isolated single-model settings, we measure how poisoned knowledge
+propagates through agent-to-agent communication, amplifying
+factual degradation across the system.
+
+% ------------------------------------------------------------------
+\subsection{LLM Safety Benchmarks}
+\label{sec:rw-benchmarks}
+
+Several benchmarks evaluate LLM safety and trustworthiness.
+Mazeika et~al.~\cite{mazeika2024harmbench} proposed
+\textsc{HarmBench}, a standardized framework for automated red
+teaming with robust refusal evaluation.
+Wang et~al.~\cite{wang2024decodingtrust} developed
+\textsc{DecodingTrust}, a comprehensive GPT trustworthiness
+assessment covering toxicity, bias, robustness, and privacy.
+Zhang et~al.~\cite{zhang2024safetybench} introduced
+\textsc{SafetyBench}, evaluating LLM safety via multiple-choice
+questions across diverse risk categories.
+Sun et~al.~\cite{sun2024trustllm} proposed \textsc{TrustLLM}
+for holistic trustworthiness evaluation.
+Debenedetti et~al.~\cite{debenedetti2024agentdojo} developed
+\textsc{AgentDojo}, specifically evaluating adversarial robustness
+of LLM agents in tool-use scenarios.
+Ruan et~al.~\cite{ruan2024identifying} proposed an LM-emulated
+sandbox for identifying risks in LM agents.
+
+These benchmarks focus predominantly on single-model or
+single-agent evaluation.  Our testbed is distinguished by three
+design choices: (1)~it evaluates \emph{environmental} rather than
+\emph{prompt-level} attacks, implementing the full taxonomy from
+Yuntao et~al.~\cite{yuntao2025agenttraps}; (2)~it tests attacks
+within a real multi-agent A2A protocol system rather than in
+isolated model calls; and (3)~it provides a complete experimental
+matrix (22~scenarios $\times$ 4~models $\times$ 3~conditions
+$\times$ 10~reps $=$ 2,640 main runs, plus 600 compound and
+6,160 ablation runs) with non-parametric statistical tests
+(Wilcoxon signed-rank~\cite{wilcoxon1945individual}) and
+calibrated effect sizes (Cohen's $d$~\cite{cohen1988statistical}).
+
+% ------------------------------------------------------------------
+\subsection{Positioning Summary}
+
+Table~\ref{tab:related-positioning} compares our testbed against
+the most closely related prior work across five evaluation dimensions.
+
+\begin{table}[t]
+\centering
+\caption{Positioning against prior work.
+  \ding{51} = addressed; \ding{55} = not addressed; $\circ$ = partially.}
+\label{tab:related-positioning}
+\small
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Work} &
+  \rotatebox{70}{\textbf{Environmental}} &
+  \rotatebox{70}{\textbf{Multi-Agent}} &
+  \rotatebox{70}{\textbf{A2A Protocol}} &
+  \rotatebox{70}{\textbf{Full Taxonomy}} &
+  \rotatebox{70}{\textbf{Stat.\ Rigor}} \\
+\midrule
+Greshake et al.~\cite{greshake2023indirect}
+  & $\circ$ & \ding{55} & \ding{55} & \ding{55} & \ding{55} \\
+Perez \& Ribeiro~\cite{perez2022prompt}
+  & \ding{55} & \ding{55} & \ding{55} & \ding{55} & \ding{55} \\
+Zou et al.~\cite{zou2023universal}
+  & \ding{55} & \ding{55} & \ding{55} & \ding{55} & $\circ$ \\
+Cohen et al.~\cite{cohen2024unleashing}
+  & $\circ$ & \ding{51} & \ding{55} & \ding{55} & \ding{55} \\
+Mazeika et al.~\cite{mazeika2024harmbench}
+  & \ding{55} & \ding{55} & \ding{55} & \ding{55} & \ding{51} \\
+Debenedetti et al.~\cite{debenedetti2024agentdojo}
+  & $\circ$ & \ding{55} & \ding{55} & \ding{55} & $\circ$ \\
+Yuntao et al.~\cite{yuntao2025agenttraps}
+  & \ding{51} & $\circ$ & \ding{55} & \ding{51} & \ding{55} \\
+\midrule
+\textbf{This work}
+  & \ding{51} & \ding{51} & \ding{51} & \ding{51} & \ding{51} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The Yuntao et~al.\ taxonomy~\cite{yuntao2025agenttraps} provides the
+conceptual foundation; our contribution is to operationalize it as a
+reproducible, statistically rigorous testbed and to extend it to the
+multi-agent A2A protocol setting.  We further contribute seven
+purpose-built mitigations and a comprehensive ablation study
+quantifying their individual and combined effectiveness.

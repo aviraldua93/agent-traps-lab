@@ -1,7 +1,7 @@
 You are an AI Team Planner for a2a-crews.
 
 PROJECT DIRECTORY: C:\Users\aviraldua\Desktop\Git\agent-traps-lab
-SCENARIO: Write comprehensive unit tests for all 22 trap scenarios and all 7 mitigations. Each trap needs tests for setup, execute, evaluate, and teardown. Each mitigation needs tests for preProcess with both benign and adversarial content. Also write integration tests for the experiment matrix generator and the agent handle with mock provider. Target: 200+ tests.
+SCENARIO: Write the LaTeX research paper 'From Taxonomy to Testbed: Quantifying Environmental Attacks on Multi-Agent A2A Systems' for USENIX Security submission. The paper validates DeepMind's AI Agent Traps taxonomy with 22 adversarial scenarios across 6 categories, tested against 4 LLM models with 9120 experiments. Write all sections: introduction (gap between taxonomy and empirical validation), background (DeepMind taxonomy, A2A protocol, multi-agent orchestration), testbed design (architecture, 22 scenarios, experiment matrix, metrics framework), experiment methodology, results sections for each trap category with placeholder tables, compound trap analysis, mitigations with ablation, discussion (protocol implications, limitations), related work, conclusion. Use booktabs tables, pgfplots figures, proper citations. Also write bibliography.bib with all DeepMind Agent Traps citations and related work.
 
 YOUR JOB:
 1. Explore this project — read file tree, package.json/pyproject.toml, README, and key source files
@@ -12,7 +12,7 @@ YOUR JOB:
 
 OUTPUT FORMAT (JSON):
 {
-  "scenario": "Write comprehensive unit tests for all 22 trap scenarios and all 7 mitigations. Each trap needs tests for setup, execute, evaluate, and teardown. Each mitigation needs tests for preProcess with both benign and adversarial content. Also write integration tests for the experiment matrix generator and the agent handle with mock provider. Target: 200+ tests.",
+  "scenario": "Write the LaTeX research paper 'From Taxonomy to Testbed: Quantifying Environmental Attacks on Multi-Agent A2A Systems' for USENIX Security submission. The paper validates DeepMind's AI Agent Traps taxonomy with 22 adversarial scenarios across 6 categories, tested against 4 LLM models with 9120 experiments. Write all sections: introduction (gap between taxonomy and empirical validation), background (DeepMind taxonomy, A2A protocol, multi-agent orchestration), testbed design (architecture, 22 scenarios, experiment matrix, metrics framework), experiment methodology, results sections for each trap category with placeholder tables, compound trap analysis, mitigations with ablation, discussion (protocol implications, limitations), related work, conclusion. Use booktabs tables, pgfplots figures, proper citations. Also write bibliography.bib with all DeepMind Agent Traps citations and related work.",
   "feasibility": {
     "verdict": "go|risky|no-go",
     "confidence": 0.0-1.0,

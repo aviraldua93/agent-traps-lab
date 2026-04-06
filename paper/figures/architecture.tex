@@ -1,0 +1,162 @@
+% ===========================================================================
+% Architecture Diagram — Testbed Pipeline
+% ===========================================================================
+% Included by: \input{figures/architecture}
+% Shows: datasets → trap scenarios → harness runner → agent handle → metrics → reporter
+%
+\begin{tikzpicture}[
+  % Node styles
+  component/.style={
+    rectangle,
+    draw=black!70,
+    fill=blue!8,
+    rounded corners=3pt,
+    minimum height=1.0cm,
+    minimum width=2.2cm,
+    font=\small\sffamily,
+    align=center,
+    thick,
+  },
+  agent/.style={
+    rectangle,
+    draw=black!70,
+    fill=green!10,
+    rounded corners=3pt,
+    minimum height=0.75cm,
+    minimum width=1.6cm,
+    font=\scriptsize\sffamily,
+    align=center,
+    thick,
+  },
+  mitigation/.style={
+    rectangle,
+    draw=black!70,
+    fill=orange!10,
+    rounded corners=3pt,
+    minimum height=0.75cm,
+    minimum width=1.6cm,
+    font=\scriptsize\sffamily,
+    align=center,
+    thick,
+  },
+  data/.style={
+    cylinder,
+    draw=black!70,
+    fill=yellow!10,
+    shape border rotate=90,
+    aspect=0.25,
+    minimum height=0.9cm,
+    minimum width=1.4cm,
+    font=\small\sffamily,
+    align=center,
+    thick,
+  },
+  output/.style={
+    rectangle,
+    draw=black!70,
+    fill=red!8,
+    rounded corners=3pt,
+    minimum height=0.9cm,
+    minimum width=1.8cm,
+    font=\small\sffamily,
+    align=center,
+    thick,
+  },
+  arrow/.style={
+    -Stealth,
+    thick,
+    black!70,
+  },
+  darrow/.style={
+    Stealth-Stealth,
+    thick,
+    black!50,
+    dashed,
+  },
+  grouplabel/.style={
+    font=\scriptsize\sffamily\itshape,
+    text=black!60,
+  },
+]
+
+% ── Row 1: Data sources ──
+\node[data] (datasets) at (0, 0) {Datasets};
+
+% ── Row 2: Trap Registry ──
+\node[component] (registry) at (0, -1.8) {Trap Registry\\{\scriptsize 22 scenarios}};
+
+% Category labels under registry
+\node[grouplabel, below=0.15cm of registry] (cats) {
+  CI(4)~~SM(4)~~CS(4)~~BC(4)~~SY(3)~~HL(3)
+};
+
+% ── Row 3: Harness Runner ──
+\node[component] (harness) at (0, -4.0) {Harness\\Runner};
+\node[component, left=1.0cm of harness] (matrix) {Matrix\\Generator};
+
+% ── Row 4: Agent Handles (4 models) ──
+\node[agent] (gpt4o) at (-3.2, -6.0) {GPT-4o};
+\node[agent] (claude) at (-1.1, -6.0) {Claude\\Sonnet~4};
+\node[agent] (gemini) at (1.0, -6.0) {Gemini\\2.5 Pro};
+\node[agent] (mini) at (3.2, -6.0) {GPT-4o\\mini};
+
+% ── Mitigations (floating right of agents) ──
+\node[mitigation] (mits) at (5.2, -6.0) {Mitigation\\Suite (7)};
+
+% ── Row 5: Metrics ──
+\node[component] (metrics) at (0, -8.0) {Metrics\\Engine};
+
+% ── Row 6: Reporter ──
+\node[output] (reporter) at (-2.0, -9.8) {Reporter\\{\scriptsize \LaTeX\ assets}};
+\node[output] (results) at (2.0, -9.8) {Results\\{\scriptsize JSON}};
+
+% ── Arrows ──
+% Data → Registry
+\draw[arrow] (datasets) -- (registry);
+
+% Registry → Harness
+\draw[arrow] (registry) -- (harness)
+  node[midway, right, font=\scriptsize] {scenarios};
+
+% Matrix → Harness
+\draw[arrow] (matrix) -- (harness)
+  node[midway, above, font=\scriptsize] {cells};
+
+% Harness → Agent handles
+\draw[arrow] (harness) -- (gpt4o)
+  node[midway, left, font=\scriptsize, xshift=-2pt] {};
+\draw[arrow] (harness) -- (claude);
+\draw[arrow] (harness) -- (gemini);
+\draw[arrow] (harness) -- (mini);
+
+% Mitigations ↔ Agents
+\draw[darrow] (mits) -- (mini)
+  node[midway, above, font=\scriptsize] {};
+\draw[darrow] (mits.south west) -- (gemini.east);
+
+% Agent handles → Metrics
+\draw[arrow] (gpt4o) -- (metrics);
+\draw[arrow] (claude) -- (metrics);
+\draw[arrow] (gemini) -- (metrics);
+\draw[arrow] (mini) -- (metrics);
+
+% Metrics → Outputs
+\draw[arrow] (metrics) -- (reporter)
+  node[midway, left, font=\scriptsize] {aggregates};
+\draw[arrow] (metrics) -- (results)
+  node[midway, right, font=\scriptsize] {raw data};
+
+% ── Background boxes ──
+\begin{scope}[on background layer]
+  % Agent group box
+  \node[
+    draw=green!40,
+    fill=green!3,
+    rounded corners=5pt,
+    fit=(gpt4o)(claude)(gemini)(mini),
+    inner sep=6pt,
+    label={[grouplabel]above:{Agent Handles (3 conditions each)}},
+  ] {};
+\end{scope}
+
+\end{tikzpicture}

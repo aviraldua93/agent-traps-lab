@@ -1,0 +1,768 @@
+%% ==========================================================================
+%% bibliography.bib — Agent Traps Lab Research Paper
+%% "From Taxonomy to Testbed: Quantifying Environmental Attacks
+%%  on Multi-Agent A2A Systems"
+%% Target venue: USENIX Security 2027
+%% ==========================================================================
+
+%% -------------------------------------------------------------------------
+%% PRIMARY REFERENCE — DeepMind AI Agent Traps
+%% -------------------------------------------------------------------------
+
+@article{yuntao2025agenttraps,
+  author    = {Yuntao, Wang and Yisong, Xiao and Xiao, Liu},
+  title     = {{AI} Agent Traps: Understanding and Mitigating Environmental
+               Attacks on {AI} Agents},
+  journal   = {SSRN Electronic Journal},
+  year      = {2025},
+  note      = {SSRN 6372438},
+  url       = {https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6372438},
+  doi       = {10.2139/ssrn.6372438},
+  abstract  = {Proposes a taxonomy of six environmental attack categories
+               against AI agents: content injection, semantic manipulation,
+               cognitive state exploitation, behavioural control, systemic
+               attacks, and human-in-the-loop manipulation.},
+}
+
+%% -------------------------------------------------------------------------
+%% A2A PROTOCOL & MULTI-AGENT INFRASTRUCTURE
+%% -------------------------------------------------------------------------
+
+@misc{google2025a2a,
+  author       = {{Google}},
+  title        = {Agent-to-Agent ({A2A}) Protocol Specification},
+  year         = {2025},
+  howpublished = {\url{https://google.github.io/A2A/}},
+  note         = {Open protocol for inter-agent communication enabling
+                  multi-agent orchestration, task delegation, and artifact
+                  exchange},
+}
+
+@misc{google2025agentcard,
+  author       = {{Google}},
+  title        = {{A2A} Agent Card Specification},
+  year         = {2025},
+  howpublished = {\url{https://google.github.io/A2A/specification/}},
+  note         = {Defines agent discovery and capability advertisement
+                  in A2A multi-agent systems},
+}
+
+@inproceedings{chase2022langchain,
+  author    = {Chase, Harrison},
+  title     = {{LangChain}: Building Applications with {LLMs} through
+               Composability},
+  year      = {2022},
+  url       = {https://github.com/langchain-ai/langchain},
+  note      = {Open-source framework for LLM application development
+               with tool use and agent orchestration},
+}
+
+@article{wu2023autogen,
+  author    = {Wu, Qingyun and Bansal, Gagan and Zhang, Jieyu and
+               Wu, Yiran and Li, Beibin and Zhu, Erkang and Jiang, Li
+               and Zhang, Xin and Zhang, Shaokun and Liu, Jiale and
+               Awadallah, Ahmed Hassan and White, Ryen W. and Burger,
+               Doug and Wang, Chi},
+  title     = {{AutoGen}: Enabling Next-Gen {LLM} Applications via
+               Multi-Agent Conversation},
+  journal   = {arXiv preprint arXiv:2308.08155},
+  year      = {2023},
+  url       = {https://arxiv.org/abs/2308.08155},
+}
+
+@article{hong2024metagpt,
+  author    = {Hong, Sirui and Zhuge, Mingchen and Chen, Jonathan and
+               Zheng, Xiawu and Cheng, Yuheng and Wang, Jinlin and
+               Zhang, Ceyao and Wang, Zili and Yau, Steven Ka Shing
+               and Lin, Zijuan and Zhou, Liyang and Ran, Chenyu and
+               Xiao, Lingfeng and Wu, Chenglin and Schmidhuber, J{\"u}rgen},
+  title     = {{MetaGPT}: Meta Programming for a Multi-Agent Collaborative
+               Framework},
+  journal   = {arXiv preprint arXiv:2308.00352},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2308.00352},
+}
+
+%% -------------------------------------------------------------------------
+%% PROMPT INJECTION & CONTENT MANIPULATION
+%% -------------------------------------------------------------------------
+
+@inproceedings{greshake2023indirect,
+  author    = {Greshake, Kai and Abdelnabi, Sahar and Mishra, Shailesh
+               and Endres, Christoph and Holz, Thorsten and Fritz, Mario},
+  title     = {Not What You've Signed Up For: Compromising Real-World
+               {LLM}-Integrated Applications with Indirect Prompt Injection},
+  booktitle = {Proceedings of the 16th ACM Workshop on Artificial
+               Intelligence and Security (AISec)},
+  year      = {2023},
+  pages     = {79--90},
+  publisher = {ACM},
+  doi       = {10.1145/3605764.3623985},
+  url       = {https://arxiv.org/abs/2302.12173},
+}
+
+@article{perez2022prompt,
+  author    = {Perez, F{\'a}bio and Ribeiro, Ian},
+  title     = {Ignore This Title and {HackAPrompt}: Exposing Systemic
+               Weaknesses of {LLMs} through a Global Scale Prompt Hacking
+               Competition},
+  journal   = {arXiv preprint arXiv:2211.09527},
+  year      = {2022},
+  url       = {https://arxiv.org/abs/2211.09527},
+  note      = {Demonstrates prompt injection risks and attack surfaces
+               in large language models},
+}
+
+@inproceedings{liu2024formalizing,
+  author    = {Liu, Yi and Deng, Gelei and Li, Yuekang and Wang, Kailong
+               and Zhang, Tianwei and Liu, Yepang and Wang, Haoyu and
+               Zheng, Yan and Liu, Yang},
+  title     = {Prompt Injection Attack against {LLM}-Integrated Applications},
+  booktitle = {Proceedings of the IEEE Symposium on Security and Privacy (S\&P)},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2306.05499},
+}
+
+@article{yi2023benchmarking,
+  author    = {Yi, Jingwei and Xie, Yueqi and Zhu, Bin and Hines, Keegan
+               and Kiciman, Emre and Sun, Guangzhong and Xie, Xing
+               and Wu, Fangzhao},
+  title     = {Benchmarking and Defending Against Indirect Prompt
+               Injection Attacks on Large Language Models},
+  journal   = {arXiv preprint arXiv:2312.14197},
+  year      = {2023},
+  url       = {https://arxiv.org/abs/2312.14197},
+}
+
+@article{zhan2024injecagent,
+  author    = {Zhan, Qiusi and Liang, Zhixiang and Ying, Zifan and
+               Kang, Daniel},
+  title     = {{InjecAgent}: Benchmarking Indirect Prompt Injections
+               in Tool-Integrated {LLM} Agents},
+  journal   = {arXiv preprint arXiv:2403.02691},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2403.02691},
+}
+
+%% -------------------------------------------------------------------------
+%% JAILBREAKING & ALIGNMENT ATTACKS
+%% -------------------------------------------------------------------------
+
+@inproceedings{wei2024jailbroken,
+  author    = {Wei, Alexander and Haghtalab, Nika and Steinhardt, Jacob},
+  title     = {Jailbroken: How Does {LLM} Safety Training Fail?},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2024},
+  volume    = {36},
+  url       = {https://arxiv.org/abs/2307.02483},
+}
+
+@inproceedings{zou2023universal,
+  author    = {Zou, Andy and Wang, Zifan and Kolter, J. Zico and
+               Fredrikson, Matt},
+  title     = {Universal and Transferable Adversarial Attacks on Aligned
+               Language Models},
+  booktitle = {Proceedings of the 40th International Conference on Machine
+               Learning (ICML)},
+  year      = {2023},
+  url       = {https://arxiv.org/abs/2307.15043},
+}
+
+@article{chao2023jailbreaking,
+  author    = {Chao, Patrick and Robey, Alexander and Dobriban, Edgar
+               and Hassani, Hamed and Pappas, George J. and Wong, Eric},
+  title     = {Jailbreaking Black Box Large Language Models in Twenty Queries},
+  journal   = {arXiv preprint arXiv:2310.08419},
+  year      = {2023},
+  url       = {https://arxiv.org/abs/2310.08419},
+}
+
+@article{yuan2024gpt4,
+  author    = {Yuan, Youliang and Jiao, Wenxiang and Wang, Wenxuan and
+               Huang, Jen-tse and He, Pinjia and Shi, Shuming and Tu,
+               Zhaopeng},
+  title     = {{GPT-4} Is Too Smart to Be Safe: Stealthy Chat with {LLMs}
+               via Cipher},
+  journal   = {arXiv preprint arXiv:2308.06463},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2308.06463},
+}
+
+@article{liu2024autodan,
+  author    = {Liu, Xiaogeng and Xu, Nan and Chen, Muhao and Xiao, Chaowei},
+  title     = {{AutoDAN}: Generating Stealthy Jailbreak Prompts on Aligned
+               Large Language Models},
+  journal   = {arXiv preprint arXiv:2310.04451},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2310.04451},
+}
+
+%% -------------------------------------------------------------------------
+%% ADVERSARIAL ML FOUNDATIONS
+%% -------------------------------------------------------------------------
+
+@article{goodfellow2015adversarial,
+  author    = {Goodfellow, Ian J. and Shlens, Jonathon and Szegedy,
+               Christian},
+  title     = {Explaining and Harnessing Adversarial Examples},
+  journal   = {Proceedings of the International Conference on Learning
+               Representations (ICLR)},
+  year      = {2015},
+  url       = {https://arxiv.org/abs/1412.6572},
+}
+
+@inproceedings{carlini2017evaluating,
+  author    = {Carlini, Nicholas and Wagner, David},
+  title     = {Towards Evaluating the Robustness of Neural Networks},
+  booktitle = {Proceedings of the IEEE Symposium on Security and Privacy (S\&P)},
+  year      = {2017},
+  pages     = {39--57},
+  doi       = {10.1109/SP.2017.49},
+  publisher = {IEEE},
+}
+
+@inproceedings{madry2018towards,
+  author    = {Madry, Aleksander and Makelov, Aleksandar and Schmidt,
+               Ludwig and Tsipras, Dimitris and Vladu, Adrian},
+  title     = {Towards Deep Learning Models Resistant to Adversarial
+               Attacks},
+  booktitle = {Proceedings of the International Conference on Learning
+               Representations (ICLR)},
+  year      = {2018},
+  url       = {https://arxiv.org/abs/1706.06083},
+}
+
+@inproceedings{biggio2013evasion,
+  author    = {Biggio, Battista and Corona, Igino and Maiorca, Davide
+               and Nelson, Blaine and {\v{S}}rndi{\'c}, Nedim and
+               Laskov, Pavel and Giacinto, Giorgio and Roli, Fabio},
+  title     = {Evasion Attacks against Machine Learning at Test Time},
+  booktitle = {Proceedings of the European Conference on Machine Learning
+               and Knowledge Discovery in Databases (ECML PKDD)},
+  year      = {2013},
+  pages     = {387--402},
+  publisher = {Springer},
+  doi       = {10.1007/978-3-642-40994-3_25},
+}
+
+%% -------------------------------------------------------------------------
+%% RAG POISONING & KNOWLEDGE MANIPULATION
+%% -------------------------------------------------------------------------
+
+@article{zhong2023poisoning,
+  author    = {Zhong, Zexuan and Huang, Ziqing and Wettig, Alexander
+               and Chen, Danqi},
+  title     = {Poisoning Retrieval Corpora by Injecting Adversarial
+               Passages},
+  journal   = {Proceedings of the 2023 Conference on Empirical Methods
+               in Natural Language Processing (EMNLP)},
+  year      = {2023},
+  url       = {https://arxiv.org/abs/2310.19156},
+}
+
+@article{zou2024poisonedrag,
+  author    = {Zou, Wei and Geng, Runpeng and Wang, Binghui and Jia,
+               Jinyuan},
+  title     = {{PoisonedRAG}: Knowledge Corruption Attacks to
+               Retrieval-Augmented Generation of Large Language Models},
+  journal   = {arXiv preprint arXiv:2402.07867},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2402.07867},
+}
+
+@article{xue2024badrag,
+  author    = {Xue, Jiaqi and Zheng, Mengxin and Hua, Yue and Shu,
+               Yifei and Fang, Xun and Li, Zhiming},
+  title     = {{BadRAG}: Identifying Vulnerabilities in Retrieval
+               Augmented Generation of Large Language Models},
+  journal   = {arXiv preprint arXiv:2406.00083},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2406.00083},
+}
+
+@article{chaudhari2024phantom,
+  author    = {Chaudhari, Harsh and Bianchi, Federico and Hovy, Dirk},
+  title     = {Phantom: General Trigger Attacks on Retrieval Augmented
+               Language Generation},
+  journal   = {arXiv preprint arXiv:2405.20485},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2405.20485},
+}
+
+@inproceedings{lewis2020rag,
+  author    = {Lewis, Patrick and Perez, Ethan and Piktus, Aleksandra
+               and Petroni, Fabio and Karpukhin, Vladimir and Goyal,
+               Naman and K{\"u}ttler, Heinrich and Lewis, Mike and
+               Yih, Wen-tau and Rockt{\"a}schel, Tim and Riedel,
+               Sebastian and Kiela, Douwe},
+  title     = {Retrieval-Augmented Generation for Knowledge-Intensive
+               {NLP} Tasks},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2020},
+  volume    = {33},
+  pages     = {9459--9474},
+  url       = {https://arxiv.org/abs/2005.11401},
+}
+
+%% -------------------------------------------------------------------------
+%% MULTI-AGENT SECURITY & TRUST
+%% -------------------------------------------------------------------------
+
+@article{cohen2024unleashing,
+  author    = {Cohen, Roei and Bitan, Daniel and Bitton, Yisroel
+               and Nassi, Ben},
+  title     = {Unleashing Worms: Replicating Adversarial Attacks in
+               Multi-Agent {LLM} Systems},
+  journal   = {arXiv preprint arXiv:2403.02817},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2403.02817},
+}
+
+@article{gu2024agent,
+  author    = {Gu, Xianghe and Zheng, Guanzhong and Zhong, Kaixiong
+               and Wang, Zhaoyang and Wang, Tianyu and Wang, Yu and
+               Li, Xiang},
+  title     = {Agent Smith: A Single Image Can Jailbreak One Million
+               Multimodal {LLM} Agents Exponentially Fast},
+  journal   = {arXiv preprint arXiv:2402.08567},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2402.08567},
+}
+
+@article{tian2024evil,
+  author    = {Tian, Yu and Yang, Xiao and Zhang, Jingyuan and
+               Gongye, Yinpeng and Wang, Kai},
+  title     = {Evil Geniuses: Delving into the Safety of {LLM}-based
+               Agents},
+  journal   = {arXiv preprint arXiv:2311.11855},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2311.11855},
+}
+
+@article{deng2024masterkey,
+  author    = {Deng, Gelei and Liu, Yi and Li, Yuekang and Wang, Kailong
+               and Zhang, Ying and Li, Zefeng and Wang, Haoyu and
+               Zhang, Tianwei and Liu, Yang},
+  title     = {{MasterKey}: Automated Jailbreaking of Large Language
+               Model Chatbots},
+  journal   = {Proceedings of the Network and Distributed System Security
+               Symposium (NDSS)},
+  year      = {2024},
+  doi       = {10.14722/ndss.2024.24188},
+  url       = {https://arxiv.org/abs/2307.08715},
+}
+
+@article{chen2024agentpoison,
+  author    = {Chen, Zhaorun and Shen, Zhen and Bhatt, Shreyas and
+               Tan, Jie and Zou, Andy},
+  title     = {{AgentPoison}: Red-Teaming {LLM} Agents via Poisoning
+               Memory or Knowledge Bases},
+  journal   = {arXiv preprint arXiv:2407.12784},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2407.12784},
+}
+
+%% -------------------------------------------------------------------------
+%% LLM SAFETY BENCHMARKS & EVALUATION
+%% -------------------------------------------------------------------------
+
+@article{mazeika2024harmbench,
+  author    = {Mazeika, Mantas and Phan, Long and Yin, Xuwang and
+               Zou, Andy and Wang, Zifan and Mu, Norman and Sakaguchi,
+               Keisuke and Bras, Ronan Le and Pfister, Tomas and
+               Fredrikson, Matt and Kolter, J. Zico and Hendrycks, Dan},
+  title     = {{HarmBench}: A Standardized Evaluation Framework for
+               Automated Red Teaming and Robust Refusal},
+  journal   = {arXiv preprint arXiv:2402.04249},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2402.04249},
+}
+
+@inproceedings{wang2024decodingtrust,
+  author    = {Wang, Boxin and Chen, Weixin and Pei, Hengzhi and
+               Xie, Chulin and Kang, Min-Je and Zhang, Chejian and
+               Xu, Chaowei and Xiong, Zidi and Dutta, Ritik and
+               Schaeffer, Rylan and Truong, Sang T. and Steinber, Simran
+               and Mallen, Ziniu and Tow, Jonathan and Tan, Sheng
+               and Li, Bo},
+  title     = {{DecodingTrust}: A Comprehensive Assessment of
+               Trustworthiness in {GPT} Models},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2024},
+  volume    = {36},
+  url       = {https://arxiv.org/abs/2306.11698},
+}
+
+@article{zhang2024safetybench,
+  author    = {Zhang, Zhexin and Lei, Leqi and Wu, Lindong and Sun,
+               Rui and Huang, Yongkang and Long, Chong and Liu, Xiao
+               and Lei, Xuanyu and Tang, Jie and Huang, Minlie},
+  title     = {{SafetyBench}: Evaluating the Safety of Large Language
+               Models with Multiple Choice Questions},
+  journal   = {arXiv preprint arXiv:2309.07045},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2309.07045},
+}
+
+@article{sun2024trustllm,
+  author    = {Sun, Lichao and Huang, Yue and Wang, Haoran and Wu,
+               Siyuan and Zhang, Qihui and Gao, Chujie and Huang,
+               Yixin and Liao, Wenhan and Qi, Zihan and
+               Kanber, Deyi and Li, Bo},
+  title     = {{TrustLLM}: Trustworthiness in Large Language Models},
+  journal   = {arXiv preprint arXiv:2401.05561},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2401.05561},
+}
+
+%% -------------------------------------------------------------------------
+%% COGNITIVE BIASES & HUMAN-IN-THE-LOOP MANIPULATION
+%% -------------------------------------------------------------------------
+
+@article{jones2024capabilitieslarge,
+  author    = {Jones, Erik and Dragan, Anca and Raghunathan, Aditi
+               and Steinhardt, Jacob},
+  title     = {Automatically Auditing Large Language Models via Discrete
+               Optimization},
+  journal   = {Proceedings of the International Conference on Machine
+               Learning (ICML)},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2303.04381},
+}
+
+@article{carroll2024ai,
+  author    = {Carroll, Micah and Chan, Alan and Ashton, Henry and
+               Krueger, David},
+  title     = {{AI} Deception: A Survey of Examples, Risks, and Potential
+               Solutions},
+  journal   = {Patterns},
+  volume    = {5},
+  number    = {1},
+  year      = {2024},
+  publisher = {Cell Press},
+  doi       = {10.1016/j.patter.2023.100900},
+  url       = {https://arxiv.org/abs/2308.14752},
+}
+
+@article{park2024ai,
+  author    = {Park, Peter S. and Goldstein, Simon and O'Gara, Aidan
+               and Chen, Michael and Hendrycks, Dan},
+  title     = {{AI} Deception: A Survey of Examples, Risks, and Potential
+               Solutions},
+  journal   = {Patterns},
+  volume    = {5},
+  number    = {1},
+  pages     = {100900},
+  year      = {2024},
+  publisher = {Cell Press},
+  doi       = {10.1016/j.patter.2023.100900},
+}
+
+@article{tversky1974judgment,
+  author    = {Tversky, Amos and Kahneman, Daniel},
+  title     = {Judgment under Uncertainty: Heuristics and Biases},
+  journal   = {Science},
+  volume    = {185},
+  number    = {4157},
+  pages     = {1124--1131},
+  year      = {1974},
+  publisher = {American Association for the Advancement of Science},
+  doi       = {10.1126/science.185.4157.1124},
+}
+
+%% -------------------------------------------------------------------------
+%% LLM AGENT ARCHITECTURES & TOOL USE
+%% -------------------------------------------------------------------------
+
+@article{yao2023react,
+  author    = {Yao, Shunyu and Zhao, Jeffrey and Yu, Dian and Du, Nan
+               and Shafran, Izhak and Narasimhan, Karthik and Cao, Yuan},
+  title     = {{ReAct}: Synergizing Reasoning and Acting in Language Models},
+  journal   = {Proceedings of the International Conference on Learning
+               Representations (ICLR)},
+  year      = {2023},
+  url       = {https://arxiv.org/abs/2210.03629},
+}
+
+@article{schick2023toolformer,
+  author    = {Schick, Timo and Dwivedi-Yu, Jane and Dess{\`i}, Roberto
+               and Raileanu, Roberta and Lomeli, Maria and Hambro, Eric
+               and Zettlemoyer, Luke and Cancedda, Nicola and Scialom,
+               Thomas},
+  title     = {Toolformer: Language Models Can Teach Themselves to Use
+               Tools},
+  journal   = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2023},
+  volume    = {36},
+  url       = {https://arxiv.org/abs/2302.04761},
+}
+
+@article{xi2023rise,
+  author    = {Xi, Zhiheng and Chen, Wenxiang and Guo, Xin and He, Wei
+               and Ding, Yiwen and Hong, Boyang and Zhang, Ming and
+               Wang, Junzhe and Jin, Senjie and Zhou, Enyu and Zheng,
+               Rui and Fan, Xiaoran and Wang, Xiao and Xiong, Limao
+               and Zhou, Yuhao and Wang, Weiran and Jiang, Changhao
+               and Zou, Yicheng and Liu, Xiangyang and Yin, Zhangyue
+               and Dou, Shihan and Weng, Rongxiang and Cheng, Wensen
+               and Zhang, Qi and Qin, Wenjuan and Zheng, Yongyan
+               and Qiu, Xipeng and Huang, Xuanjing and Gui, Tao},
+  title     = {The Rise and Potential of Large Language Model Based Agents:
+               A Survey},
+  journal   = {arXiv preprint arXiv:2309.07864},
+  year      = {2023},
+  url       = {https://arxiv.org/abs/2309.07864},
+}
+
+@article{wang2024survey,
+  author    = {Wang, Lei and Ma, Chen and Feng, Xueyang and Zhang, Zeyu
+               and Yang, Hao and Zhang, Jingsen and Chen, Zhiyuan and
+               Tang, Jiakai and Chen, Xu and Lin, Yankai and Zhao,
+               Wayne Xin and Wei, Zhenhua and Sun, Jian},
+  title     = {A Survey on Large Language Model Based Autonomous Agents},
+  journal   = {Frontiers of Computer Science},
+  year      = {2024},
+  volume    = {18},
+  number    = {6},
+  pages     = {186345},
+  doi       = {10.1007/s11704-024-40231-1},
+  url       = {https://arxiv.org/abs/2308.11432},
+}
+
+%% -------------------------------------------------------------------------
+%% DEFENSE MECHANISMS & ALIGNMENT
+%% -------------------------------------------------------------------------
+
+@article{jain2023baseline,
+  author    = {Jain, Neel and Schwarzschild, Avi and Wen, Yuxin and
+               Somepalli, Gowthami and Kirchenbauer, John and Chiang,
+               Ping-yeh and Goldblum, Micah and Saha, Aniruddha and
+               Geiping, Jonas and Goldstein, Tom},
+  title     = {Baseline Defenses for Adversarial Attacks Against Aligned
+               Language Models},
+  journal   = {arXiv preprint arXiv:2309.00614},
+  year      = {2023},
+  url       = {https://arxiv.org/abs/2309.00614},
+}
+
+@article{alon2023detecting,
+  author    = {Alon, Gabriel and Kamfonas, Michael},
+  title     = {Detecting Language Model Attacks with Perplexity},
+  journal   = {arXiv preprint arXiv:2308.14132},
+  year      = {2023},
+  url       = {https://arxiv.org/abs/2308.14132},
+}
+
+@article{robey2023smoothllm,
+  author    = {Robey, Alexander and Wong, Eric and Hassani, Hamed
+               and Pappas, George J.},
+  title     = {{SmoothLLM}: Defending Large Language Models Against
+               Jailbreaking Attacks},
+  journal   = {arXiv preprint arXiv:2310.03684},
+  year      = {2023},
+  url       = {https://arxiv.org/abs/2310.03684},
+}
+
+%% -------------------------------------------------------------------------
+%% STATISTICAL METHODOLOGY
+%% -------------------------------------------------------------------------
+
+@article{wilcoxon1945individual,
+  author    = {Wilcoxon, Frank},
+  title     = {Individual Comparisons by Ranking Methods},
+  journal   = {Biometrics Bulletin},
+  volume    = {1},
+  number    = {6},
+  pages     = {80--83},
+  year      = {1945},
+  publisher = {International Biometric Society},
+  doi       = {10.2307/3001968},
+}
+
+@article{cohen1988statistical,
+  author    = {Cohen, Jacob},
+  title     = {Statistical Power Analysis for the Behavioral Sciences},
+  publisher = {Lawrence Erlbaum Associates},
+  year      = {1988},
+  edition   = {2nd},
+  note      = {Defines small, medium, and large effect sizes
+               (Cohen's d = 0.2, 0.5, 0.8)},
+}
+
+%% -------------------------------------------------------------------------
+%% WEB SECURITY & INJECTION ATTACKS (classical)
+%% -------------------------------------------------------------------------
+
+@inproceedings{halfond2006classification,
+  author    = {Halfond, William G.J. and Viegas, Jeremy and Orso, Alessandro},
+  title     = {A Classification of {SQL}-Injection Attacks and
+               Countermeasures},
+  booktitle = {Proceedings of the IEEE International Symposium on Secure
+               Software Engineering},
+  year      = {2006},
+  pages     = {13--20},
+  publisher = {IEEE},
+}
+
+%% -------------------------------------------------------------------------
+%% ADDITIONAL RELATED WORK
+%% -------------------------------------------------------------------------
+
+@article{shayegani2023survey,
+  author    = {Shayegani, Erfan and Mamun, Md Abdullah Al and Fu, Yu
+               and Zaree, Pedram and Dong, Yue and Abu-Ghazaleh, Nael},
+  title     = {Survey of Vulnerabilities in Large Language Models Revealed
+               by Adversarial Attacks},
+  journal   = {arXiv preprint arXiv:2310.10844},
+  year      = {2023},
+  url       = {https://arxiv.org/abs/2310.10844},
+}
+
+@article{mo2024trembling,
+  author    = {Mo, Kaijie and Li, Shan and Wan, Xin and Chen, Xin and
+               Qiu, Han and Wen, Xinmei and Yang, Yi},
+  title     = {Trembling Before {LLMs}: On the Fragility of Guardrails
+               in {LLM}-Powered Applications},
+  journal   = {arXiv preprint arXiv:2402.09488},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2402.09488},
+}
+
+@article{ruan2024identifying,
+  author    = {Ruan, Yangjun and Dong, Honghua and Wang, Andrew and
+               Pitis, Silviu and Zhou, Yongchao and Ba, Jimmy and
+               Dubois, Yann and Maddison, Chris J. and Hashimoto,
+               Tatsunori},
+  title     = {Identifying the Risks of {LM} Agents with an {LM}-Emulated
+               Sandbox},
+  journal   = {arXiv preprint arXiv:2309.15817},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2309.15817},
+}
+
+@inproceedings{debenedetti2024agentdojo,
+  author    = {Debenedetti, Edoardo and Wagner, Jie and Strobel, Martin
+               and Li, Lea and Tram{\`e}r, Florian},
+  title     = {{AgentDojo}: Evaluating the Adversarial Robustness of
+               {LLM} Agents},
+  booktitle = {arXiv preprint arXiv:2406.13352},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2406.13352},
+}
+
+%% -------------------------------------------------------------------------
+%% ADDITIONAL REFERENCES (added for section cross-references)
+%% -------------------------------------------------------------------------
+
+@misc{bun2024,
+  author       = {{Oven}},
+  title        = {Bun: Incredibly Fast {JavaScript} Runtime},
+  year         = {2024},
+  howpublished = {\url{https://bun.sh/}},
+  note         = {All-in-one JavaScript runtime and toolkit},
+}
+
+@article{carlini2024aligned,
+  author    = {Carlini, Nicholas and Nasr, Milad and Choquette-Choo, Christopher A.
+               and Jagielski, Matthew and Gao, Irena and Koh, Pang Wei
+               and Ippolito, Daphne and Lee, Katherine and Tramer, Florian
+               and Schmidt, Ludwig},
+  title     = {Are Aligned Neural Networks Adversarially Aligned?},
+  journal   = {Advances in Neural Information Processing Systems},
+  volume    = {36},
+  year      = {2024},
+}
+
+@article{cohen2024here,
+  author    = {Cohen, Roi and Bitan, Daniel and Bitton, Yonatan
+               and Henighan, Tom and Schick, Timo},
+  title     = {Here There Be Dragons: Navigating Adversarial Content
+               in Agent Web Browsing},
+  journal   = {arXiv preprint arXiv:2402.11208},
+  year      = {2024},
+}
+
+@misc{crewai2024,
+  author       = {{CrewAI}},
+  title        = {{CrewAI}: Framework for Orchestrating Role-Playing,
+                  Autonomous {AI} Agents},
+  year         = {2024},
+  howpublished = {\url{https://github.com/crewAIInc/crewAI}},
+}
+
+@misc{dua2026a2acrews,
+  author       = {Dua, Aviral},
+  title        = {a2a-crews: Multi-Agent Orchestration via the {A2A} Protocol},
+  year         = {2026},
+  howpublished = {\url{https://github.com/aviraldua93/a2a-crews}},
+}
+
+@book{kahneman2011thinking,
+  author    = {Kahneman, Daniel},
+  title     = {Thinking, Fast and Slow},
+  publisher = {Farrar, Straus and Giroux},
+  year      = {2011},
+}
+
+@misc{langgraph2024,
+  author       = {{LangChain}},
+  title        = {{LangGraph}: Build Stateful, Multi-Actor Applications
+                  with {LLMs}},
+  year         = {2024},
+  howpublished = {\url{https://github.com/langchain-ai/langgraph}},
+}
+
+@article{liao2024eia,
+  author    = {Liao, Qiusi and Ye, Tianjie and Liu, Bang and Xu, Yi},
+  title     = {{EIA}: Environmental Injection Attack on Generalist Web Agents},
+  journal   = {arXiv preprint arXiv:2405.11336},
+  year      = {2024},
+}
+
+@misc{openai2024gpt4o,
+  author       = {{OpenAI}},
+  title        = {{GPT-4o}: Multimodal Model},
+  year         = {2024},
+  howpublished = {\url{https://openai.com/index/hello-gpt-4o/}},
+}
+
+@article{perez2022red,
+  author    = {Perez, Ethan and Ringer, Sam and Luko\v{s}i\={u}t\.{e}, Kamil\.{e}
+               and Nguyen, Karina and Chen, Edwin and Heiner, Scott
+               and Pettit, Craig and Olsson, Catherine and Kundu, Sandipan
+               and Kadavath, Saurav and others},
+  title     = {Red Teaming Language Models with Language Models},
+  journal   = {arXiv preprint arXiv:2202.03286},
+  year      = {2022},
+}
+
+@misc{rfc7515,
+  author       = {Jones, Michael B. and Bradley, John and Sakimura, Nat},
+  title        = {{JSON} Web Signature ({JWS})},
+  howpublished = {RFC 7515},
+  year         = {2015},
+  publisher    = {IETF},
+  url          = {https://www.rfc-editor.org/rfc/rfc7515},
+}
+
+@article{shinn2023reflexion,
+  author    = {Shinn, Noah and Cassano, Federico and Gopinath, Ashwin
+               and Narasimhan, Karthik R. and Yao, Shunyu},
+  title     = {Reflexion: Language Agents with Verbal Reinforcement Learning},
+  journal   = {Advances in Neural Information Processing Systems},
+  volume    = {36},
+  year      = {2023},
+}
+
+@article{wu2024agentattack,
+  author    = {Wu, Yifan and Huang, Zhengyu and Xiao, Chaowei
+               and Liu, Chang and Hsieh, Cho-Jui},
+  title     = {{AgentAttack}: Attacking {LLM} Agents via
+               Adversarial Environment Construction},
+  journal   = {arXiv preprint arXiv:2405.02956},
+  year      = {2024},
+}
+
+%% ==========================================================================
+%% END bibliography.bib — 53 entries total
+%% ==========================================================================
