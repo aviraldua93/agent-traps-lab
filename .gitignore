@@ -10,3 +10,6 @@ bun.lock
 coverage/
 test-results/
 playwright-report/
+# a2a-crews launch artifacts
+.a2a-crews-launch-*
+.a2a-crews-prompt-*
