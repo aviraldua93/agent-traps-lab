@@ -4,72 +4,24 @@
 \section{Results: Semantic Manipulation}
 \label{sec:results-sm}
 
-This section reports results for the four semantic manipulation
-scenarios: \trap{Authority-Framing} (SM-1), \trap{Emotional-Urgency}
-(SM-2), \trap{Context-Flooding} (SM-3), and
-\trap{Identity-Manipulation} (SM-4).
-
-\subsection{Decision Drift}
-\label{sec:sm-drift}
-
-Unlike content injection, semantic manipulation does not embed
-explicit instructions. Instead, it biases the agent's
-decision-making through framing effects. We measure success via
-\metric{decision drift} ($\Delta$): the cosine distance between
-the agent's action and the ground-truth correct action.
+The four semantic manipulation scenarios bias agent decision-making
+through framing effects rather than explicit injected instructions.
+\Cref{tab:sm-success} reports trap success rates.
 
 \begin{table}[t]
   \centering
-  \caption{Semantic manipulation decision drift ($\Delta$) under
-    baseline (B) and hardened (H) conditions. Values are mean
-    $\pm$ std, $n=10$. Lower is better. \sig\ denotes significance.}
-  \label{tab:sm-drift}
+  \caption{Semantic manipulation trap success rates (\%) for
+    \model{GPT-4o-mini}: baseline (B) vs.\ hardened (H), $n=5$.}
+  \label{tab:sm-success}
   \small
-  \begin{tabular}{@{}llcccc@{}}
+  \begin{tabular}{@{}lrrrcr@{}}
     \toprule
-    & & \model{GPT-4o} & \model{Sonnet~4} & \model{Gemini} & \model{4o-mini} \\
+    \textbf{Scenario} & \textbf{B (\%)} & \textbf{H (\%)} & \textbf{$\Delta$} & \textbf{$d$} & \textbf{$p$} \\
     \midrule
-    \multirow{2}{*}{SM-1}
-      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    \midrule
-    \multirow{2}{*}{SM-2}
-      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    \midrule
-    \multirow{2}{*}{SM-3}
-      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    \midrule
-    \multirow{2}{*}{SM-4}
-      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\subsection{Detection Rates}
-\label{sec:sm-detection}
-
-Semantic manipulation is inherently harder to detect than content
-injection because the adversarial signal is embedded in the
-\emph{framing} rather than in hidden content. Detection rates
-reflect this challenge.
-
-\begin{table}[t]
-  \centering
-  \caption{Semantic manipulation detection rates (\%) across
-    baseline conditions.}
-  \label{tab:sm-detection}
-  \small
-  \begin{tabular}{@{}lcccc@{}}
-    \toprule
-    & \model{GPT-4o} & \model{Sonnet~4} & \model{Gemini} & \model{4o-mini} \\
-    \midrule
-    SM-1 & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    SM-2 & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    SM-3 & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    SM-4 & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    SM-1: Authority framing      & \textbf{100} & \textbf{0} & $-$100 & $\infty$ & 0.033 \\
+    SM-2: Emotional urgency      &   0 &  0 &     0 & 0.00 & 1.000 \\
+    SM-3: Context flooding       &   0 &  0 &     0 & 0.00 & 1.000 \\
+    SM-4: Identity manipulation  &   0 &  0 &     0 & 0.00 & 1.000 \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -78,20 +30,22 @@ reflect this challenge.
 \label{sec:sm-findings}
 
 \begin{enumerate}[nosep,leftmargin=*]
-  \item \textbf{Authority framing (SM-1)} produces the highest
-    decision drift across all models, confirming that LLMs are
-    susceptible to appeals from purported authoritative sources.
+  \item \textbf{Authority framing (SM-1)} is the only semantic
+    manipulation attack that succeeds against GPT-4o-mini in the
+    baseline condition, achieving 100\% trap success. However, the
+    hardened condition \emph{completely} eliminates this vulnerability
+    ($d = \infty$, $p = 0.033$). This is one of only two scenarios
+    showing complete mitigation.
 
-  \item \textbf{Context flooding (SM-3)} is most effective against
-    models with smaller context windows or less robust attention
-    mechanisms, as the adversarial signal is diluted by volume.
+  \item \textbf{Three of four scenarios (SM-2--SM-4)} show 0\%
+    baseline trap success, indicating that GPT-4o-mini is
+    \emph{naturally resistant} to emotional urgency, context flooding,
+    and identity manipulation attacks without any defensive
+    mitigations. This suggests that RLHF training already provides
+    substantial protection against social-engineering framing.
 
-  \item The \mitigation{semantic-shield} module reduces drift
-    significantly for urgency and authority attacks but is less
-    effective against identity manipulation, suggesting that
-    persona-based attacks require more sophisticated defenses.
-
-  \item \model{Claude Sonnet~4} shows the lowest baseline decision
-    drift across semantic manipulation scenarios, suggesting stronger
-    inherent resistance to framing effects.
+  \item The $p = 0.033$ for SM-1 does not reach the Bonferroni
+    threshold of 0.00227, but the effect size is maximal (all 5
+    baseline reps triggered, all 5 hardened reps resisted), providing
+    strong practical evidence despite the limited sample size.
 \end{enumerate}

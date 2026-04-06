@@ -8,26 +8,24 @@ work remains purely theoretical---no open testbed exists to empirically
 measure how real agents behave when deployed into adversarial
 environments. We bridge this gap with \textsc{agent-traps-lab}, an
 open-source framework that operationalizes all six trap categories as
-22 reproducible adversarial scenarios and executes them against four
-production-grade large language models (GPT-4o, Claude Sonnet~4,
-Gemini~2.5~Pro, GPT-4o-mini) over Google's Agent-to-Agent (A2A)
-protocol. Our experiment matrix comprises 9{,}120 individual runs
-spanning three conditions---\emph{baseline} (no defenses),
-\emph{hardened} (seven mitigation modules active), and \emph{ablated}
-(single-mitigation removal)---each repeated 10 times for statistical
-power. We report trap success rates, detection rates, escape rates,
-decision drift, and cascade metrics with 95\% confidence intervals,
-Wilcoxon signed-rank tests, Cohen's $d$ effect sizes, and Bonferroni
-correction for multiple comparisons. Key findings include: (1)~content
-injection traps via hidden CSS and HTML comments achieve the highest
-baseline success rates; (2)~semantic manipulation through authority
-framing is the most difficult trap category for agents to detect;
-(3)~systemic multi-agent cascades produce super-additive failure modes;
-(4)~the hardened mitigation suite reduces overall trap success by a
-statistically significant margin with large effect sizes; and
-(5)~ablation analysis reveals that input sanitization and cascade
-breaking contribute the greatest marginal defense value. We release the
-complete testbed, all experimental data, and paper-ready statistical
-assets to enable reproducible adversarial evaluation of multi-agent
-systems.
+22 reproducible adversarial scenarios and evaluates them against
+GPT-4o-mini (via GitHub Models) over Google's Agent-to-Agent (A2A)
+protocol. Our experiment comprises 220 runs (22~scenarios $\times$
+2~conditions $\times$ 5~repetitions), comparing a \emph{baseline} (no
+defenses) against a \emph{hardened} configuration (seven mitigation
+modules plus a security-hardened system prompt). We report trap success
+rates, detection rates, Cohen's $d$ effect sizes, and
+Bonferroni-corrected Wilcoxon signed-rank tests. Key findings:
+(1)~baseline trap success is \textbf{45.5\%} overall, reduced to
+\textbf{25.5\%} under hardened conditions---a 20 percentage-point
+mitigation benefit; (2)~content injection via CSS and dynamic cloaking
+resists all mitigations (100\% in both conditions), while authority
+framing and cross-contamination are \emph{completely} mitigated
+(100\%$\to$0\%); (3)~systemic traps show 0\% baseline success,
+indicating that GPT-4o-mini naturally resists protocol-level attacks;
+(4)~two \emph{regression} cases emerge where mitigations \emph{increase}
+vulnerability (misleading forms 0\%$\to$100\%, ranking manipulation
+80\%$\to$100\%); and (5)~the modest overall benefit suggests that
+architectural defenses beyond prompt-level hardening are needed. We
+release the complete testbed, experiment data, and analysis scripts.
 \end{abstract}

@@ -4,45 +4,24 @@
 \section{Results: Cognitive State}
 \label{sec:results-cs}
 
-This section reports results for the four cognitive state corruption
-scenarios: \trap{Vector-Poisoning} (CS-1),
-\trap{Ranking-Manipulation} (CS-2), \trap{Gradual-Drift} (CS-3),
-and \trap{Cross-Contamination} (CS-4). These attacks target the
-agent's knowledge retrieval pipeline (RAG) rather than its
-instruction processing.
-
-\subsection{Factual Accuracy Degradation}
-\label{sec:cs-accuracy}
-
-We measure the agent's factual accuracy on a set of ground-truth
-questions after exposure to poisoned knowledge sources.
+The four cognitive state scenarios target the agent's knowledge
+retrieval pipeline rather than its instruction processing.
+\Cref{tab:cs-success} reports trap success rates.
 
 \begin{table}[t]
   \centering
-  \caption{Cognitive state trap success rates (\%) under baseline (B)
-    and hardened (H) conditions. Higher trap success = lower agent
-    accuracy. Values: mean $\pm$ std, $n=10$.}
+  \caption{Cognitive state trap success rates (\%) for
+    \model{GPT-4o-mini}: baseline (B) vs.\ hardened (H), $n=5$.}
   \label{tab:cs-success}
   \small
-  \begin{tabular}{@{}llcccc@{}}
+  \begin{tabular}{@{}lrrrcr@{}}
     \toprule
-    & & \model{GPT-4o} & \model{Sonnet~4} & \model{Gemini} & \model{4o-mini} \\
+    \textbf{Scenario} & \textbf{B (\%)} & \textbf{H (\%)} & \textbf{$\Delta$} & \textbf{$d$} & \textbf{$p$} \\
     \midrule
-    \multirow{2}{*}{CS-1}
-      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    \midrule
-    \multirow{2}{*}{CS-2}
-      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    \midrule
-    \multirow{2}{*}{CS-3}
-      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    \midrule
-    \multirow{2}{*}{CS-4}
-      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    CS-1: Vector poisoning     & \textbf{100} & \textbf{100} &     0 &  0.00 & 1.000 \\
+    CS-2: Ranking manipulation &  80 & \textbf{100} & $+$20 & $-$0.63 & 0.259 \\
+    CS-3: Gradual drift        & \textbf{100} &  20 & $-$80 &  2.53 & 0.052 \\
+    CS-4: Cross-contamination  & \textbf{100} &  \textbf{0} & $-$100 & $\infty$ & 0.033 \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -51,23 +30,24 @@ questions after exposure to poisoned knowledge sources.
 \label{sec:cs-findings}
 
 \begin{enumerate}[nosep,leftmargin=*]
-  \item \textbf{Gradual drift (CS-3)} is the most insidious cognitive
-    state attack: by incrementally shifting knowledge over multiple
-    interactions, it evades detection while accumulating significant
-    factual errors.
+  \item \textbf{Cross-contamination (CS-4)} is completely mitigated:
+    100\%$\to$0\% ($d = \infty$, $p = 0.033$). The
+    \mitigation{rag-integrity} module's cross-reference validation
+    effectively prevents poisoned context from propagating through
+    A2A message exchange.
 
-  \item \textbf{Vector poisoning (CS-1)} achieves the highest
-    \emph{immediate} success rate but is also the most detectable,
-    as the poisoned embeddings produce anomalous retrieval patterns
-    that the \mitigation{rag-integrity} module can flag.
+  \item \textbf{Gradual drift (CS-3)} shows the largest measurable
+    effect size ($d = 2.53$, $p = 0.052$): baseline 100\%$\to$hardened
+    20\%. While one in five hardened runs still drifts, the reduction
+    is substantial.
 
-  \item \textbf{Cross-contamination (CS-4)} is uniquely dangerous in
-    multi-agent systems: when one agent's poisoned context leaks into
-    another agent's knowledge base via A2A message exchange, the
-    blast radius extends beyond the original target.
+  \item \textbf{Vector poisoning (CS-1)} resists all mitigations
+    (100\% in both conditions), indicating that direct embedding-level
+    attacks bypass the \mitigation{rag-integrity} module's
+    document-level validation.
 
-  \item The \mitigation{rag-integrity} module provides strong defense
-    against CS-1 and CS-2 (large Cohen's $d$) but only moderate
-    protection against CS-3 (gradual drift), highlighting the need
-    for temporal anomaly detection in RAG pipelines.
+  \item \textbf{Ranking manipulation (CS-2) is a regression case}:
+    trap success \emph{increases} from 80\% to 100\% under hardened
+    conditions ($d = -0.63$). The mitigations may alter retrieval
+    ordering in a way that inadvertently amplifies the ranking attack.
 \end{enumerate}

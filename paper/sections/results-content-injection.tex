@@ -4,75 +4,27 @@
 \section{Results: Content Injection}
 \label{sec:results-ci}
 
-This section reports results for the four content injection scenarios:
-\trap{CSS-Invisible} (CI-1), \trap{HTML-Comment} (CI-2),
-\trap{Image-Metadata} (CI-3), and \trap{Dynamic-Cloaking} (CI-4).
-
-\subsection{Trap Success Rates}
-\label{sec:ci-success}
-
-\Cref{tab:ci-success} reports trap success rates across all four
-models under baseline and hardened conditions.
+The four content injection scenarios target hidden instructions embedded
+in rendered content. \Cref{tab:ci-success} reports trap success rates
+for \model{GPT-4o-mini} under both conditions.
 
 \begin{table}[t]
   \centering
-  \caption{Content injection trap success rates (\%) under baseline (B)
-    and hardened (H) conditions. Values are mean $\pm$ std across
-    $n=10$ repetitions. \sig\ denotes significance after Bonferroni
-    correction ($p < 0.00227$).}
+  \caption{Content injection trap success rates (\%) for
+    \model{GPT-4o-mini}: baseline (B) vs.\ hardened (H), $n=5$.
+    $\Delta$: change in percentage points. Effect sizes and
+    uncorrected $p$-values from Wilcoxon signed-rank tests.
+    No comparison reaches Bonferroni significance ($p < 0.00227$).}
   \label{tab:ci-success}
   \small
-  \begin{tabular}{@{}llcccc@{}}
+  \begin{tabular}{@{}lrrrcr@{}}
     \toprule
-    & & \model{GPT-4o} & \model{Sonnet~4} & \model{Gemini} & \model{4o-mini} \\
+    \textbf{Scenario} & \textbf{B (\%)} & \textbf{H (\%)} & \textbf{$\Delta$} & \textbf{$d$} & \textbf{$p$} \\
     \midrule
-    \multirow{2}{*}{CI-1}
-      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    \midrule
-    \multirow{2}{*}{CI-2}
-      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    \midrule
-    \multirow{2}{*}{CI-3}
-      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    \midrule
-    \multirow{2}{*}{CI-4}
-      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\subsection{Detection and Escape Rates}
-\label{sec:ci-detection}
-
-Content injection attacks are designed to be invisible to the agent's
-text processing pipeline. \Cref{tab:ci-detection} reports detection
-and escape rates.
-
-\begin{table}[t]
-  \centering
-  \caption{Content injection detection ($\delta$) and escape
-    ($\epsilon$) rates (\%) under baseline conditions. Higher is better.}
-  \label{tab:ci-detection}
-  \small
-  \begin{tabular}{@{}lcccc@{}}
-    \toprule
-    & \model{GPT-4o} & \model{Sonnet~4} & \model{Gemini} & \model{4o-mini} \\
-    \midrule
-    CI-1 $\delta$ & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    CI-1 $\epsilon$ & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    \midrule
-    CI-2 $\delta$ & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    CI-2 $\epsilon$ & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    \midrule
-    CI-3 $\delta$ & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    CI-3 $\epsilon$ & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    \midrule
-    CI-4 $\delta$ & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    CI-4 $\epsilon$ & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    CI-1: CSS invisible    & \textbf{100} & \textbf{100} &   0 & 0.00 & 1.000 \\
+    CI-2: HTML comments    &  40 &   \textbf{0} & $-$40 & 1.03 & 0.142 \\
+    CI-3: Image metadata   &  40 &  40 &   0 & 0.00 & 0.583 \\
+    CI-4: Dynamic cloaking & \textbf{100} & \textbf{100} &   0 & 0.00 & 1.000 \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -81,24 +33,25 @@ and escape rates.
 \label{sec:ci-findings}
 
 \begin{enumerate}[nosep,leftmargin=*]
-  \item \textbf{CSS invisible text (CI-1)} achieves the highest
-    baseline trap success rate across all content injection techniques,
-    confirming the DeepMind hypothesis that rendering-layer attacks are
-    especially effective because LLMs process raw text without
-    awareness of visual presentation.
+  \item \textbf{CSS invisible text (CI-1) and dynamic cloaking (CI-4)}
+    achieve 100\% trap success in \emph{both} conditions. The
+    seven-module mitigation suite, including \mitigation{input-sanitizer},
+    is entirely ineffective against these rendering-layer attacks.
+    This confirms the DeepMind hypothesis that attacks exploiting the
+    gap between raw text and visual presentation are especially
+    persistent.
 
-  \item \textbf{Dynamic cloaking (CI-4)} shows the greatest variance
-    across models, suggesting that model-specific content processing
-    pipelines interact differently with JavaScript-based adversarial
-    techniques.
+  \item \textbf{HTML comments (CI-2)} drop from 40\% to 0\% under
+    hardened conditions ($d = 1.03$, large effect), suggesting that
+    the \mitigation{input-sanitizer} module successfully strips
+    comment-based payloads.
 
-  \item \textbf{Input sanitization} (the \mitigation{input-sanitizer}
-    module) provides the largest reduction in content injection success
-    rates, with large effect sizes (Cohen's $d > 0.8$) across all
-    four scenarios.
+  \item \textbf{Image metadata (CI-3)} shows identical 40\% success
+    in both conditions ($d = 0.00$), indicating that the model
+    occasionally processes EXIF data but mitigations do not
+    specifically target this vector.
 
-  \item \textbf{Image metadata attacks (CI-3)} are the least effective
-    in the baseline condition, likely because current LLM tool-use
-    implementations do not routinely extract EXIF data from images
-    during web browsing tasks.
+  \item \textbf{Overall}, content injection is the most
+    mitigation-resistant category: two of four scenarios show
+    complete resistance to all defenses.
 \end{enumerate}

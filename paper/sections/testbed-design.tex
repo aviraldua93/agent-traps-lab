@@ -49,7 +49,7 @@ components:
   \caption{Testbed architecture. Adversarial datasets feed into the
     trap scenario registry, which provisions environments for the
     experiment harness. The harness deploys agents under test (one of
-    four models in one of three conditions) into each environment,
+    the model under test in one of two conditions) into each environment,
     collects observations, computes metrics, and generates \LaTeX\
     assets via the reporter.}
   \label{fig:architecture}
@@ -160,16 +160,17 @@ For systemic scenarios, we additionally compute \metric{Cascade Depth}
 \subsection{Experiment Matrix Visualization}
 \label{sec:testbed-matrix}
 
-\Cref{fig:matrix-flow} visualizes the full experiment matrix
-design. The matrix generates 9{,}120 total experiment cells across
-main, compound, and ablation sub-matrices.
+\Cref{fig:matrix-flow} visualizes the experiment design.
+The current run comprises 220 experiment cells (22 scenarios
+$\times$ 2 conditions $\times$ 5 repetitions); the testbed also
+supports compound and ablation sub-matrices for future experiments.
 
 \begin{figure}[t]
   \centering
   \input{figures/matrix-flow}
   \caption{Experiment matrix flow. 22~scenarios are crossed with
-    4~models and 3~conditions (baseline, hardened, ablated) at
-    10~repetitions each. Compound and ablation sub-matrices expand
-    the total to 9{,}120 experiment cells.}
+    2~conditions (baseline, hardened) at 5~repetitions each,
+    yielding 220 experiment cells. The testbed supports expansion
+    to multiple models, compound, and ablation sub-matrices.}
   \label{fig:matrix-flow}
 \end{figure}

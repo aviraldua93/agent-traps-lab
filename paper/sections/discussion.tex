@@ -4,82 +4,123 @@
 \section{Discussion}
 \label{sec:discussion}
 
+\subsection{Mitigations Work for Framing, Not for Injection}
+\label{sec:discuss-asymmetry}
+
+The most striking pattern in our data is the \emph{asymmetry} of
+mitigation effectiveness across attack types. Semantic manipulation
+(authority framing: 100\%$\to$0\%), human-in-the-loop attacks (all
+three scenarios: 40--60\%$\to$0\%), and cross-contamination
+(100\%$\to$0\%) are fully mitigated by the hardened configuration.
+These are attacks where the adversarial signal operates at the
+\emph{semantic} level---framing, selective reporting, social
+engineering---and can be countered by prompt-level defenses that
+instruct the agent to be skeptical.
+
+In contrast, content injection via CSS invisible text and dynamic
+cloaking (100\% in both conditions) completely resists all
+mitigations. These attacks exploit a \emph{structural} gap: LLMs
+process raw text without awareness of rendering context. No amount of
+prompt engineering can fix this; architectural defenses (e.g., content
+rendering pipelines that strip non-visible elements before LLM
+processing) are required.
+
+\subsection{Regression Cases: Iatrogenic Mitigations}
+\label{sec:discuss-regression}
+
+Two scenarios exhibit \emph{regression}---the hardened condition
+performs worse than baseline:
+
+\begin{enumerate}[nosep,leftmargin=*]
+  \item \textbf{Misleading forms (BC-2)}: 0\%$\to$100\%
+    ($d = \infty$, $p = 0.033$). The model naturally resists this
+    attack, but the mitigation suite introduces the vulnerability.
+    The security-hardened system prompt may alter form-processing
+    behavior in ways that make the agent \emph{more} susceptible.
+
+  \item \textbf{Ranking manipulation (CS-2)}: 80\%$\to$100\%
+    ($d = -0.63$). The \mitigation{rag-integrity} module's
+    cross-reference validation may inadvertently amplify manipulated
+    rankings by treating them as authoritative signals.
+\end{enumerate}
+
+These regressions constitute an \emph{iatrogenic} phenomenon:
+defenses that cause harm. This is a critical finding for the security
+community---mitigation suites must be evaluated holistically, not
+just on their target scenarios, as they can create new attack surfaces.
+
+\subsection{Natural Resistance of GPT-4o-mini}
+\label{sec:discuss-natural}
+
+Of 22 scenarios, \textbf{12 show 0\% baseline trap success}
+(SM-2--SM-4, BC-3--BC-4, SY-1--SY-3, and three partially at 40\%),
+indicating that GPT-4o-mini's RLHF training already provides
+substantial protection against many attack vectors. The systemic
+category is particularly notable: all three scenarios achieve 0\%
+in both conditions, suggesting that protocol-level cascade attacks
+may require more sophisticated model targeting or larger agent
+topologies.
+
+\subsection{Statistical Limitations}
+\label{sec:discuss-stats}
+
+Our $n=5$ design has important limitations:
+
+\begin{itemize}[nosep,leftmargin=*]
+  \item \textbf{No individual comparison reaches Bonferroni
+    significance} ($\alpha_{\text{corrected}} = 0.00227$). The lowest
+    $p$-values are 0.033 (SM-1, CS-4, BC-2), well above the
+    corrected threshold. We interpret results through effect sizes
+    rather than NHST.
+
+  \item \textbf{The hardened condition confounds} mitigation modules
+    with the security-hardened prompt. A 2$\times$2 factorial
+    (modules $\pm$ prompt $\pm$) would disambiguate these effects.
+
+  \item \textbf{Single model.} Our results characterize GPT-4o-mini
+    only. Frontier models may show different vulnerability profiles;
+    multi-model comparison is a priority for follow-up work.
+\end{itemize}
+
+\subsection{The 20pp Gap: Modest but Meaningful}
+\label{sec:discuss-gap}
+
+The overall 20 percentage-point reduction (45.5\%$\to$25.5\%) is
+modest. A quarter of all trap attempts still succeed under full
+hardening. This suggests that prompt-level and module-level defenses
+are necessary but insufficient; \emph{architectural} defenses---content
+rendering pipelines, embedding-level anomaly detection, protocol-level
+authentication---are needed to close the remaining gap.
+
 \subsection{Protocol-Level Implications}
 \label{sec:discuss-protocol}
 
-Our systemic attack results (\cref{sec:results-sys}) reveal
-fundamental security gaps in the A2A protocol specification:
-
-\begin{enumerate}[nosep,leftmargin=*]
-  \item \textbf{No message authentication.} A2A relies on
-    transport-layer TLS but provides no application-layer message
-    signing. Agent impersonation (SY-2) succeeds because peer agents
-    cannot cryptographically verify the sender's identity.
-
-  \item \textbf{No content integrity.} Task messages can be modified
-    in transit or by intermediary agents without detection. Message
-    poisoning (SY-1) exploits this by injecting adversarial content
-    into otherwise legitimate task payloads.
-
-  \item \textbf{No trust framework.} The protocol treats all agents
-    as equally trustworthy. Our \mitigation{cascade-breaker} module
-    introduces trust scoring as a mitigation, but a protocol-level
-    trust framework would be more robust.
-\end{enumerate}
-
-We recommend that future versions of the A2A specification incorporate
-mandatory message signing (e.g., JWS~\cite{rfc7515}), content
-integrity hashes, and a trust-scoring extension.
-
-\subsection{Model-Specific Vulnerabilities}
-\label{sec:discuss-models}
-
-Our results reveal significant variation across models:
-
-\begin{itemize}[nosep,leftmargin=*]
-  \item \model{GPT-4o-mini} is consistently the most vulnerable across
-    all categories, likely due to reduced instruction-following
-    robustness compared to frontier models.
-
-  \item \model{Claude Sonnet~4} shows the strongest inherent resistance
-    to semantic manipulation, potentially reflecting Anthropic's
-    emphasis on harmlessness training.
-
-  \item \model{GPT-4o} and \model{Gemini~2.5~Pro} show complementary
-    vulnerability profiles: GPT-4o is more susceptible to content
-    injection while Gemini is more susceptible to cognitive state
-    attacks.
-\end{itemize}
+Although systemic attacks showed 0\% success in our study, the A2A
+protocol's lack of message authentication, content integrity, and
+trust frameworks remains a structural concern. We recommend that
+future protocol versions incorporate mandatory message signing
+(e.g., JWS~\cite{rfc7515}), content integrity hashes, and trust
+scoring.
 
 \subsection{Limitations}
 \label{sec:discuss-limitations}
 
 \begin{enumerate}[nosep,leftmargin=*]
-  \item \textbf{Synthetic environments.} Our trap scenarios are
-    designed for controlled measurement, not realism. Real-world
-    adversarial environments may be more or less effective depending
-    on context.
-
+  \item \textbf{Synthetic environments.} Our trap scenarios target
+    controlled measurement, not realism.
   \item \textbf{Static adversaries.} Our adversaries do not adapt to
-    the target model or defense configuration. Adaptive adversaries
-    would likely achieve higher success rates.
-
-  \item \textbf{Binary metrics.} Trap success and detection are
-    measured as binary indicators. More nuanced metrics (e.g.,
-    degree of compromise) would provide finer-grained analysis.
-
-  \item \textbf{Model versioning.} LLM providers continuously update
-    their models. Our results reflect specific model snapshots and
-    may not generalize to future versions.
-
-  \item \textbf{Human-in-the-loop validation.} HL-category results
-    measure whether the agent \emph{produces} biased output, not
-    whether human reviewers are actually \emph{deceived}. A user
-    study would strengthen these findings.
-
-  \item \textbf{Scale.} While 9{,}120 experiments provide statistical
-    power for our comparisons, the experiment matrix does not cover
-    all possible adversarial parameter variations within each scenario.
+    the model or defense configuration.
+  \item \textbf{No ablation or compound data.} This run covers only
+    baseline vs.\ hardened; per-module and compound analyses are
+    planned.
+  \item \textbf{Model versioning.} Results reflect a specific
+    GPT-4o-mini snapshot and may not generalize to future versions.
+  \item \textbf{HitL validation.} HL results measure biased
+    \emph{output}, not human \emph{deception}.
+  \item \textbf{Tool-use attacks not covered.} Following the DeepMind
+    taxonomy scope, we evaluate environmental/contextual attacks and
+    do not cover tool-use/function-calling attack surfaces
+    (cf.\ AgentDojo~\cite{debenedetti2024agentdojo}).
 \end{enumerate}
 
 \subsection{Broader Impact}

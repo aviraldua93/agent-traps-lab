@@ -42,7 +42,7 @@ attacks where the adversarial payload is embedded in the agent's
 operating environment (CSS-invisible text, HTML comments, image
 metadata, dynamically cloaked content) rather than in the user
 prompt.  Second, we measure injection success across a controlled
-matrix of 4~models $\times$ 3~conditions $\times$ 10~repetitions
+matrix of 2~conditions $\times$ 5~repetitions
 with statistical rigor (Bonferroni-corrected $p$-values, Cohen's $d$
 effect sizes), providing the quantitative grounding that prior work
 has lacked.
@@ -177,10 +177,9 @@ design choices: (1)~it evaluates \emph{environmental} rather than
 \emph{prompt-level} attacks, implementing the full taxonomy from
 Yuntao et~al.~\cite{yuntao2025agenttraps}; (2)~it tests attacks
 within a real multi-agent A2A protocol system rather than in
-isolated model calls; and (3)~it provides a complete experimental
-matrix (22~scenarios $\times$ 4~models $\times$ 3~conditions
-$\times$ 10~reps $=$ 2,640 main runs, plus 600 compound and
-6,160 ablation runs) with non-parametric statistical tests
+isolated model calls; and (3)~it provides a controlled experimental
+matrix (22~scenarios $\times$ 2~conditions
+$\times$ 5~reps $=$ 220 main runs) with non-parametric statistical tests
 (Wilcoxon signed-rank~\cite{wilcoxon1945individual}) and
 calibrated effect sizes (Cohen's $d$~\cite{cohen1988statistical}).
 
@@ -230,5 +229,5 @@ The Yuntao et~al.\ taxonomy~\cite{yuntao2025agenttraps} provides the
 conceptual foundation; our contribution is to operationalize it as a
 reproducible, statistically rigorous testbed and to extend it to the
 multi-agent A2A protocol setting.  We further contribute seven
-purpose-built mitigations and a comprehensive ablation study
-quantifying their individual and combined effectiveness.
+purpose-built mitigations and empirical evidence of both their
+effectiveness and their failure modes (including iatrogenic regressions).

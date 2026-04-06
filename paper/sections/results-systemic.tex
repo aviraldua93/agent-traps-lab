@@ -4,44 +4,24 @@
 \section{Results: Systemic}
 \label{sec:results-sys}
 
-This section reports results for the three systemic scenarios:
-\trap{Message-Poisoning} (SY-1), \trap{Agent-Impersonation} (SY-2),
-and \trap{Cascade-Failure} (SY-3). These attacks exploit multi-agent
-topologies enabled by the A2A protocol.
-
-\subsection{Cascade Metrics}
-\label{sec:sys-cascade}
-
-In addition to the standard metrics, systemic scenarios report
-\metric{cascade depth} (number of agents sequentially compromised)
-and \metric{blast radius} (fraction of the agent crew affected).
+The three systemic scenarios exploit multi-agent topologies enabled by
+the A2A protocol: message poisoning (SY-1), agent impersonation (SY-2),
+and cascade failure (SY-3).
 
 \begin{table}[t]
   \centering
-  \caption{Systemic attack metrics under baseline (B) and hardened (H)
-    conditions. $\tau$: trap success (\%), $C_d$: cascade depth
-    (agents), $B_r$: blast radius (\%). Values: mean $\pm$ std, $n=10$.}
+  \caption{Systemic attack trap success rates (\%) for
+    \model{GPT-4o-mini}: baseline (B) vs.\ hardened (H), $n=5$.
+    All three scenarios show 0\% in both conditions.}
   \label{tab:sys-metrics}
   \small
-  \begin{tabular}{@{}llcccc@{}}
+  \begin{tabular}{@{}lrrrcr@{}}
     \toprule
-    & & \model{GPT-4o} & \model{Sonnet~4} & \model{Gemini} & \model{4o-mini} \\
+    \textbf{Scenario} & \textbf{B (\%)} & \textbf{H (\%)} & \textbf{$\Delta$} & \textbf{$d$} & \textbf{$p$} \\
     \midrule
-    \multirow{2}{*}{SY-1 $\tau$}
-      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    \midrule
-    \multirow{2}{*}{SY-1 $C_d$}
-      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    \midrule
-    \multirow{2}{*}{SY-2 $B_r$}
-      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-    \midrule
-    \multirow{2}{*}{SY-3 $C_d$}
-      & B & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
-      & H & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} & \textcolor{red}{[TBD]} \\
+    SY-1: Message poisoning    & 0 & 0 & 0 & 0.00 & 1.000 \\
+    SY-2: Agent impersonation  & 0 & 0 & 0 & 0.00 & 1.000 \\
+    SY-3: Cascade failure      & 0 & 0 & 0 & 0.00 & 1.000 \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -50,26 +30,24 @@ and \metric{blast radius} (fraction of the agent crew affected).
 \label{sec:sys-findings}
 
 \begin{enumerate}[nosep,leftmargin=*]
-  \item \textbf{Message poisoning (SY-1)} in A2A communications
-    achieves moderate cascade depths even in the baseline condition.
-    A single poisoned task message can corrupt the downstream agent's
-    context, which in turn produces corrupted outputs for further
-    downstream agents.
+  \item \textbf{All three systemic scenarios show 0\% trap success}
+    in both baseline and hardened conditions. GPT-4o-mini appears
+    naturally resistant to protocol-level attacks in our testbed
+    configuration.
 
-  \item \textbf{Agent impersonation (SY-2)} exploits the lack of
-    strong identity verification in the A2A protocol. When an
-    adversarial agent presents a forged Agent Card with elevated
-    capabilities, peer agents delegate sensitive tasks to the
-    impersonator.
+  \item This is a \emph{surprising} negative result: the DeepMind
+    taxonomy highlights systemic attacks as a critical threat for
+    multi-agent systems, yet our model resists all three attack vectors
+    without any defensive mitigations. Possible explanations include:
+    (a)~GPT-4o-mini's instruction-following may be insufficiently
+    sophisticated to propagate cascading failures;
+    (b)~our A2A testbed topology (3-agent crew) may be too small to
+    trigger cascade dynamics; or (c)~the attack payloads may require
+    model-specific tuning.
 
-  \item \textbf{Cascade failure (SY-3)} demonstrates \emph{unbounded}
-    propagation in baseline conditions: cascade depth scales linearly
-    with crew size. The \mitigation{cascade-breaker} module
-    introduces circuit-breaker semantics that bound cascade depth,
-    reducing blast radius by a statistically significant margin.
-
-  \item \textbf{Protocol implication}: These results motivate
-    mandatory message signing, trust scoring, and anomaly detection
-    as extensions to the A2A specification
-    (\cref{sec:discuss-protocol}).
+  \item \textbf{Protocol implications remain}: our 0\% result does
+    \emph{not} imply systemic attacks are harmless in general.
+    Different models, larger crew sizes, or adaptive adversaries may
+    produce different results. The A2A protocol's lack of message
+    authentication and trust frameworks remains an architectural concern.
 \end{enumerate}

@@ -69,7 +69,7 @@ export async function createAgentHandle(
   config: AgentConfig,
   runId: string,
 ): Promise<AgentHandle> {
-  const provider: LLMProvider = getProvider(config.modelConfig);
+  const provider: LLMProvider = await getProvider(config.modelConfig);
   const mitigations: Mitigation[] = resolveMitigations(config.mitigations);
 
   // Build the system prompt

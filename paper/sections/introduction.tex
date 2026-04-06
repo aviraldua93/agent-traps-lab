@@ -41,8 +41,8 @@ analysis.
 \paragraph{Our contribution.}
 We present \textsc{agent-traps-lab}, an open-source testbed that
 operationalizes all six DeepMind trap categories as 22 concrete
-adversarial scenarios and evaluates them against four production-grade
-LLMs across 9{,}120 controlled experiments. Our contributions are:
+adversarial scenarios and evaluates them against GPT-4o-mini across
+220 controlled experiments. Our contributions are:
 
 \begin{enumerate}[nosep,leftmargin=*]
   \item \textbf{Testbed.} A modular, extensible framework implementing
@@ -50,26 +50,24 @@ LLMs across 9{,}120 controlled experiments. Our contributions are:
     agent interface, mitigation registry, and automated experiment
     harness (\cref{sec:testbed}).
 
-  \item \textbf{Experiment matrix.} A full factorial design:
-    22~scenarios $\times$ 4~models $\times$ 3~conditions (baseline,
-    hardened, ablated) $\times$ 10~repetitions, plus 600 compound-trap
-    and 6{,}160 ablation experiments (\cref{sec:methodology}).
+  \item \textbf{Experiment design.} A controlled comparison:
+    22~scenarios $\times$ 2~conditions (baseline, hardened)
+    $\times$ 5~repetitions = 220 experiment cells with
+    Bonferroni-corrected non-parametric tests
+    (\cref{sec:methodology}).
 
-  \item \textbf{Empirical results.} Per-category trap success rates,
-    detection rates, escape rates, and decision drift with 95\%
-    confidence intervals, non-parametric significance tests, and
-    effect sizes (\cref{sec:results-ci}--\cref{sec:results-hitl}).
+  \item \textbf{Empirical results.} Per-category trap success rates
+    and detection rates with Cohen's $d$ effect sizes and Wilcoxon
+    signed-rank tests
+    (\cref{sec:results-ci}--\cref{sec:results-hitl}).
 
-  \item \textbf{Defense analysis.} Ablation studies revealing the
-    marginal contribution of each of seven mitigation modules, with
-    Bonferroni-corrected comparisons (\cref{sec:mitigations}).
-
-  \item \textbf{Compound traps.} Evidence of super-additive failure
-    modes when two trap categories are combined
-    (\cref{sec:compound}).
+  \item \textbf{Defense evaluation.} A seven-module mitigation suite
+    that reduces overall trap success from 45.5\% to 25.5\%, with
+    category-specific analysis revealing both successes and regressions
+    (\cref{sec:mitigations}).
 
   \item \textbf{Artifacts.} The full testbed, experiment data, and
-    paper assets are publicly released for reproducibility
+    analysis scripts are publicly released for reproducibility
     (\cref{app:artifacts}).
 \end{enumerate}
 
@@ -78,8 +76,7 @@ The remainder of this paper is organized as follows.
 and multi-agent orchestration. \Cref{sec:testbed} describes our testbed
 architecture. \Cref{sec:methodology} details the experiment design.
 \Cref{sec:results-ci} through \cref{sec:results-hitl} present
-per-category results. \Cref{sec:compound} analyzes compound traps.
-\Cref{sec:mitigations} reports mitigation and ablation findings.
-\Cref{sec:discussion} discusses implications and limitations.
+per-category results. \Cref{sec:mitigations} reports overall mitigation
+findings. \Cref{sec:discussion} discusses implications and limitations.
 \Cref{sec:related} positions our work in the literature, and
 \cref{sec:conclusion} concludes.
