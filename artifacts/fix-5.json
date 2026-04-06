@@ -1,0 +1,1 @@
+{"id": "fix-5", "title": "Fix: Add 4 missing seminal references (Wallace 2019, Zeng 2024, Shen 2024, Shafahi 2018) to bibliography.bib and cite them in related-work.tex. Also cite orphaned deng2024masterkey in §14.2.", "assignedTo": "coder", "severity": "medium"}

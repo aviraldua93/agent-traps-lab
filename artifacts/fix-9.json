@@ -1,0 +1,1 @@
+{"id": "fix-9", "title": "Fix: main.tex:167 appendix B claims 'full confidence intervals are provided in the supplementary JSON artifacts' but analysis.json has no CI data and no table includes CIs. Either remove 'full confidence intervals' or qualify as 'point estimates and effect sizes'. RC-3 partial, BLOCKING.", "assignedTo": "coder", "severity": "blocking"}

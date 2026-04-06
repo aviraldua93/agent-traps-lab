@@ -1,0 +1,1 @@
+{"id": "fix-7", "title": "Fix: Add failure/timeout rate reporting to methodology.tex §4.5 — either a per-scenario table or a statement confirming all 220 cells completed. Current text only mentions exclusion policy without actual rates (RC-13).", "assignedTo": "coder", "severity": "medium"}

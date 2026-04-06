@@ -1,0 +1,1 @@
+{"id": "fix-6", "title": "Fix: related-work.tex:20 incorrectly says Perez & Ribeiro 'formalized' prompt injection. Their paper (HackAPrompt) is a competition paper. Change 'formalized' to 'demonstrated' or 'catalogued'. Also remove duplicate carroll2024ai/park2024ai bib entries (keep park2024ai) and clean 15 orphaned entries.", "assignedTo": "coder", "severity": "medium"}

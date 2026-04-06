@@ -1,0 +1,203 @@
+{
+  "name": "rereview-revised-paper-paper",
+  "scenario": "Re-review the revised paper in paper/ — all TBD placeholders are now populated with real data from 220 experiments. Check if the 18 required changes from artifacts/reviews/meta-review.md are addressed. Focus on: real data in tables, statistical limitations acknowledged, regression findings documented, abstract accuracy, conclusion backed by data.",
+  "process": "wave",
+  "agents": [
+    {
+      "key": "data-validator",
+      "name": "Data Validator",
+      "description": "Cross-references every number in paper tables (§5-§10, §12) against results/run-2026-04-06T19-30-14/analysis.json. Verifies abstract claims (45.5%, 25.5%, 20pp, specific scenario percentages) match the data. Checks conclusion claims are supported. Confirms no TBD/placeholder remnants exist anywhere in paper/.",
+      "skills": [
+        "json-data-analysis",
+        "latex-table-parsing",
+        "numerical-cross-referencing"
+      ],
+      "allowedTools": [
+        "view",
+        "glob",
+        "grep",
+        "explore",
+        "edit",
+        "create",
+        "powershell"
+      ]
+    },
+    {
+      "key": "statistics-auditor",
+      "name": "Statistics Auditor",
+      "description": "Evaluates RC-3 (95% CI columns), RC-4 (super-additivity test), RC-5 (power analysis), RC-8 (Bonferroni families), and RC-12 (exact Wilcoxon / tie handling). Reviews src/harness/metrics.ts for implementation correctness. Assesses whether the n=5 design is adequately acknowledged and whether claims are appropriately tempered.",
+      "skills": [
+        "non-parametric-statistics",
+        "power-analysis",
+        "effect-size-interpretation",
+        "typescript-code-review"
+      ],
+      "allowedTools": [
+        "view",
+        "glob",
+        "grep",
+        "explore",
+        "edit",
+        "create",
+        "powershell"
+      ]
+    },
+    {
+      "key": "editorial-reviewer",
+      "name": "Editorial Reviewer",
+      "description": "Checks RC-2 (page limit), RC-10 (missing references: Wallace 2019, Zeng 2024, Shen 2024, Shafahi 2018), RC-15 (Perez & Ribeiro attribution), RC-16 (duplicate carroll2024ai/park2024ai bib entries), RC-17 (varied section openings), RC-18 (semantic macro usage). Also verifies RC-9 (numerical consistency) and RC-11 (tool-use scoping) are properly addressed.",
+      "skills": [
+        "academic-writing-review",
+        "bibtex-management",
+        "latex-style-enforcement",
+        "page-budget-estimation"
+      ],
+      "allowedTools": [
+        "view",
+        "glob",
+        "grep",
+        "explore",
+        "edit",
+        "create",
+        "powershell"
+      ]
+    },
+    {
+      "key": "meta-reviewer",
+      "name": "Meta Reviewer",
+      "description": "Synthesizes findings from data-validator, statistics-auditor, and editorial-reviewer into a final RC-1 through RC-18 pass/fail/partial assessment. Produces an updated revision-check.md at artifacts/reviews/revision-check.md with evidence-based verdicts. Assesses overall paper readiness for resubmission. Flags any new issues discovered during re-review.",
+      "skills": [
+        "academic-meta-review",
+        "revision-assessment",
+        "resubmission-readiness-evaluation"
+      ],
+      "allowedTools": [
+        "view",
+        "glob",
+        "grep",
+        "explore",
+        "edit",
+        "create",
+        "powershell"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "validate-table-data",
+      "title": "Cross-reference all paper tables against analysis.json",
+      "assignedTo": "data-validator",
+      "dependsOn": [],
+      "acceptanceCriteria": [
+        "Every number in tables tab:ci-success, tab:sm-success, tab:cs-success, tab:bc-success, tab:sys-metrics, tab:hitl-success, and tab:summary-all is verified against results/run-2026-04-06T19-30-14/analysis.json with zero discrepancies or all discrepancies documented",
+        "Abstract claims (45.5% baseline, 25.5% hardened, 20pp benefit, specific scenario percentages like CI-1=100%, SM-1 100%→0%, BC-2 0%→100%) are verified against data",
+        "Conclusion claims (all 5 enumerated findings) are verified as supported by the data in tables",
+        "grep for TBD, placeholder, XX.XXXX, example.com across all paper/ files returns zero matches (confirming RC-1 complete)"
+      ],
+      "deliverable": "artifacts/validate-table-data.md"
+    },
+    {
+      "id": "verify-abstract-conclusion-accuracy",
+      "title": "Verify abstract and conclusion claims match actual experiment scope",
+      "assignedTo": "data-validator",
+      "dependsOn": [
+        "validate-table-data"
+      ],
+      "acceptanceCriteria": [
+        "Abstract accurately describes 220-run experiment (22 scenarios × 2 conditions × 5 reps) with single model (GPT-4o-mini), not the original 9,120-cell plan",
+        "All five key findings in abstract are verifiable from the data tables (no overclaiming)",
+        "Conclusion does not claim results that require multi-model, compound, or ablation data that was not collected",
+        "Regression cases (BC-2, CS-2) are accurately described in both abstract and conclusion with correct percentages"
+      ],
+      "deliverable": "artifacts/verify-abstract-conclusion-accuracy.md"
+    },
+    {
+      "id": "audit-ci-columns",
+      "title": "Assess RC-3: 95% confidence interval columns in results tables",
+      "assignedTo": "statistics-auditor",
+      "dependsOn": [],
+      "acceptanceCriteria": [
+        "Determination of whether any results table includes 95% CI columns (currently none do — verify this is still the case)",
+        "Assessment of whether the paper still claims CI reporting in methodology section",
+        "If CIs are missing, document the specific tables that need CI columns and recommend Wilson vs. Clopper-Pearson intervals for proportion data",
+        "Check if the \\ci{}{} macro defined in main.tex is used anywhere in section files"
+      ],
+      "deliverable": "artifacts/audit-ci-columns.md"
+    },
+    {
+      "id": "audit-statistical-methodology",
+      "title": "Assess RC-4, RC-5, RC-8, RC-12: statistical framework completeness",
+      "assignedTo": "statistics-auditor",
+      "dependsOn": [],
+      "acceptanceCriteria": [
+        "RC-4 assessment: Whether super-additivity test procedure is formally defined in §4.4 or adequately deferred (compound data was not collected — is this acceptable?)",
+        "RC-5 assessment: Whether the power limitation paragraph in §4.4 constitutes adequate acknowledgment given n=5 (even less power than originally reviewed n=10)",
+        "RC-8 assessment: Whether Bonferroni correction with k=22 is sufficiently defined or whether separate family definitions are still needed",
+        "RC-12 assessment: Whether metrics.ts Wilcoxon implementation (normal approximation, consecutive ranks, no continuity correction) is acceptable at n=5 or constitutes a critical flaw"
+      ],
+      "deliverable": "artifacts/audit-statistical-methodology.md"
+    },
+    {
+      "id": "audit-references-attribution",
+      "title": "Assess RC-10, RC-15, RC-16: bibliography and attribution issues",
+      "assignedTo": "editorial-reviewer",
+      "dependsOn": [],
+      "acceptanceCriteria": [
+        "RC-10: Verify whether Wallace et al. 2019, Zeng et al. 2024, Shen et al. 2024, Shafahi et al. 2018 have been added to bibliography.bib and cited in related-work.tex (currently absent)",
+        "RC-15: Verify whether related-work.tex:20 still attributes 'formalization' to Perez & Ribeiro (currently still present — document the exact incorrect text)",
+        "RC-16: Verify whether carroll2024ai and park2024ai duplicate entries still exist in bibliography.bib (currently still present at lines 433/447)",
+        "Document any other orphaned or uncited bibliography entries"
+      ],
+      "deliverable": "artifacts/audit-references-attribution.md"
+    },
+    {
+      "id": "audit-page-limit-and-structure",
+      "title": "Assess RC-2, RC-17, RC-18: structural and formatting issues",
+      "assignedTo": "editorial-reviewer",
+      "dependsOn": [],
+      "acceptanceCriteria": [
+        "RC-2: Estimate current page count and assess whether the paper fits within 13-page USENIX body limit (6 separate results sections + discussion + related work suggests likely overage)",
+        "RC-17: Verify whether results section openings are varied or still follow mechanical pattern (currently 'The N [category] scenarios [verb]...' in all 6 sections)",
+        "RC-18: Verify whether semantic macros (\\pval{}, \\cohend{}, \\ci{}{}, \\meanstd{}{}, \\sig) are used in data tables (currently unused — all tables use raw LaTeX formatting)",
+        "Assess overall LaTeX quality and identify any new formatting issues"
+      ],
+      "deliverable": "artifacts/audit-page-limit-and-structure.md"
+    },
+    {
+      "id": "audit-remaining-editorial",
+      "title": "Assess RC-7, RC-9, RC-11, RC-13, RC-14: content and scoping items",
+      "assignedTo": "editorial-reviewer",
+      "dependsOn": [],
+      "acceptanceCriteria": [
+        "RC-7: Verify confound acknowledgment in methodology.tex and discussion.tex (currently present as 'Confound note' paragraph — assess adequacy)",
+        "RC-9: Verify numerical consistency in related-work.tex (original errors: 2,640 and 600 — now should reference 220 runs matching actual experiment)",
+        "RC-11: Verify tool-use attack scoping in discussion.tex limitations (currently item 6 — assess adequacy)",
+        "RC-13: Verify whether failure/timeout rates are reported per scenario (currently only mentioned in methodology.tex without a table)",
+        "RC-14: Verify seeding clarification in methodology.tex (currently addressed in §4.3)"
+      ],
+      "deliverable": "artifacts/audit-remaining-editorial.md"
+    },
+    {
+      "id": "synthesize-revision-assessment",
+      "title": "Produce final RC-1 through RC-18 revision verification",
+      "assignedTo": "meta-reviewer",
+      "dependsOn": [
+        "validate-table-data",
+        "verify-abstract-conclusion-accuracy",
+        "audit-ci-columns",
+        "audit-statistical-methodology",
+        "audit-references-attribution",
+        "audit-page-limit-and-structure",
+        "audit-remaining-editorial"
+      ],
+      "acceptanceCriteria": [
+        "Updated artifacts/reviews/revision-check.md with pass/fail/partial status for all 18 RC items, with evidence from the three specialist audits",
+        "Overall pass rate calculated (estimated ~8-10 of 18 based on preliminary analysis)",
+        "Clear prioritized list of remaining items to fix before resubmission, categorized as blocking vs. non-blocking",
+        "Assessment of whether the experiment descoping (9,120→220 cells) is adequately justified in the paper and whether it weakens key claims",
+        "Final verdict on paper readiness for USENIX Security 2027 resubmission"
+      ],
+      "deliverable": "artifacts/synthesize-revision-assessment.md"
+    }
+  ]
+}
