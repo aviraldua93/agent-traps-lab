@@ -1,7 +1,7 @@
 # Task: trap-tests-content-injection
 
 ## Summary
-Created comprehensive unit tests for all 4 content-injection trap scenarios (css-invisible, html-comments, image-metadata, dynamic-cloaking) with 45 tests covering setup/execute/evaluate/teardown lifecycle.
+Comprehensive unit tests for all 4 content-injection trap scenarios (css-invisible, html-comments, image-metadata, dynamic-cloaking). Fixed geospatial casing in semantic-manipulation tests and message-poisoning rejection text in systemic tests. All 245 tests pass across 6 files.
 
 ## Files Changed
 - `tests/unit/traps/content-injection.test.ts` — **Created** (45 tests)
