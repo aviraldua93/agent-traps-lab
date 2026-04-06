@@ -7,9 +7,12 @@
  *   bun run scripts/run-single-trap.ts --trap content-injection --model gpt4o --reps 5
  */
 
+import { registerAllScenarios } from '../src/traps/register-all.js';
 import { generateMatrix, filterMatrix, printMatrixSummary } from '../src/harness/matrix.js';
 import { executeMatrix, saveResults } from '../src/harness/runner.js';
 import { parseArgs } from 'util';
+
+registerAllScenarios();
 
 const { values } = parseArgs({
   args: process.argv.slice(2),
