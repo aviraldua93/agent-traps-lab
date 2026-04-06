@@ -1,0 +1,324 @@
+\begin{thebibliography}{10}
+
+\bibitem{biggio2013evasion}
+Battista Biggio, Igino Corona, Davide Maiorca, Blaine Nelson, Nedim
+  {\v{S}}rndi{\'c}, Pavel Laskov, Giorgio Giacinto, and Fabio Roli.
+\newblock Evasion attacks against machine learning at test time.
+\newblock In {\em Proceedings of the European Conference on Machine Learning
+  and Knowledge Discovery in Databases (ECML PKDD)}, pages 387--402. Springer,
+  2013.
+
+\bibitem{carlini2024aligned}
+Nicholas Carlini, Milad Nasr, Christopher~A. Choquette-Choo, Matthew Jagielski,
+  Irena Gao, Pang~Wei Koh, Daphne Ippolito, Katherine Lee, Florian Tramer, and
+  Ludwig Schmidt.
+\newblock Are aligned neural networks adversarially aligned?
+\newblock {\em Advances in Neural Information Processing Systems}, 36, 2024.
+
+\bibitem{carlini2017evaluating}
+Nicholas Carlini and David Wagner.
+\newblock Towards evaluating the robustness of neural networks.
+\newblock In {\em Proceedings of the IEEE Symposium on Security and Privacy
+  (S\&P)}, pages 39--57. IEEE, 2017.
+
+\bibitem{chao2023jailbreaking}
+Patrick Chao, Alexander Robey, Edgar Dobriban, Hamed Hassani, George~J. Pappas,
+  and Eric Wong.
+\newblock Jailbreaking black box large language models in twenty queries.
+\newblock {\em arXiv preprint arXiv:2310.08419}, 2023.
+
+\bibitem{chaudhari2024phantom}
+Harsh Chaudhari, Federico Bianchi, and Dirk Hovy.
+\newblock Phantom: General trigger attacks on retrieval augmented language
+  generation.
+\newblock {\em arXiv preprint arXiv:2405.20485}, 2024.
+
+\bibitem{chen2024agentpoison}
+Zhaorun Chen, Zhen Shen, Shreyas Bhatt, Jie Tan, and Andy Zou.
+\newblock {AgentPoison}: Red-teaming {LLM} agents via poisoning memory or
+  knowledge bases.
+\newblock {\em arXiv preprint arXiv:2407.12784}, 2024.
+
+\bibitem{cohen1988statistical}
+Jacob Cohen.
+\newblock {\em Statistical Power Analysis for the Behavioral Sciences}.
+\newblock Lawrence Erlbaum Associates, 2nd edition, 1988.
+\newblock Defines small, medium, and large effect sizes (Cohen's d = 0.2, 0.5,
+  0.8).
+
+\bibitem{cohen2024unleashing}
+Roei Cohen, Daniel Bitan, Yisroel Bitton, and Ben Nassi.
+\newblock Unleashing worms: Replicating adversarial attacks in multi-agent
+  {LLM} systems.
+\newblock {\em arXiv preprint arXiv:2403.02817}, 2024.
+
+\bibitem{cohen2024here}
+Roi Cohen, Daniel Bitan, Yonatan Bitton, Tom Henighan, and Timo Schick.
+\newblock Here there be dragons: Navigating adversarial content in agent web
+  browsing.
+\newblock {\em arXiv preprint arXiv:2402.11208}, 2024.
+
+\bibitem{crewai2024}
+{CrewAI}.
+\newblock {CrewAI}: Framework for orchestrating role-playing, autonomous {AI}
+  agents.
+\newblock \url{https://github.com/crewAIInc/crewAI}, 2024.
+
+\bibitem{debenedetti2024agentdojo}
+Edoardo Debenedetti, Jie Wagner, Martin Strobel, Lea Li, and Florian
+  Tram{\`e}r.
+\newblock {AgentDojo}: Evaluating the adversarial robustness of {LLM} agents.
+\newblock In {\em arXiv preprint arXiv:2406.13352}, 2024.
+
+\bibitem{dua2026a2acrews}
+Aviral Dua.
+\newblock a2a-crews: Multi-agent orchestration via the {A2A} protocol.
+\newblock \url{https://github.com/aviraldua93/a2a-crews}, 2026.
+
+\bibitem{goodfellow2015adversarial}
+Ian~J. Goodfellow, Jonathon Shlens, and Christian Szegedy.
+\newblock Explaining and harnessing adversarial examples.
+\newblock {\em Proceedings of the International Conference on Learning
+  Representations (ICLR)}, 2015.
+
+\bibitem{google2025agentcard}
+{Google}.
+\newblock {A2A} agent card specification.
+\newblock \url{https://google.github.io/A2A/specification/}, 2025.
+\newblock Defines agent discovery and capability advertisement in A2A
+  multi-agent systems.
+
+\bibitem{google2025a2a}
+{Google}.
+\newblock Agent-to-agent ({A2A}) protocol specification.
+\newblock \url{https://google.github.io/A2A/}, 2025.
+\newblock Open protocol for inter-agent communication enabling multi-agent
+  orchestration, task delegation, and artifact exchange.
+
+\bibitem{greshake2023indirect}
+Kai Greshake, Sahar Abdelnabi, Shailesh Mishra, Christoph Endres, Thorsten
+  Holz, and Mario Fritz.
+\newblock Not what you've signed up for: Compromising real-world
+  {LLM}-integrated applications with indirect prompt injection.
+\newblock In {\em Proceedings of the 16th ACM Workshop on Artificial
+  Intelligence and Security (AISec)}, pages 79--90. ACM, 2023.
+
+\bibitem{gu2024agent}
+Xianghe Gu, Guanzhong Zheng, Kaixiong Zhong, Zhaoyang Wang, Tianyu Wang,
+  Yu~Wang, and Xiang Li.
+\newblock Agent smith: A single image can jailbreak one million multimodal
+  {LLM} agents exponentially fast.
+\newblock {\em arXiv preprint arXiv:2402.08567}, 2024.
+
+\bibitem{hong2024metagpt}
+Sirui Hong, Mingchen Zhuge, Jonathan Chen, Xiawu Zheng, Yuheng Cheng, Jinlin
+  Wang, Ceyao Zhang, Zili Wang, Steven Ka~Shing Yau, Zijuan Lin, Liyang Zhou,
+  Chenyu Ran, Lingfeng Xiao, Chenglin Wu, and J{\"u}rgen Schmidhuber.
+\newblock {MetaGPT}: Meta programming for a multi-agent collaborative
+  framework.
+\newblock {\em arXiv preprint arXiv:2308.00352}, 2024.
+
+\bibitem{rfc7515}
+Michael~B. Jones, John Bradley, and Nat Sakimura.
+\newblock {JSON} web signature ({JWS}).
+\newblock RFC 7515, 2015.
+
+\bibitem{kahneman2011thinking}
+Daniel Kahneman.
+\newblock {\em Thinking, Fast and Slow}.
+\newblock Farrar, Straus and Giroux, 2011.
+
+\bibitem{langgraph2024}
+{LangChain}.
+\newblock {LangGraph}: Build stateful, multi-actor applications with {LLMs}.
+\newblock \url{https://github.com/langchain-ai/langgraph}, 2024.
+
+\bibitem{lewis2020rag}
+Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir
+  Karpukhin, Naman Goyal, Heinrich K{\"u}ttler, Mike Lewis, Wen-tau Yih, Tim
+  Rockt{\"a}schel, Sebastian Riedel, and Douwe Kiela.
+\newblock Retrieval-augmented generation for knowledge-intensive {NLP} tasks.
+\newblock In {\em Advances in Neural Information Processing Systems (NeurIPS)},
+  volume~33, pages 9459--9474, 2020.
+
+\bibitem{liao2024eia}
+Qiusi Liao, Tianjie Ye, Bang Liu, and Yi~Xu.
+\newblock {EIA}: Environmental injection attack on generalist web agents.
+\newblock {\em arXiv preprint arXiv:2405.11336}, 2024.
+
+\bibitem{liu2024autodan}
+Xiaogeng Liu, Nan Xu, Muhao Chen, and Chaowei Xiao.
+\newblock {AutoDAN}: Generating stealthy jailbreak prompts on aligned large
+  language models.
+\newblock {\em arXiv preprint arXiv:2310.04451}, 2024.
+
+\bibitem{liu2024formalizing}
+Yi~Liu, Gelei Deng, Yuekang Li, Kailong Wang, Tianwei Zhang, Yepang Liu, Haoyu
+  Wang, Yan Zheng, and Yang Liu.
+\newblock Prompt injection attack against {LLM}-integrated applications.
+\newblock In {\em Proceedings of the IEEE Symposium on Security and Privacy
+  (S\&P)}, 2024.
+
+\bibitem{madry2018towards}
+Aleksander Madry, Aleksandar Makelov, Ludwig Schmidt, Dimitris Tsipras, and
+  Adrian Vladu.
+\newblock Towards deep learning models resistant to adversarial attacks.
+\newblock In {\em Proceedings of the International Conference on Learning
+  Representations (ICLR)}, 2018.
+
+\bibitem{mazeika2024harmbench}
+Mantas Mazeika, Long Phan, Xuwang Yin, Andy Zou, Zifan Wang, Norman Mu, Keisuke
+  Sakaguchi, Ronan~Le Bras, Tomas Pfister, Matt Fredrikson, J.~Zico Kolter, and
+  Dan Hendrycks.
+\newblock {HarmBench}: A standardized evaluation framework for automated red
+  teaming and robust refusal.
+\newblock {\em arXiv preprint arXiv:2402.04249}, 2024.
+
+\bibitem{openai2024gpt4o}
+{OpenAI}.
+\newblock {GPT-4o}: Multimodal model.
+\newblock \url{https://openai.com/index/hello-gpt-4o/}, 2024.
+
+\bibitem{bun2024}
+{Oven}.
+\newblock Bun: Incredibly fast {JavaScript} runtime.
+\newblock \url{https://bun.sh/}, 2024.
+\newblock All-in-one JavaScript runtime and toolkit.
+
+\bibitem{perez2022red}
+Ethan Perez, Sam Ringer, Kamil\.{e} Luko\v{s}i\={u}t\.{e}, Karina Nguyen, Edwin
+  Chen, Scott Heiner, Craig Pettit, Catherine Olsson, Sandipan Kundu, Saurav
+  Kadavath, et~al.
+\newblock Red teaming language models with language models.
+\newblock {\em arXiv preprint arXiv:2202.03286}, 2022.
+
+\bibitem{perez2022prompt}
+F{\'a}bio Perez and Ian Ribeiro.
+\newblock Ignore this title and {HackAPrompt}: Exposing systemic weaknesses of
+  {LLMs} through a global scale prompt hacking competition.
+\newblock {\em arXiv preprint arXiv:2211.09527}, 2022.
+\newblock Demonstrates prompt injection risks and attack surfaces in large
+  language models.
+
+\bibitem{ruan2024identifying}
+Yangjun Ruan, Honghua Dong, Andrew Wang, Silviu Pitis, Yongchao Zhou, Jimmy Ba,
+  Yann Dubois, Chris~J. Maddison, and Tatsunori Hashimoto.
+\newblock Identifying the risks of {LM} agents with an {LM}-emulated sandbox.
+\newblock {\em arXiv preprint arXiv:2309.15817}, 2024.
+
+\bibitem{shinn2023reflexion}
+Noah Shinn, Federico Cassano, Ashwin Gopinath, Karthik~R. Narasimhan, and
+  Shunyu Yao.
+\newblock Reflexion: Language agents with verbal reinforcement learning.
+\newblock {\em Advances in Neural Information Processing Systems}, 36, 2023.
+
+\bibitem{sun2024trustllm}
+Lichao Sun, Yue Huang, Haoran Wang, Siyuan Wu, Qihui Zhang, Chujie Gao, Yixin
+  Huang, Wenhan Liao, Zihan Qi, Deyi Kanber, and Bo~Li.
+\newblock {TrustLLM}: Trustworthiness in large language models.
+\newblock {\em arXiv preprint arXiv:2401.05561}, 2024.
+
+\bibitem{tian2024evil}
+Yu~Tian, Xiao Yang, Jingyuan Zhang, Yinpeng Gongye, and Kai Wang.
+\newblock Evil geniuses: Delving into the safety of {LLM}-based agents.
+\newblock {\em arXiv preprint arXiv:2311.11855}, 2024.
+
+\bibitem{tversky1974judgment}
+Amos Tversky and Daniel Kahneman.
+\newblock Judgment under uncertainty: Heuristics and biases.
+\newblock {\em Science}, 185(4157):1124--1131, 1974.
+
+\bibitem{wang2024decodingtrust}
+Boxin Wang, Weixin Chen, Hengzhi Pei, Chulin Xie, Min-Je Kang, Chejian Zhang,
+  Chaowei Xu, Zidi Xiong, Ritik Dutta, Rylan Schaeffer, Sang~T. Truong, Simran
+  Steinber, Ziniu Mallen, Jonathan Tow, Sheng Tan, and Bo~Li.
+\newblock {DecodingTrust}: A comprehensive assessment of trustworthiness in
+  {GPT} models.
+\newblock In {\em Advances in Neural Information Processing Systems (NeurIPS)},
+  volume~36, 2024.
+
+\bibitem{wei2024jailbroken}
+Alexander Wei, Nika Haghtalab, and Jacob Steinhardt.
+\newblock Jailbroken: How does {LLM} safety training fail?
+\newblock In {\em Advances in Neural Information Processing Systems (NeurIPS)},
+  volume~36, 2024.
+
+\bibitem{wilcoxon1945individual}
+Frank Wilcoxon.
+\newblock Individual comparisons by ranking methods.
+\newblock {\em Biometrics Bulletin}, 1(6):80--83, 1945.
+
+\bibitem{wu2023autogen}
+Qingyun Wu, Gagan Bansal, Jieyu Zhang, Yiran Wu, Beibin Li, Erkang Zhu,
+  Li~Jiang, Xin Zhang, Shaokun Zhang, Jiale Liu, Ahmed~Hassan Awadallah,
+  Ryen~W. White, Doug Burger, and Chi Wang.
+\newblock {AutoGen}: Enabling next-gen {LLM} applications via multi-agent
+  conversation.
+\newblock {\em arXiv preprint arXiv:2308.08155}, 2023.
+
+\bibitem{wu2024agentattack}
+Yifan Wu, Zhengyu Huang, Chaowei Xiao, Chang Liu, and Cho-Jui Hsieh.
+\newblock {AgentAttack}: Attacking {LLM} agents via adversarial environment
+  construction.
+\newblock {\em arXiv preprint arXiv:2405.02956}, 2024.
+
+\bibitem{xue2024badrag}
+Jiaqi Xue, Mengxin Zheng, Yue Hua, Yifei Shu, Xun Fang, and Zhiming Li.
+\newblock {BadRAG}: Identifying vulnerabilities in retrieval augmented
+  generation of large language models.
+\newblock {\em arXiv preprint arXiv:2406.00083}, 2024.
+
+\bibitem{yao2023react}
+Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik Narasimhan,
+  and Yuan Cao.
+\newblock {ReAct}: Synergizing reasoning and acting in language models.
+\newblock {\em Proceedings of the International Conference on Learning
+  Representations (ICLR)}, 2023.
+
+\bibitem{yi2023benchmarking}
+Jingwei Yi, Yueqi Xie, Bin Zhu, Keegan Hines, Emre Kiciman, Guangzhong Sun,
+  Xing Xie, and Fangzhao Wu.
+\newblock Benchmarking and defending against indirect prompt injection attacks
+  on large language models.
+\newblock {\em arXiv preprint arXiv:2312.14197}, 2023.
+
+\bibitem{yuntao2025agenttraps}
+Wang Yuntao, Xiao Yisong, and Liu Xiao.
+\newblock {AI} agent traps: Understanding and mitigating environmental attacks
+  on {AI} agents.
+\newblock {\em SSRN Electronic Journal}, 2025.
+\newblock SSRN 6372438.
+
+\bibitem{zhan2024injecagent}
+Qiusi Zhan, Zhixiang Liang, Zifan Ying, and Daniel Kang.
+\newblock {InjecAgent}: Benchmarking indirect prompt injections in
+  tool-integrated {LLM} agents.
+\newblock {\em arXiv preprint arXiv:2403.02691}, 2024.
+
+\bibitem{zhang2024safetybench}
+Zhexin Zhang, Leqi Lei, Lindong Wu, Rui Sun, Yongkang Huang, Chong Long, Xiao
+  Liu, Xuanyu Lei, Jie Tang, and Minlie Huang.
+\newblock {SafetyBench}: Evaluating the safety of large language models with
+  multiple choice questions.
+\newblock {\em arXiv preprint arXiv:2309.07045}, 2024.
+
+\bibitem{zhong2023poisoning}
+Zexuan Zhong, Ziqing Huang, Alexander Wettig, and Danqi Chen.
+\newblock Poisoning retrieval corpora by injecting adversarial passages.
+\newblock {\em Proceedings of the 2023 Conference on Empirical Methods in
+  Natural Language Processing (EMNLP)}, 2023.
+
+\bibitem{zou2023universal}
+Andy Zou, Zifan Wang, J.~Zico Kolter, and Matt Fredrikson.
+\newblock Universal and transferable adversarial attacks on aligned language
+  models.
+\newblock In {\em Proceedings of the 40th International Conference on Machine
+  Learning (ICML)}, 2023.
+
+\bibitem{zou2024poisonedrag}
+Wei Zou, Runpeng Geng, Binghui Wang, and Jinyuan Jia.
+\newblock {PoisonedRAG}: Knowledge corruption attacks to retrieval-augmented
+  generation of large language models.
+\newblock {\em arXiv preprint arXiv:2402.07867}, 2024.
+
+\end{thebibliography}

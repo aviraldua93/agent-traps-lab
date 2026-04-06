@@ -1,0 +1,202 @@
+{
+  "name": "review-research-paper-paper",
+  "scenario": "Review the research paper in paper/ for USENIX Security submission. 5 parallel reviewers (methodology, statistics, security, related-work, writing) write reviews to artifacts/reviews/. Then a meta-reviewer synthesizes them into accept/revise/reject. Then a revision-checker verifies fixes. The review-crew.json config is at src/review/review-crew.json — use its roles and task structure.",
+  "process": "wave",
+  "agents": [
+    {
+      "key": "methodology-reviewer",
+      "name": "Methodology Reviewer",
+      "description": "Reviews the experimental design in sections/methodology.tex and sections/testbed-design.tex: study design validity (22 scenarios × 4 models × 3 conditions × 10 reps), control adequacy (baseline vs hardened vs ablated), confound management (deterministic seeding, timeout policy, failure exclusion), reproducibility (open artifacts, seed formula), variable operationalization (TrapScenario interface lifecycle: setup/execute/evaluate/teardown), and whether every claim in the abstract and conclusion is supported by a corresponding results section. Writes review to artifacts/reviews/methodology.md.",
+      "skills": [
+        "latex-reading",
+        "experimental-design",
+        "reproducibility-assessment",
+        "claim-verification"
+      ],
+      "allowedTools": [
+        "view",
+        "glob",
+        "grep",
+        "explore",
+        "edit",
+        "create",
+        "powershell"
+      ]
+    },
+    {
+      "key": "statistics-reviewer",
+      "name": "Statistics Reviewer",
+      "description": "Reviews all statistical claims and plans in sections/methodology.tex (§4.4): sample size justification (n=10 reps — is power adequate?), Wilcoxon signed-rank test appropriateness for paired baseline-vs-hardened comparisons, Cohen's d with pooled SD classification thresholds, 95% CI construction via t-distribution with df=9, Bonferroni correction (α=0.05/22=0.00227). Cross-references LaTeX table structures in all results-*.tex and mitigations-ablation.tex against the statistical reporting requirements (N, mean±std, CI, p-value, effect size). Flags all TBD placeholders. Checks compound-analysis.tex super-additivity hypothesis test. Writes review to artifacts/reviews/statistics.md.",
+      "skills": [
+        "statistical-testing",
+        "power-analysis",
+        "effect-size-interpretation",
+        "multiple-comparison-correction",
+        "latex-table-validation"
+      ],
+      "allowedTools": [
+        "view",
+        "glob",
+        "grep",
+        "explore",
+        "edit",
+        "create",
+        "powershell"
+      ]
+    },
+    {
+      "key": "security-reviewer",
+      "name": "Security Reviewer",
+      "description": "Reviews the threat model completeness across all 6 trap categories (22 scenarios): content injection (CI-1 through CI-4), semantic manipulation (SM-1 through SM-4), cognitive state (CS-1 through CS-4), behavioural control (BC-1 through BC-3), systemic (SY-1 through SY-4), and human-in-the-loop (HL-1 through HL-3). Assesses scenario realism against real-world attack surfaces and published CVEs. Evaluates whether the 7 mitigation modules (input-sanitizer, semantic-shield, context-validator, rag-integrity, behavioral-guard, cascade-breaker, report-auditor) provide adequate coverage. Reviews A2A protocol security implications in sections/discussion.tex. Identifies missing attack vectors not covered by the DeepMind taxonomy. Writes review to artifacts/reviews/security.md.",
+      "skills": [
+        "threat-modeling",
+        "adversarial-ml",
+        "prompt-injection-analysis",
+        "multi-agent-security",
+        "a2a-protocol-knowledge"
+      ],
+      "allowedTools": [
+        "view",
+        "glob",
+        "grep",
+        "explore",
+        "edit",
+        "create",
+        "powershell"
+      ]
+    },
+    {
+      "key": "literature-writing-reviewer",
+      "name": "Literature Writing Reviewer",
+      "description": "Dual-focus role combining related-work review and writing quality assessment. For related work: reviews sections/related-work.tex citation completeness against key threads (prompt injection: Greshake, Perez & Ribeiro; jailbreaking: Wei, Zou, Chao; adversarial ML: Goodfellow, Carlini & Wagner, Madry; multi-agent: Cohen, Gu, Tian; RAG poisoning: Zhong, Zou, Xue; benchmarks: HarmBench, DecodingTrust, AgentDojo). Checks bibliography.bib for missing seminal references. Validates Table 2 positioning claims. For writing: reviews abstract strength, introduction narrative arc, argument flow across 16 sections, figure/table self-explanatory quality, notation consistency (\\trap, \\model, \\metric, \\mitigation macros), section transitions, USENIX Security 2027 formatting compliance (13-page limit, two-column, usenix-2020-09.sty). Writes review to artifacts/reviews/literature-writing.md.",
+      "skills": [
+        "academic-citation-analysis",
+        "literature-gap-identification",
+        "technical-writing-assessment",
+        "latex-formatting",
+        "usenix-style-compliance"
+      ],
+      "allowedTools": [
+        "view",
+        "glob",
+        "grep",
+        "explore",
+        "edit",
+        "create",
+        "powershell"
+      ]
+    },
+    {
+      "key": "meta-reviewer",
+      "name": "Meta Reviewer",
+      "description": "Reads all 4 specialist reviews from artifacts/reviews/ and synthesizes a unified meta-review. Produces: (1) overall verdict (accept/major-revision/minor-revision/reject) with confidence level, (2) a prioritized list of required changes ranked by severity, (3) optional improvements, (4) key strengths of the paper, (5) a summary assessment suitable for an area chair. After paper revision, acts as revision-checker: reads the meta-review and verifies each required change was addressed, producing a pass/fail checklist. Writes meta-review to artifacts/reviews/meta-review.md and revision check to artifacts/reviews/revision-check.md.",
+      "skills": [
+        "review-synthesis",
+        "editorial-judgment",
+        "priority-assessment",
+        "revision-verification"
+      ],
+      "allowedTools": [
+        "view",
+        "glob",
+        "grep",
+        "explore",
+        "edit",
+        "create",
+        "powershell"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "review-methodology",
+      "title": "Review experimental methodology — controls, confounds, reproducibility, claim support",
+      "assignedTo": "methodology-reviewer",
+      "dependsOn": [],
+      "acceptanceCriteria": [
+        "Review file exists at artifacts/reviews/methodology.md with structured sections: Design Assessment, Controls Evaluation, Reproducibility, Claim-Evidence Mapping, Verdict",
+        "Every claim in abstract.tex and conclusion.tex is mapped to a specific results section with assessment of whether supporting evidence exists or is TBD",
+        "The 3-condition experimental design (baseline/hardened/ablated) is evaluated for internal validity with specific confound concerns listed",
+        "Reproducibility assessment covers: deterministic seeding formula, open-source artifacts, timeout/failure exclusion policy, and identifies any missing reproduction details",
+        "At least 3 specific actionable recommendations are provided, each referencing a specific section and line of the paper"
+      ],
+      "deliverable": "artifacts/review-methodology.md"
+    },
+    {
+      "id": "review-statistics",
+      "title": "Review statistical analysis plan — tests, corrections, power, effect sizes, table completeness",
+      "assignedTo": "statistics-reviewer",
+      "dependsOn": [],
+      "acceptanceCriteria": [
+        "Review file exists at artifacts/reviews/statistics.md with structured sections: Power Analysis, Test Selection, Multiple Comparisons, Effect Sizes, Table Audit, Verdict",
+        "Power analysis assessment for n=10 reps: is this sufficient to detect medium effect sizes (d=0.5) at the Bonferroni-corrected α=0.00227? Explicit calculation or reference provided",
+        "Complete inventory of all TBD placeholders across results-*.tex, compound-analysis.tex, and mitigations-ablation.tex with exact count and file locations",
+        "Assessment of whether Wilcoxon signed-rank is appropriate given n=10 paired observations (addresses the small-sample concern for non-parametric tests)",
+        "Each LaTeX table structure is checked for presence of all required columns: N, mean±std, 95% CI, p-value, Cohen's d — with specific tables flagged if any column is missing"
+      ],
+      "deliverable": "artifacts/review-statistics.md"
+    },
+    {
+      "id": "review-security",
+      "title": "Review threat model — scenario realism, attack completeness, mitigation sufficiency, A2A gaps",
+      "assignedTo": "security-reviewer",
+      "dependsOn": [],
+      "acceptanceCriteria": [
+        "Review file exists at artifacts/reviews/security.md with structured sections: Threat Model Assessment, Per-Category Analysis, Mitigation Coverage, A2A Protocol Gaps, Missing Vectors, Verdict",
+        "Each of the 6 trap categories is individually assessed for realism with at least one real-world parallel or CVE reference per category",
+        "The 7 mitigations are evaluated for coverage completeness — identifies any trap scenarios that lack a corresponding mitigation or where the mitigation strategy is insufficient",
+        "A2A protocol security discussion (sections/discussion.tex §13.1) is evaluated: are the 3 recommended protocol extensions (message signing, integrity hashes, trust scoring) well-justified by the experimental evidence?",
+        "At least 2 missing attack vectors or unconsidered threat scenarios are identified that a USENIX Security PC reviewer might raise"
+      ],
+      "deliverable": "artifacts/review-security.md"
+    },
+    {
+      "id": "review-literature-writing",
+      "title": "Review related work coverage, citation gaps, writing quality, and USENIX formatting",
+      "assignedTo": "literature-writing-reviewer",
+      "dependsOn": [],
+      "acceptanceCriteria": [
+        "Review file exists at artifacts/reviews/literature-writing.md with structured sections: Citation Completeness, Positioning Analysis, Writing Quality, Formatting Compliance, Verdict",
+        "Table 2 (related-work positioning) is validated: each checkmark/cross/partial claim is assessed for accuracy against the cited paper's actual contributions",
+        "At least 3 missing references are identified from the prompt injection, adversarial ML, multi-agent security, or LLM safety benchmark literature published through 2025",
+        "Writing assessment covers: abstract (is it self-contained?), introduction (does it motivate the gap?), section transitions, notation consistency across all 16 section files, and conclusion strength",
+        "USENIX Security formatting compliance check: page count estimate, two-column layout, bibliography style, appendix placement, and any style violations flagged"
+      ],
+      "deliverable": "artifacts/review-literature-writing.md"
+    },
+    {
+      "id": "meta-review-synthesis",
+      "title": "Synthesize all 4 reviews into unified meta-review with accept/revise/reject decision",
+      "assignedTo": "meta-reviewer",
+      "dependsOn": [
+        "review-methodology",
+        "review-statistics",
+        "review-security",
+        "review-literature-writing"
+      ],
+      "acceptanceCriteria": [
+        "Meta-review file exists at artifacts/reviews/meta-review.md with sections: Overall Verdict, Key Strengths, Required Changes (prioritized), Optional Improvements, Summary for Area Chair",
+        "Overall verdict is one of: accept, minor-revision, major-revision, reject — with a confidence score (low/medium/high) and 2-3 sentence justification",
+        "Required changes list is prioritized (critical/major/minor) with each item traced back to the originating specialist review and specific paper section",
+        "The TBD placeholder situation is explicitly addressed as a gating factor in the verdict — meta-review must state whether the paper is reviewable in its current state",
+        "Summary paragraph is written in the style of a USENIX Security area chair report: balanced, specific, and actionable"
+      ],
+      "deliverable": "artifacts/meta-review-synthesis.md"
+    },
+    {
+      "id": "revision-verification",
+      "title": "Verify all required changes from meta-review are addressed in revised draft",
+      "assignedTo": "meta-reviewer",
+      "dependsOn": [
+        "meta-review-synthesis"
+      ],
+      "acceptanceCriteria": [
+        "Verification file exists at artifacts/reviews/revision-check.md with a checklist table: Item | Status (pass/fail/partial) | Evidence | Notes",
+        "Every required change from meta-review.md is present as a checklist item with explicit pass/fail assessment",
+        "For each failed item, specific guidance is provided on what remains to be done with section references",
+        "A final summary states whether the paper is ready for resubmission or needs another revision cycle"
+      ],
+      "deliverable": "artifacts/revision-verification.md"
+    }
+  ]
+}

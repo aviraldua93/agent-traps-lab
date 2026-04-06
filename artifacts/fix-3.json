@@ -1,0 +1,1 @@
+{"id":"fix-3","title":"Fix: Hardened condition confounds mitigations with system prompt suffix. Add a prompt-only condition (security prompt, no mitigations) to methodology.tex §4.2, or add explicit acknowledgment of this confound in Discussion.","assignedTo":"coder","severity":"medium"}

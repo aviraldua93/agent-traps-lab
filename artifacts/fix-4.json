@@ -1,0 +1,1 @@
+{"id":"fix-4","title":"Fix: Add p-value and Cohen d columns to per-category results tables (ci-success, sm-drift, cs-success, bc-success, sys-metrics, hitl-success) — currently only show mean±std without paired comparison statistics.","assignedTo":"coder","severity":"blocking"}

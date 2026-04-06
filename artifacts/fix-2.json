@@ -1,0 +1,1 @@
+{"id":"fix-2","title":"Fix: related-work.tex line 182 says '2,640 main runs' but methodology.tex computes 1,760 main cells. Fix inconsistency. Also fill GPU-hours placeholder (methodology.tex line 94) and Zenodo DOI placeholder (main.tex line 175).","assignedTo":"coder","severity":"medium"}
