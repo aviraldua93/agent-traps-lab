@@ -1,0 +1,18 @@
+{
+  "model": {
+    "id": "gpt4o-mini",
+    "name": "GPT-4o-mini (GitHub Models)",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "apiKeyEnv": "GITHUB_TOKEN",
+    "maxTokens": 2048,
+    "temperature": 0.7
+  },
+  "reps": 5,
+  "scenarios": 22,
+  "conditions": [
+    "baseline",
+    "hardened"
+  ],
+  "timestamp": "2026-04-06T19:30:14.567Z"
+}
