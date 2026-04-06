@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  # ── Qdrant vector database — backing store for rag-a2a ──
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant-data:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:6333/healthz || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ── RAG-A2A — retrieval-augmented generation agent ──
+  rag-a2a:
+    build:
+      context: ../rag-a2a
+      dockerfile: Dockerfile
+    image: ghcr.io/aviraldua93/rag-a2a:latest
+    ports:
+      - "3737:3737"
+    environment:
+      QDRANT_URL: http://qdrant:6333
+      PORT: "3737"
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:3737/.well-known/agent.json || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # ── agent-traps-lab — the experiment runner ──
+  agent-traps-lab:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      RAG_A2A_URL: http://rag-a2a:3737
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+    volumes:
+      - ./results:/app/results
+    depends_on:
+      rag-a2a:
+        condition: service_healthy
+
+volumes:
+  qdrant-data:

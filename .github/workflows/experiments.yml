@@ -1,0 +1,185 @@
+name: Run Experiments
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Model to test"
+        required: true
+        type: choice
+        options:
+          - all
+          - gpt4o
+          - claude-sonnet
+          - gemini-pro
+          - gpt4o-mini
+        default: all
+      trap_category:
+        description: "Trap category to test"
+        required: true
+        type: choice
+        options:
+          - all
+          - content-injection
+          - semantic-manipulation
+          - cognitive-state
+          - behavioural-control
+          - systemic
+          - human-in-the-loop
+        default: all
+      condition:
+        description: "Experiment condition"
+        required: true
+        type: choice
+        options:
+          - all
+          - baseline
+          - hardened
+        default: all
+      reps:
+        description: "Repetitions per cell (1-10)"
+        required: true
+        type: number
+        default: 3
+
+jobs:
+  experiments:
+    name: Run Experiment Matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build filter arguments
+        id: filters
+        run: |
+          args=""
+          if [ "${{ inputs.model }}" != "all" ]; then
+            args="$args --model ${{ inputs.model }}"
+          fi
+          if [ "${{ inputs.trap_category }}" != "all" ]; then
+            args="$args --category ${{ inputs.trap_category }}"
+          fi
+          if [ "${{ inputs.condition }}" != "all" ]; then
+            args="$args --condition ${{ inputs.condition }}"
+          fi
+          echo "args=$args" >> "$GITHUB_OUTPUT"
+
+      - name: Run experiment matrix
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          bun run scripts/run-full-matrix.ts ${{ steps.filters.outputs.args }}
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment-results-${{ github.run_id }}
+          path: results/
+          retention-days: 90
+
+      - name: Generate summary
+        if: always()
+        run: |
+          # Find the latest results directory
+          latest=$(ls -td results/run-* 2>/dev/null | head -1)
+          if [ -z "$latest" ]; then
+            echo "No results directory found."
+            exit 0
+          fi
+
+          echo "## 🪤 Experiment Results" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Parameter | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|-----------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Model | \`${{ inputs.model }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Category | \`${{ inputs.trap_category }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Condition | \`${{ inputs.condition }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Repetitions | \`${{ inputs.reps }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Results Dir | \`$latest\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          if [ -f "$latest/summary.json" ]; then
+            total=$(jq -r '.total // "N/A"' "$latest/summary.json")
+            succeeded=$(jq -r '.succeeded // "N/A"' "$latest/summary.json")
+            failed=$(jq -r '.failed // "N/A"' "$latest/summary.json")
+            timedOut=$(jq -r '.timedOut // "N/A"' "$latest/summary.json")
+            duration=$(jq -r '.durationMs // 0' "$latest/summary.json")
+            duration_s=$(echo "scale=1; $duration / 1000" | bc)
+
+            echo "### Results Summary" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Metric | Count |" >> "$GITHUB_STEP_SUMMARY"
+            echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Total | $total |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| ✅ Succeeded | $succeeded |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| ❌ Failed | $failed |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| ⏰ Timed Out | $timedOut |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Duration | ${duration_s}s |" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Post PR comment
+        if: github.event_name == 'pull_request' || github.event.pull_request
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // Find latest results
+            const resultsDir = 'results';
+            if (!fs.existsSync(resultsDir)) return;
+
+            const runs = fs.readdirSync(resultsDir)
+              .filter(d => d.startsWith('run-'))
+              .sort()
+              .reverse();
+
+            if (runs.length === 0) return;
+
+            const latestDir = path.join(resultsDir, runs[0]);
+            const summaryPath = path.join(latestDir, 'summary.json');
+
+            if (!fs.existsSync(summaryPath)) return;
+
+            const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+            const durationS = (summary.durationMs / 1000).toFixed(1);
+
+            const body = [
+              '## 🪤 Experiment Results',
+              '',
+              `| Metric | Value |`,
+              `|--------|-------|`,
+              `| Model | \`${{ inputs.model }}\` |`,
+              `| Category | \`${{ inputs.trap_category }}\` |`,
+              `| Condition | \`${{ inputs.condition }}\` |`,
+              `| Total Cells | ${summary.total} |`,
+              `| ✅ Succeeded | ${summary.succeeded} |`,
+              `| ❌ Failed | ${summary.failed} |`,
+              `| ⏰ Timed Out | ${summary.timedOut} |`,
+              `| Duration | ${durationS}s |`,
+              '',
+              `> Run ID: \`${runs[0]}\` — [View artifacts](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`,
+            ].join('\n');
+
+            // Find the PR number from the triggering event
+            const prNumber = context.payload.pull_request?.number;
+            if (!prNumber) return;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body,
+            });
