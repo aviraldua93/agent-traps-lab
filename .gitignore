@@ -1,0 +1,12 @@
+node_modules/
+dist/
+results/
+*.log
+.env
+.env.local
+.DS_Store
+Thumbs.db
+bun.lock
+coverage/
+test-results/
+playwright-report/

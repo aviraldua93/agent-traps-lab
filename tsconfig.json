@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ESNext"],
+    "types": ["bun-types"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "@traps/*": ["src/traps/*"],
+      "@agents/*": ["src/agents/*"],
+      "@harness/*": ["src/harness/*"],
+      "@mitigations/*": ["src/mitigations/*"],
+      "@a2a/*": ["src/a2a/*"],
+      "@integrations/*": ["src/integrations/*"],
+      "@review/*": ["src/review/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "scripts/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["node_modules", "dist", "results"]
+}

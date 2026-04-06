@@ -1,0 +1,99 @@
+{
+  "name": "paper-review",
+  "description": "Research paper review crew — 5 specialist reviewers + meta-reviewer + revision checker. Modeled after top-tier conference review process.",
+  "roles": [
+    {
+      "key": "methodology-reviewer",
+      "description": "Reviews experimental methodology: study design, controls, confounds, reproducibility, sample sizes, variable operationalization. Checks every claim has supporting data. Verifies each table has N, CI, and p-values. Writes detailed review to artifacts/reviews/methodology.md",
+      "model": null,
+      "allowed_tools": ["view", "glob", "grep", "explore", "edit", "create", "powershell", "task"],
+      "sub_agent_policy": { "explore": true, "task": true, "general-purpose": false, "code-review": false }
+    },
+    {
+      "key": "statistics-reviewer",
+      "description": "Reviews all statistical analyses: sample size justification via power analysis, significance tests (Wilcoxon signed-rank), effect sizes (Cohen's d), confidence intervals, Bonferroni correction for multiple comparisons, distribution assumptions, visualization accuracy. Parses LaTeX tables and cross-references against raw data in results/. Writes review to artifacts/reviews/statistics.md",
+      "model": null,
+      "allowed_tools": ["view", "glob", "grep", "explore", "edit", "create", "powershell", "task"],
+      "sub_agent_policy": { "explore": true, "task": true, "general-purpose": false, "code-review": false }
+    },
+    {
+      "key": "security-reviewer",
+      "description": "Reviews threat model completeness and adversarial scenario realism. For each of the 6 trap categories: are the sub-scenarios realistic? Do they match real-world attack surfaces? Are the mitigations sufficient? Are there missing attack vectors? Compares against published CVEs and real agent exploits. Writes review to artifacts/reviews/security.md",
+      "model": null,
+      "allowed_tools": ["view", "glob", "grep", "explore", "edit", "create", "powershell", "task"],
+      "sub_agent_policy": { "explore": true, "task": true, "general-purpose": false, "code-review": false }
+    },
+    {
+      "key": "related-work-reviewer",
+      "description": "Reviews citation completeness and positioning: checks against prompt injection literature (Greshake et al., Perez & Ribeiro), jailbreaking (Wei et al., Zou et al.), adversarial ML (Goodfellow, Carlini & Wagner), multi-agent security, RAG poisoning (Zhong et al.). Cross-references bibliography against Semantic Scholar. Identifies missed references. Writes review to artifacts/reviews/related-work.md",
+      "model": null,
+      "allowed_tools": ["view", "glob", "grep", "explore", "edit", "create", "powershell", "task"],
+      "sub_agent_policy": { "explore": true, "task": true, "general-purpose": false, "code-review": false }
+    },
+    {
+      "key": "writing-reviewer",
+      "description": "Reviews paper quality: abstract strength, introduction hook, argument flow, figure/table quality (are they self-explanatory?), notation consistency, section transitions, conclusion strength. Checks against USENIX Security formatting requirements. Writes review to artifacts/reviews/writing.md",
+      "model": null,
+      "allowed_tools": ["view", "glob", "grep", "explore", "edit", "create", "powershell", "task"],
+      "sub_agent_policy": { "explore": true, "task": true, "general-purpose": false, "code-review": false }
+    },
+    {
+      "key": "meta-reviewer",
+      "description": "Reads all 5 reviews from artifacts/reviews/. Synthesizes into a unified meta-review: overall assessment (accept/major-revision/minor-revision/reject), prioritized list of required changes, optional improvements, key strengths. Models the role of an area chair at a top venue. Writes meta-review to artifacts/reviews/meta-review.md",
+      "model": null,
+      "allowed_tools": ["view", "glob", "grep", "explore", "edit", "create", "powershell", "task"],
+      "sub_agent_policy": { "explore": true, "task": true, "general-purpose": false, "code-review": false }
+    },
+    {
+      "key": "revision-checker",
+      "description": "After paper revision, reads the meta-review from artifacts/reviews/meta-review.md and checks every required change was addressed. Produces a checklist with pass/fail per item. Writes verification to artifacts/reviews/revision-check.md",
+      "model": null,
+      "allowed_tools": ["view", "glob", "grep", "explore", "edit", "create", "powershell", "task"],
+      "sub_agent_policy": { "explore": true, "task": true, "general-purpose": false, "code-review": false }
+    }
+  ],
+  "tasks": [
+    {
+      "id": "review-methodology",
+      "title": "Review experimental methodology — controls, confounds, reproducibility, operationalization",
+      "assigned_to": "methodology-reviewer",
+      "depends_on": []
+    },
+    {
+      "id": "review-statistics",
+      "title": "Review statistical analyses — significance tests, effect sizes, CIs, power analysis, Bonferroni",
+      "assigned_to": "statistics-reviewer",
+      "depends_on": []
+    },
+    {
+      "id": "review-security",
+      "title": "Review threat model — scenario realism, attack completeness, mitigation sufficiency",
+      "assigned_to": "security-reviewer",
+      "depends_on": []
+    },
+    {
+      "id": "review-related-work",
+      "title": "Review related work — citation completeness, positioning, missed references",
+      "assigned_to": "related-work-reviewer",
+      "depends_on": []
+    },
+    {
+      "id": "review-writing",
+      "title": "Review paper quality — structure, clarity, figures, formatting",
+      "assigned_to": "writing-reviewer",
+      "depends_on": []
+    },
+    {
+      "id": "meta-review",
+      "title": "Synthesize all 5 reviews into unified meta-review with accept/revise/reject decision",
+      "assigned_to": "meta-reviewer",
+      "depends_on": ["review-methodology", "review-statistics", "review-security", "review-related-work", "review-writing"]
+    },
+    {
+      "id": "check-revisions",
+      "title": "Verify all required changes from meta-review are addressed in revised draft",
+      "assigned_to": "revision-checker",
+      "depends_on": ["meta-review"]
+    }
+  ]
+}
