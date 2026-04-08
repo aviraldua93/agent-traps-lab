@@ -1,3 +1,5 @@
+<p align="center"><img src="hero.svg" alt="Agent Traps Lab Hero" width="800" /></p>
+
 # 🪤 agent-traps-lab
 
 > **Empirical testbed for DeepMind's ["AI Agent Traps"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6372438) paper — 22 adversarial scenarios, 4 models, 3,480 experiments, statistical rigor.**
